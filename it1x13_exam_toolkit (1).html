@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IT1x13 // Networking Exam Toolkit</title>
+<style>
+:root{
+  --bg: #0a0e14;
+  --panel: #111826;
+  --panel-2: #161f30;
+  --line: #223047;
+  --text: #e3e9f0;
+  --muted: #7e8ca3;
+  --cyan: #22d3b8;
+  --cyan-dim: #0f5c50;
+  --amber: #ffb454;
+  --red: #ff6b6b;
+  --purple: #a78bfa;
+  --mono: 'JetBrains Mono', 'Consolas', 'SFMono-Regular', monospace;
+  --sans: -apple-system, 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:var(--sans);}
+body{ background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 42px 42px;
+  background-attachment: fixed;
+  background-color: var(--bg);
+  min-height:100vh;
+}
+body::before{
+  content:"";
+  position:fixed; inset:0;
+  background: radial-gradient(ellipse 900px 500px at 20% -5%, rgba(34,211,184,0.10), transparent 60%),
+              radial-gradient(ellipse 700px 500px at 100% 10%, rgba(167,139,250,0.08), transparent 60%);
+  pointer-events:none;
+  z-index:0;
+}
+.wrap{position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:28px 20px 80px;}
+
+header.top{display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:22px; padding-bottom:18px; border-bottom:1px solid var(--line);}
+header.top .brand{font-family:var(--mono); font-size:13px; letter-spacing:0.12em; color:var(--cyan); text-transform:uppercase;}
+header.top h1{font-size:26px; margin:4px 0 2px; font-weight:700; letter-spacing:-0.01em;}
+header.top p{margin:0; color:var(--muted); font-size:13.5px;}
+.badge-row{display:flex; gap:8px; flex-wrap:wrap;}
+.badge{font-family:var(--mono); font-size:11px; color:var(--muted); border:1px solid var(--line); padding:3px 9px; border-radius:20px; background:var(--panel);}
+
+nav.tabs{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:24px; position:sticky; top:0; z-index:5; background:rgba(10,14,20,0.92); backdrop-filter: blur(6px); padding:10px 0; border-bottom:1px solid var(--line);}
+nav.tabs button{
+  font-family:var(--mono); font-size:12.5px; color:var(--muted); background:var(--panel);
+  border:1px solid var(--line); padding:9px 14px; border-radius:8px; cursor:pointer;
+  transition: all .15s ease; letter-spacing:0.02em;
+}
+nav.tabs button .n{color:var(--cyan); margin-right:6px;}
+nav.tabs button:hover{color:var(--text); border-color:var(--cyan-dim);}
+nav.tabs button.active{background:var(--cyan); color:#04231d; border-color:var(--cyan); font-weight:700;}
+nav.tabs button.active .n{color:#04231d;}
+
+.panel{display:none; animation: fade .25s ease;}
+.panel.active{display:block;}
+@keyframes fade{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
+
+.card{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:20px 22px; margin-bottom:18px;}
+.card h2{margin-top:0; font-size:19px; display:flex; align-items:center; gap:10px;}
+.card h2 .tag{font-family:var(--mono); font-size:11px; color:var(--cyan); border:1px solid var(--cyan-dim); background:rgba(34,211,184,0.08); padding:2px 8px; border-radius:6px;}
+.card > p.lead{color:var(--muted); margin-top:-6px; font-size:14px;}
+
+/* Notes accordion */
+.topic-block{border:1px solid var(--line); border-radius:10px; margin-bottom:12px; overflow:hidden; background:var(--panel-2);}
+.topic-head{display:flex; align-items:center; justify-content:space-between; padding:14px 18px; cursor:pointer; user-select:none;}
+.topic-head:hover{background:rgba(255,255,255,0.02);}
+.topic-head .th-left{display:flex; align-items:center; gap:12px;}
+.topic-num{font-family:var(--mono); color:var(--cyan); font-size:13px; border:1px solid var(--cyan-dim); border-radius:6px; padding:2px 8px;}
+.topic-head h3{margin:0; font-size:15.5px;}
+.chev{color:var(--muted); transition: transform .2s ease; font-family:var(--mono);}
+.topic-block.open .chev{transform:rotate(90deg); color:var(--cyan);}
+.topic-body{max-height:0; overflow:hidden; transition:max-height .3s ease; padding:0 18px;}
+.topic-block.open .topic-body{max-height:6000px; padding:0 18px 18px;}
+.topic-body h4{color:var(--cyan); font-size:13.5px; text-transform:uppercase; letter-spacing:0.04em; margin:16px 0 8px;}
+.topic-body h4:first-child{margin-top:6px;}
+.topic-body ul{margin:6px 0; padding-left:20px;}
+.topic-body li{margin-bottom:5px; font-size:14px; line-height:1.5;}
+.topic-body p{font-size:14px; line-height:1.6; color:var(--text);}
+.note{background:rgba(255,180,84,0.08); border-left:3px solid var(--amber); padding:8px 12px; font-size:13px; color:#ffd9a0; border-radius:0 6px 6px 0; margin:10px 0;}
+table.ref{width:100%; border-collapse:collapse; font-size:13px; margin:10px 0 16px;}
+table.ref th{background:var(--panel); text-align:left; padding:7px 10px; font-family:var(--mono); font-size:11.5px; color:var(--cyan); border-bottom:1px solid var(--line);}
+table.ref td{padding:7px 10px; border-bottom:1px solid var(--line); font-family:var(--mono); font-size:12.5px;}
+table.ref tr:hover td{background:rgba(255,255,255,0.02);}
+
+/* forms */
+.grid{display:grid; gap:14px;}
+.grid.g2{grid-template-columns:1fr 1fr;}
+.grid.g3{grid-template-columns:1fr 1fr 1fr;}
+@media(max-width:720px){.grid.g2,.grid.g3{grid-template-columns:1fr;}}
+label{display:block; font-size:12px; color:var(--muted); font-family:var(--mono); margin-bottom:5px; text-transform:uppercase; letter-spacing:0.03em;}
+input[type=text], input[type=number], select{
+  width:100%; background:var(--bg); border:1px solid var(--line); color:var(--text);
+  padding:10px 12px; border-radius:8px; font-family:var(--mono); font-size:14px;
+}
+input:focus, select:focus{outline:none; border-color:var(--cyan);}
+button.btn{
+  font-family:var(--mono); font-weight:700; font-size:13px; letter-spacing:0.03em;
+  background:var(--cyan); color:#04231d; border:none; padding:11px 20px; border-radius:8px; cursor:pointer;
+  transition:transform .1s ease, filter .15s ease;
+}
+button.btn:hover{filter:brightness(1.1);}
+button.btn:active{transform:scale(0.98);}
+button.btn.secondary{background:transparent; color:var(--cyan); border:1px solid var(--cyan-dim);}
+button.btn.ghost{background:transparent; color:var(--muted); border:1px solid var(--line);}
+button.btn.small{padding:6px 12px; font-size:11.5px;}
+
+.result-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; margin-top:16px;}
+.result-cell{background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:12px 14px;}
+.result-cell .rl{font-family:var(--mono); font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em;}
+.result-cell .rv{font-family:var(--mono); font-size:16px; color:var(--cyan); margin-top:4px; word-break:break-all;}
+
+.bitstring{font-family:var(--mono); font-size:15px; letter-spacing:2px; line-height:2.2;}
+.bit-n{color:var(--cyan); background:rgba(34,211,184,0.12); border-radius:3px; padding:1px 2px;}
+.bit-h{color:var(--amber); background:rgba(255,180,84,0.10); border-radius:3px; padding:1px 2px;}
+.bit-borrow{color:var(--purple); background:rgba(167,139,250,0.14); border-radius:3px; padding:1px 2px;}
+.legend{display:flex; gap:16px; font-family:var(--mono); font-size:11.5px; color:var(--muted); margin-top:10px;}
+.legend span.dot{display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:5px; vertical-align:middle;}
+
+.req-row{display:grid; grid-template-columns:1fr 100px 32px; gap:8px; margin-bottom:8px; align-items:center;}
+.req-row button{background:transparent; border:1px solid var(--line); color:var(--red); border-radius:6px; cursor:pointer; height:38px;}
+
+table.outtable{width:100%; border-collapse:collapse; margin-top:16px; font-family:var(--mono); font-size:12.5px;}
+table.outtable th{background:var(--panel-2); color:var(--cyan); text-align:left; padding:9px 10px; border-bottom:2px solid var(--line); font-size:11px; text-transform:uppercase; letter-spacing:0.03em;}
+table.outtable td{padding:9px 10px; border-bottom:1px solid var(--line);}
+table.outtable tr:hover td{background:rgba(34,211,184,0.04);}
+
+.steps{counter-reset:step;}
+.step{position:relative; padding-left:38px; margin-bottom:16px;}
+.step::before{counter-increment:step; content:counter(step); position:absolute; left:0; top:0; width:26px; height:26px; background:var(--cyan-dim); color:var(--cyan); border:1px solid var(--cyan); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:12px; font-weight:700;}
+.step h4{margin:0 0 4px; font-size:14.5px; color:var(--text); text-transform:none; letter-spacing:0;}
+.step p{margin:0; font-size:13.5px; color:var(--muted); line-height:1.5;}
+
+/* Quiz / test */
+.qitem{border:1px solid var(--line); border-radius:10px; padding:16px 18px; margin-bottom:14px; background:var(--panel-2);}
+.qitem .qmeta{font-family:var(--mono); font-size:10.5px; color:var(--muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.04em;}
+.qitem .qtext{font-size:14.5px; margin-bottom:10px; line-height:1.5;}
+.qopts{display:grid; gap:8px;}
+.qopt{display:flex; align-items:center; gap:10px; padding:9px 12px; border:1px solid var(--line); border-radius:8px; cursor:pointer; font-size:13.5px;}
+.qopt:hover{border-color:var(--cyan-dim);}
+.qopt input{accent-color:var(--cyan);}
+.qopt.correct{border-color:var(--cyan); background:rgba(34,211,184,0.08);}
+.qopt.incorrect{border-color:var(--red); background:rgba(255,107,107,0.08);}
+.qexplain{display:none; margin-top:10px; font-size:13px; color:var(--muted); background:var(--bg); border-left:3px solid var(--cyan-dim); padding:8px 12px; border-radius:0 6px 6px 0;}
+.fillin input{max-width:260px; display:inline-block;}
+.scorebar{position:sticky; bottom:16px; background:var(--panel); border:1px solid var(--cyan-dim); border-radius:12px; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; margin-top:20px; box-shadow:0 8px 30px rgba(0,0,0,0.4);}
+.scorebar .sc{font-family:var(--mono); font-size:20px; color:var(--cyan);}
+
+.pill-tabs{display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap;}
+.pill-tabs button{font-family:var(--mono); font-size:11.5px; padding:7px 13px; border-radius:20px; border:1px solid var(--line); background:transparent; color:var(--muted); cursor:pointer;}
+.pill-tabs button.active{background:var(--purple); border-color:var(--purple); color:#1a1030; font-weight:700;}
+
+.answer-box{margin-top:14px; padding:14px; background:var(--bg); border:1px dashed var(--line); border-radius:8px; display:none;}
+.answer-box.show{display:block;}
+.answer-box .correct-hl{color:var(--cyan);}
+.answer-box .wrong-hl{color:var(--red);}
+
+footer{text-align:center; color:var(--muted); font-size:12px; font-family:var(--mono); margin-top:40px; padding-top:20px; border-top:1px solid var(--line);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div>
+    <div class="brand">// IT1x13 Computer Networking</div>
+    <h1>Exam Toolkit: Ethernet → IPv4 → Subnetting → IPv6 → Routing</h1>
+    <p>Condensed notes, live subnetting/address-table builders, and a mixed practice paper — Topics 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12.</p>
+  </div>
+  <div class="badge-row">
+    <span class="badge">11 topics</span>
+    <span class="badge">interactive</span>
+    <span class="badge">practice test inside</span>
+  </div>
+</header>
+
+<nav class="tabs" id="tabNav">
+  <button class="active" data-tab="notes"><span class="n">01</span>Notes</button>
+  <button data-tab="calc"><span class="n">02</span>Subnet Calculator</button>
+  <button data-tab="divide"><span class="n">03</span>Divide Into Subnets</button>
+  <button data-tab="vlsm"><span class="n">04</span>Address Table Builder (VLSM)</button>
+  <button data-tab="ipv6"><span class="n">05</span>IPv6 Practice</button>
+  <button data-tab="test"><span class="n">06</span>Practice Test</button>
+</nav>
+
+<!-- ============ PANEL: NOTES ============ -->
+<section class="panel active" id="panel-notes">
+  <div class="card">
+    <h2>Study Notes <span class="tag">click a topic to expand</span></h2>
+    <p class="lead">Condensed from your Topic 5, 6, 7, 9, 10, 11 and 12 slide decks. Skim these first, then go do the calculators — you learn subnetting by doing it, not reading it.</p>
+    <div id="notesContainer"></div>
+  </div>
+</section>
+
+<!-- other panels injected by JS build functions below / or static, see part 2 -->
+<!-- ============ PANEL: SINGLE SUBNET CALCULATOR ============ -->
+<section class="panel" id="panel-calc">
+  <div class="card">
+    <h2>Subnet Calculator <span class="tag">how to read one address</span></h2>
+    <p class="lead">Type any IP + prefix. This shows you exactly how the network address, broadcast, and usable host range are calculated — the same steps you must show working for in the exam.</p>
+    <div class="grid g2">
+      <div>
+        <label>IPv4 Address</label>
+        <input type="text" id="calcIp" value="192.168.10.10" placeholder="e.g. 192.168.10.10">
+      </div>
+      <div>
+        <label>Prefix Length (CIDR)</label>
+        <input type="number" id="calcPrefix" value="24" min="0" max="32">
+      </div>
+    </div>
+    <div style="margin-top:14px;"><button class="btn" onclick="runCalc()">Calculate</button></div>
+    <div id="calcResults"></div>
+  </div>
+
+  <div class="card" id="calcSteps" style="display:none;">
+    <h2>Worked Steps</h2>
+    <div class="steps" id="calcStepsBody"></div>
+  </div>
+</section>
+
+<!-- ============ PANEL: DIVIDE INTO EQUAL SUBNETS ============ -->
+<section class="panel" id="panel-divide">
+  <div class="card">
+    <h2>Create Your Own Subnets <span class="tag">equal-size subnetting</span></h2>
+    <p class="lead">Give a base network, then say how many subnets you need (or how many hosts each one must hold). This borrows host bits and lists every resulting subnet — exactly like Topic 9's "subnet within an octet boundary" tables.</p>
+    <div class="grid g3">
+      <div>
+        <label>Base Network Address</label>
+        <input type="text" id="divIp" value="192.168.1.0">
+      </div>
+      <div>
+        <label>Base Prefix</label>
+        <input type="number" id="divPrefix" value="24" min="1" max="30">
+      </div>
+      <div>
+        <label>Split By</label>
+        <select id="divMode">
+          <option value="subnets">Number of subnets needed</option>
+          <option value="hosts">Hosts needed per subnet</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid g3" style="margin-top:14px;">
+      <div>
+        <label id="divTargetLabel">Number of subnets</label>
+        <input type="number" id="divTarget" value="4" min="1">
+      </div>
+      <div style="align-self:end;"><button class="btn" onclick="runDivide()" style="width:100%;">Generate Subnets</button></div>
+      <div></div>
+    </div>
+    <div id="divSummary"></div>
+    <div id="divBitView"></div>
+    <div id="divTableWrap"></div>
+  </div>
+</section>
+
+<!-- ============ PANEL: VLSM / ADDRESS TABLE BUILDER ============ -->
+<section class="panel" id="panel-vlsm">
+  <div class="card">
+    <h2>Address Table Builder <span class="tag">VLSM — variable-size subnets</span></h2>
+    <p class="lead">This is the real exam skill from Topic 10: given a base network and a list of LANs/WAN links with different host counts, build a full VLSM address table with zero wasted addresses. Largest requirement is always allocated first.</p>
+    <div class="grid g2">
+      <div>
+        <label>Base Network Address</label>
+        <input type="text" id="vlsmIp" value="192.168.1.0">
+      </div>
+      <div>
+        <label>Base Prefix</label>
+        <input type="number" id="vlsmPrefix" value="24" min="1" max="30">
+      </div>
+    </div>
+    <h4 style="font-family:var(--mono); font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em; margin:20px 0 10px;">Subnet / Link Requirements</h4>
+    <div id="vlsmReqRows"></div>
+    <div style="display:flex; gap:10px; margin-top:6px; flex-wrap:wrap;">
+      <button class="btn ghost small" onclick="addReqRow()">+ Add Row</button>
+      <button class="btn ghost small" onclick="loadSampleTopology()">Load Sample Topology (4 LANs + 3 WAN links)</button>
+      <button class="btn small" onclick="runVLSM()">Build Address Table</button>
+    </div>
+    <div id="vlsmSummary"></div>
+    <div id="vlsmTableWrap"></div>
+  </div>
+
+  <div class="card">
+    <h2>How This Is Built — The Method</h2>
+    <div class="steps">
+      <div class="step"><h4>Step 1 — List every requirement</h4><p>Write down every LAN and every point-to-point WAN link that needs an address block, with the number of usable hosts each one needs. WAN links between two routers always need exactly 2 hosts.</p></div>
+      <div class="step"><h4>Step 2 — Sort largest to smallest</h4><p>Always allocate the biggest host requirement first. This is the golden rule of VLSM — if you allocate small blocks first, you fragment the space and can't fit the big ones later.</p></div>
+      <div class="step"><h4>Step 3 — Find the smallest block that fits</h4><p>For N hosts needed, find the smallest power of 2 that is ≥ N + 2 (network + broadcast address are reserved). That gives you the block size, and 32 − log2(block size) gives you the prefix.</p></div>
+      <div class="step"><h4>Step 4 — Place it on a boundary</h4><p>The network address of each block must be a multiple of its own block size (e.g. a /29 block of 8 addresses must start at a multiple of 8). The calculator above snaps each block to the next valid boundary automatically.</p></div>
+      <div class="step"><h4>Step 5 — Repeat for the next requirement</h4><p>Move the cursor to the end of the block you just placed, and repeat from Step 3 for the next-largest requirement, until every row has an address.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PANEL: IPv6 PRACTICE ============ -->
+<section class="panel" id="panel-ipv6">
+  <div class="card">
+    <h2>IPv6 Compression Trainer <span class="tag">Topic 11</span></h2>
+    <p class="lead">Practice the two compression rules: (1) omit leading zeros in each hextet, (2) replace the single longest run of consecutive all-zero hextets with <code>::</code> — only once per address.</p>
+    <div class="pill-tabs">
+      <button class="active" data-ipv6mode="compress" onclick="setIpv6Mode('compress')">Expand → Compress</button>
+      <button data-ipv6mode="expand" onclick="setIpv6Mode('expand')">Compressed → Expand</button>
+      <button data-ipv6mode="quiz" onclick="setIpv6Mode('quiz')">Quiz Me</button>
+    </div>
+    <div id="ipv6Body"></div>
+  </div>
+
+  <div class="card">
+    <h2>Quick Reference — IPv6</h2>
+    <table class="ref">
+      <tr><th>Address type</th><th>Range / Prefix</th><th>Purpose</th></tr>
+      <tr><td>Global Unicast (GUA)</td><td>2000::/3</td><td>Globally routable, like a public IPv4 address</td></tr>
+      <tr><td>Unique Local (ULA)</td><td>fc00::/7</td><td>Private/internal use, not globally routed</td></tr>
+      <tr><td>Link-Local (LLA)</td><td>fe80::/10</td><td>Auto-created on every interface, never routed off the link</td></tr>
+      <tr><td>Multicast</td><td>ff00::/8</td><td>One packet → many destinations</td></tr>
+      <tr><td>All-nodes multicast</td><td>ff02::1</td><td>Every IPv6 device on the link</td></tr>
+      <tr><td>All-routers multicast</td><td>ff02::2</td><td>Every IPv6 router on the link</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ PANEL: PRACTICE TEST ============ -->
+<section class="panel" id="panel-test">
+  <div class="card">
+    <h2>Practice Test Paper <span class="tag">questions · mixed topics</span></h2>
+    <p class="lead">Covers Topics 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12. Answer everything then hit <strong>Grade My Test</strong> at the bottom — correct/incorrect is highlighted with a short explanation for each question.</p>
+  </div>
+  <div id="testContainer"></div>
+</section>
+
+<footer>Built for DenniXD's IT1x13 revision — Networking Today · Protocols &amp; Models · Physical Layer · Data Link &amp; Ethernet · Ethernet Switching · IPv4 · Gateways &amp; ARP · Subnetting Maths &amp; Implementation · IPv6 · Routing &amp; Transport</footer>
+</div>
+
+<script>
+/* =========================================================
+   TAB NAVIGATION
+========================================================= */
+document.querySelectorAll('#tabNav button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('#tabNav button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+
+/* =========================================================
+   NOTES DATA + RENDER
+========================================================= */
+const NOTES = [
+{
+  num:'01', title:'Networking Today — Network Types & Devices',
+  html:`
+  <h4>Types of Networks</h4>
+  <ul>
+    <li><strong>SOHO (Small Office/Home Office):</strong> the network type specifically designed to let a remote worker connect back to a corporate office.</li>
+    <li><strong>Small home networks</strong> connect a few devices in a home to each other and the internet.</li>
+    <li><strong>LAN (Local Area Network):</strong> spans a single site — home, building, or campus.</li>
+    <li>Larger organizations connect multiple sites together across a <strong>WAN</strong>, ultimately reaching the global internet.</li>
+  </ul>
+  <h4>End Devices vs Intermediary Devices</h4>
+  <ul>
+    <li><strong>End devices</strong> are where a message originates or ends — they have a network interface (NIC). Examples: workstation, IP phone, file server, wireless tablet.</li>
+    <li><strong>Intermediary devices</strong> connect end devices together and forward traffic between them — they do not originate the data. Examples: multilayer switch, router, wireless access point.</li>
+    <li>A device may have <strong>more than one NIC</strong> — e.g. a laptop with both a wired Ethernet NIC and a wireless NIC.</li>
+  </ul>
+  <h4>Four Basic Network Requirements</h4>
+  <table class="ref">
+    <tr><th>Requirement</th><th>What it means</th></tr>
+    <tr><td>Fault Tolerance</td><td>The network limits the impact of a failure — the fewer devices affected, the better. Achieved through redundant paths/links.</td></tr>
+    <tr><td>Scalability</td><td>A scalable network can expand to support new users and applications quickly, without degrading performance for existing users.</td></tr>
+    <tr><td>Quality of Service (QoS)</td><td>Manages network resources so priority traffic (e.g. voice/video calls) is not degraded by less time-sensitive traffic.</td></tr>
+    <tr><td>Security</td><td>Protects the network infrastructure and the data traveling across it — covers confidentiality, integrity, and availability.</td></tr>
+  </table>
+  <h4>Bandwidth vs Real-World Throughput</h4>
+  <ul>
+    <li>An ISP might advertise 1 Gbps, but a real speed test often shows much less. Contributing factors include: <strong>network congestion</strong>, <strong>protocol overhead</strong>, <strong>limitations of end-user hardware</strong>, and the <strong>connection type</strong> (e.g. Wi-Fi vs a wired connection).</li>
+  </ul>
+  <h4>Home Network Security</h4>
+  <ul>
+    <li>An <strong>integrated router</strong> (the typical home Wi-Fi router) is more secure than a single PC connected directly to a modem, because the router provides hardware firewall/NAT features that hide internal devices from direct exposure to the internet.</li>
+  </ul>
+  <h4>Bits and Bytes</h4>
+  <ul>
+    <li>Humans see photos, videos, and text — but the end device only ever sees <strong>binary data</strong> (1s and 0s).</li>
+    <li>A <strong>bit</strong> is a single binary digit (0 or 1). A <strong>byte</strong> is a sequence of 8 bits.</li>
+  </ul>
+  `
+},
+{
+  num:'02', title:'Communicating in the Network — Protocols & Models',
+  html:`
+  <h4>The Rules of Communication</h4>
+  <ul>
+    <li>Every method of communication has to establish rules, or protocols, before communicating successfully. These rules govern: <strong>message encoding</strong>, <strong>formatting and encapsulation</strong>, <strong>message size</strong>, <strong>timing</strong>, and <strong>delivery options</strong>.</li>
+    <li><strong>Encoding</strong> is the process that converts information (thoughts, letters, numbers) into a form acceptable for transmission over a specific medium.</li>
+    <li>Messages that are not correctly formatted according to the protocol are <strong>not successfully delivered</strong>, and are not processed by the receiving device or intermediary devices.</li>
+  </ul>
+  <h4>Encapsulation & De-encapsulation</h4>
+  <ul>
+    <li><strong>Encapsulation</strong> is the process of placing one message format (e.g. the data) inside another format (e.g. an addressed protocol header) so it can be delivered across a network.</li>
+    <li>Classic analogy: a <strong>letter</strong> (the data) is placed inside an <strong>envelope</strong> (the IP protocol, which adds addressing). The recipient performs <strong>de-encapsulation</strong> by removing the letter from the envelope.</li>
+  </ul>
+  <h4>Delivery Options: Unicast, Multicast, Broadcast</h4>
+  <table class="ref">
+    <tr><th>Type</th><th>Description</th><th>Example</th></tr>
+    <tr><td>Unicast</td><td>One-to-one — a message sent to a single destination host</td><td>Messaging a single friend on WhatsApp</td></tr>
+    <tr><td>Multicast</td><td>One-to-many — sent to a specific group of hosts, not everyone</td><td>Messaging a WhatsApp group chat</td></tr>
+    <tr><td>Broadcast</td><td>One-to-all — sent to every host on the local network</td><td>An ARP request</td></tr>
+  </table>
+  <h4>OSI Reference Model vs TCP/IP Protocol Model</h4>
+  <ul>
+    <li>The <strong>OSI model</strong> is considered a <em>reference</em> model — it provides a conceptual framework for understanding network functions, layer by layer, without dictating exactly which protocols must be used at each layer.</li>
+    <li>The <strong>TCP/IP model</strong> is considered a <em>protocol</em> model — it describes the specific suite of protocols that is actually used in networks today.</li>
+  </ul>
+  <table class="ref">
+    <tr><th>OSI Model (7 layers)</th><th>TCP/IP Model (4 layers)</th></tr>
+    <tr><td>7. Application</td><td rowspan="3">Application</td></tr>
+    <tr><td>6. Presentation</td></tr>
+    <tr><td>5. Session</td></tr>
+    <tr><td>4. Transport</td><td>Transport</td></tr>
+    <tr><td>3. Network</td><td>Internet</td></tr>
+    <tr><td>2. Data Link</td><td rowspan="2">Network Access</td></tr>
+    <tr><td>1. Physical</td></tr>
+  </table>
+  <h4>The PDU Stack Journey</h4>
+  <ul>
+    <li>As data moves <strong>down</strong> the stack toward transmission, each layer's protocol adds its own header (and sometimes trailer) information — this is <strong>encapsulation</strong>, and the data's name (the PDU, Protocol Data Unit) changes at each layer.</li>
+  </ul>
+  <table class="ref">
+    <tr><th>Layer</th><th>PDU Name</th></tr>
+    <tr><td>Application / Presentation / Session</td><td>Data</td></tr>
+    <tr><td>Transport</td><td>Segment</td></tr>
+    <tr><td>Network</td><td>Packet</td></tr>
+    <tr><td>Data Link</td><td>Frame</td></tr>
+    <tr><td>Physical</td><td>Bits</td></tr>
+  </table>
+  <div class="note">The PDU journey: <strong>Data → Segment → Packet → Frame → Bits</strong>. On the receiving end, the reverse happens layer by layer — this is de-encapsulation. When the next device receives the bits, the very first thing it does is de-encapsulate the frame.</div>
+  <h4>Layer 2 vs Layer 3 Addressing on the Journey</h4>
+  <ul>
+    <li>The <strong>Layer 3 (IP) address</strong> stays the same from the original source all the way to the final destination.</li>
+    <li>The <strong>Layer 2 (MAC) address</strong> changes at every hop (every router along the path) — each router re-encapsulates the packet into a new frame with new source/destination MACs for the next link.</li>
+    <li>If the destination is on a remote network, the frame's destination MAC address is the <strong>default gateway's</strong> MAC address, not the final destination host's MAC.</li>
+  </ul>
+  `
+},
+{
+  num:'03', title:'The Physical Layer',
+  html:`
+  <h4>Role of the Physical Layer</h4>
+  <ul>
+    <li>The physical layer accepts a complete frame from the <strong>Data Link layer</strong> and encodes it as a series of signals to be transmitted onto the local media.</li>
+    <li>It transports bits across the network media, and a physical connection to the local network must be established before any communication can occur.</li>
+    <li>Transmitting bits onto the local media is the <strong>last step</strong> in the encapsulation process.</li>
+  </ul>
+  <h4>Three Functional Areas of Physical Layer Standards</h4>
+  <table class="ref">
+    <tr><th>Area</th><th>What it covers</th></tr>
+    <tr><td>Physical components</td><td>The hardware devices, media, and connectors that transmit the signals</td></tr>
+    <tr><td>Encoding</td><td>The method used to convert a stream of bits into a predefined "code" recognizable by the next device (a signaling method)</td></tr>
+    <tr><td>Signaling</td><td>How bit values "1" and "0" are represented physically on the medium (a voltage change, a light pulse, a radio wave modulation)</td></tr>
+  </table>
+  <div class="note">Exam tip: Encoding and Signaling are often confused. <strong>Encoding</strong> converts the data/frame into a bit pattern format. <strong>Signaling</strong> is how those individual bits are physically represented as energy on the medium.</div>
+  <h4>The Three Primary Media Types</h4>
+  <table class="ref">
+    <tr><th>Media</th><th>How data is represented</th><th>Key traits</th></tr>
+    <tr><td>Copper (UTP)</td><td>Electrical impulses</td><td>Lowest cost, easiest to install, but shortest distance and lowest bandwidth of the three. Wires are grouped in twisted pairs specifically to cancel out electromagnetic interference (EMI) and crosstalk from adjacent wires.</td></tr>
+    <tr><td>Fiber-optic</td><td>Pulses of light</td><td>Can be made of glass <em>or plastic</em>. Immune to electrical interference because it uses light, not electricity. Very high bandwidth and can carry signals over relatively long distances — ideal for high-traffic, point-to-point interconnections between buildings. Higher cost and more installation skill required.</td></tr>
+    <tr><td>Wireless</td><td>Modulation of electromagnetic (radio) waves</td><td>No physical connector needed, but susceptible to interference and a security concern — anyone within range of the transmission area can potentially gain access. WLANs generally operate in half-duplex, and more users on a WLAN means reduced bandwidth for each user.</td></tr>
+  </table>
+  <h4>Copper vs Fiber — Implementation Trade-offs</h4>
+  <ul>
+    <li><strong>Fiber is superior in:</strong> bandwidth (much higher) and distance (much longer runs without a repeater).</li>
+    <li><strong>UTP (copper) is superior in:</strong> cost (lowest media/connector cost of the common cable types) and ease of installation (requires less specialized skill).</li>
+  </ul>
+  <h4>Wireless & IEEE Standards</h4>
+  <table class="ref">
+    <tr><th>Standard</th><th>Technology</th></tr>
+    <tr><td>IEEE 802.11</td><td>Wireless LAN (Wi-Fi)</td></tr>
+    <tr><td>IEEE 802.15</td><td>Wireless PAN (Bluetooth)</td></tr>
+    <tr><td>IEEE 802.16</td><td>WiMAX</td></tr>
+    <tr><td>IEEE 802.15.4</td><td>Zigbee — designed for low-power IoT applications</td></tr>
+  </table>
+  <ul>
+    <li>To build a Wireless LAN (WLAN) you need at minimum: (1) a <strong>Wireless Access Point (WAP)</strong> or wireless router, and (2) <strong>wireless NICs</strong> on every end device that will join it.</li>
+    <li><strong>Environmental interference:</strong> metal shelves or structures can reflect or block radio waves, reducing effective coverage. Motors and similar electrical equipment generate EMI, which can degrade signal integrity and cause data loss.</li>
+  </ul>
+  `
+},
+{
+  num:'04', title:'Data Link Layer & Ethernet Frame Fundamentals',
+  html:`
+  <h4>Role of the Data Link Layer</h4>
+  <ul>
+    <li>The Data Link layer describes the methods used to exchange data frames over a common local media, and allows the upper layers to access the physical media.</li>
+    <li>It is responsible for the NIC-to-NIC communication between devices on the <strong>same</strong> local network, and it performs <strong>error detection</strong> (but generally not correction).</li>
+    <li>The Data Link layer is <strong>not aware</strong> of what's inside the frame's data field — whether it's an IPv4 packet, an ARP message, or an IPv6 packet.</li>
+  </ul>
+  <h4>Two Sublayers</h4>
+  <table class="ref">
+    <tr><th>Sublayer</th><th>Function</th></tr>
+    <tr><td>LLC (Logical Link Control)</td><td>Communicates between the networking software (upper layers) and the device hardware — places information in the frame identifying which network layer protocol is being used (e.g. IPv4 vs IPv6).</td></tr>
+    <tr><td>MAC (Media Access Control)</td><td>Implemented by hardware, typically in the NIC. Provides data link layer addressing and delimits data according to the physical signaling requirements — i.e. media access control and encapsulation.</td></tr>
+  </table>
+  <h4>Ethernet Frame Structure</h4>
+  <ul>
+    <li>A frame is made up of three general parts: <strong>Header</strong> (addressing and control information), <strong>Data</strong> (the encapsulated payload from the upper layer), and <strong>Trailer</strong> (used for error detection).</li>
+    <li>Frame fields provide the addressing and control needed to deliver the frame across the local media, and also mark the beginning and end of the frame.</li>
+    <li>The <strong>error detection</strong> field (e.g. the FCS/CRC check) is located in the frame's <strong>trailer</strong>.</li>
+  </ul>
+  <h4>Network Topologies</h4>
+  <ul>
+    <li><strong>Physical topology</strong> shows the actual physical connections and how devices are physically interconnected (cables, ports).</li>
+    <li><strong>Logical topology</strong> shows how data actually flows on a network, which can differ from the physical layout.</li>
+  </ul>
+  <table class="ref">
+    <tr><th>Topology</th><th>Description</th></tr>
+    <tr><td>Point-to-point</td><td>A permanent link between exactly two endpoints</td></tr>
+    <tr><td>Hub-and-spoke</td><td>A central device connects to multiple remote sites, each remote site links only to the hub</td></tr>
+    <tr><td>Mesh</td><td>Provides high availability and fault tolerance — multiple paths exist between nodes, so if one link fails, traffic can be rerouted</td></tr>
+    <tr><td>Star</td><td>The most common LAN topology today — highly scalable and easy to troubleshoot, since every device connects to a central switch</td></tr>
+  </table>
+  <h4>MAC Addresses</h4>
+  <ul>
+    <li>An Ethernet MAC address is <strong>48 bits</strong> (6 bytes) long, written in hexadecimal, and burned into the NIC (a "physical address").</li>
+    <li>It is split into two 24-bit (3-byte) halves:</li>
+  </ul>
+  <table class="ref">
+    <tr><th>Portion</th><th>Bits</th><th>Meaning</th></tr>
+    <tr><td>OUI (Organizationally Unique Identifier)</td><td>First 24 bits (3 bytes)</td><td>Identifies the manufacturer/vendor</td></tr>
+    <tr><td>Device-specific value</td><td>Last 24 bits (3 bytes)</td><td>A unique serial number assigned by the vendor</td></tr>
+  </table>
+  <div class="note">Example: MAC address <strong>00-60-2F-3A-07-BC</strong> → Vendor (OUI) = <strong>00-60-2F</strong>, Device-specific serial = <strong>3A-07-BC</strong>.</div>
+  <h4>Frame MAC Address Rules</h4>
+  <ul>
+    <li>A <strong>source</strong> MAC address in a frame must always be a <strong>unicast</strong> address — it identifies the one NIC that actually sent the frame.</li>
+    <li>A <strong>unicast</strong> destination MAC identifies one specific destination device.</li>
+    <li>The Ethernet <strong>broadcast</strong> MAC address is always <code>FF-FF-FF-FF-FF-FF</code> — flooded out every switch port except the incoming one.</li>
+    <li>An Ethernet <strong>multicast</strong> destination MAC address for IPv4 traffic always begins with <code>01-00-5E</code>.</li>
+  </ul>
+  `
+},
+{
+  num:'05', title:'Ethernet Switching — MAC Address Table & Forwarding',
+  html:`
+  <h4>The MAC Address Table</h4>
+  <ul>
+    <li>A Layer 2 switch forwards frames using <strong>MAC addresses only</strong> — it has no idea what's inside the frame (IPv4, ARP, IPv6, etc.).</li>
+    <li>The table is also called a <strong>CAM table</strong> (content addressable memory). It's empty when the switch first powers on.</li>
+    <li><strong>Learning:</strong> for every incoming frame, the switch checks the <em>source</em> MAC address. New MAC &rarr; add it with the incoming port. Known MAC on a different port &rarr; replace the entry (device moved). Entries expire after ~5 minutes by default.</li>
+    <li><strong>Forwarding:</strong> the switch checks the <em>destination</em> MAC. Match in table &rarr; forward out that one port ("filtering"). No match ("unknown unicast") &rarr; flood out all ports except the incoming one. Broadcast/multicast &rarr; always flooded.</li>
+  </ul>
+  <h4>Forwarding Methods</h4>
+  <table class="ref">
+    <tr><th>Method</th><th>How it works</th><th>Trade-off</th></tr>
+    <tr><td>Store-and-forward</td><td>Receives the whole frame, checks CRC, then forwards</td><td>Higher latency, but drops corrupt frames — needed for QoS</td></tr>
+    <tr><td>Cut-through: Fast-forward</td><td>Forwards as soon as the destination MAC is read</td><td>Lowest latency, no error checking — bad frames get relayed</td></tr>
+    <tr><td>Cut-through: Fragment-free</td><td>Checks only the first 64 bytes before forwarding</td><td>Compromise — most collisions happen in the first 64 bytes</td></tr>
+  </table>
+  <h4>Memory Buffering</h4>
+  <ul>
+    <li><strong>Port-based memory:</strong> frames queue per port; one busy destination port can delay every frame behind it, even for other free ports.</li>
+    <li><strong>Shared memory:</strong> one common buffer pool dynamically allocated to any port — supports asymmetric switching (different speeds on different ports, e.g. a fast server port).</li>
+  </ul>
+  <h4>Duplex, Speed & Cabling</h4>
+  <ul>
+    <li><strong>Full-duplex:</strong> send and receive simultaneously. <strong>Half-duplex:</strong> only one direction at a time.</li>
+    <li>Gigabit Ethernet ports are always full-duplex.</li>
+    <li><strong>Duplex mismatch</strong> (one side full, other half) is one of the most common causes of poor performance on 10/100 Mbps links — usually from mismatched autonegotiation.</li>
+    <li><strong>Auto-MDIX</strong> auto-detects straight-through vs crossover cabling, but you should still use the correct cable type rather than rely on it.</li>
+  </ul>
+  <div class="note">Exam tip: "unknown unicast" flooding vs broadcast flooding is a common trick question — both get flooded, but for different reasons (no table entry vs destination is literally everyone).</div>
+  `
+},
+{
+  num:'06', title:'IPv4 — Network Layer, Header, Addressing',
+  html:`
+  <h4>Network Layer Characteristics</h4>
+  <ul>
+    <li>Four jobs: addressing end devices, encapsulation, routing, de-encapsulation.</li>
+    <li>IP is <strong>connectionless</strong> (no handshake), <strong>best-effort</strong> (no guaranteed delivery, no acknowledgments), and <strong>media independent</strong> (doesn't care if the link is copper, fiber, or wireless).</li>
+    <li>Because IP is unreliable by design, it relies on higher layers (like TCP) for retransmission, reordering and error recovery.</li>
+    <li><strong>Fragmentation:</strong> Layer 3 splits a packet when it's bigger than the outgoing link's MTU. This adds latency. IPv6 does not fragment packets in transit.</li>
+  </ul>
+  <h4>IPv4 Header — Key Fields</h4>
+  <table class="ref">
+    <tr><th>Field</th><th>Purpose</th></tr>
+    <tr><td>Version</td><td>4-bit field, 0100 for IPv4</td></tr>
+    <tr><td>Differentiated Services (DiffServ/ToS)</td><td>Used for QoS marking</td></tr>
+    <tr><td>Header Checksum</td><td>Detects corruption in the header only</td></tr>
+    <tr><td>TTL</td><td>Layer 3 hop count — hits 0 &rarr; router discards the packet</td></tr>
+    <tr><td>Protocol</td><td>Identifies the next layer protocol: ICMP, TCP, UDP…</td></tr>
+    <tr><td>Source / Destination Address</td><td>Two 32-bit fields — the most important part of the header</td></tr>
+  </table>
+  <h4>Address Structure: Network + Host</h4>
+  <ul>
+    <li>32-bit address, written as 4 octets in dotted-decimal (e.g. 209.165.200.1).</li>
+    <li>Subnet mask (or prefix length, e.g. /24) tells you which bits are network vs host.</li>
+    <li><strong>ANDing:</strong> AND the IP address with the subnet mask, bit by bit, to get the network address. Rule: 1 AND 1 = 1, everything else = 0.</li>
+    <li>Within every subnet: <strong>network address</strong> (all host bits = 0), <strong>usable host range</strong> (first host = network+1, last host = broadcast&minus;1), <strong>broadcast address</strong> (all host bits = 1).</li>
+  </ul>
+  <table class="ref">
+    <tr><th>Subnet Mask</th><th>Prefix</th></tr>
+    <tr><td>255.0.0.0</td><td>/8</td></tr>
+    <tr><td>255.255.0.0</td><td>/16</td></tr>
+    <tr><td>255.255.255.0</td><td>/24</td></tr>
+    <tr><td>255.255.255.128</td><td>/25</td></tr>
+    <tr><td>255.255.255.192</td><td>/26</td></tr>
+    <tr><td>255.255.255.224</td><td>/27</td></tr>
+    <tr><td>255.255.255.240</td><td>/28</td></tr>
+    <tr><td>255.255.255.248</td><td>/29</td></tr>
+    <tr><td>255.255.255.252</td><td>/30</td></tr>
+  </table>
+  <h4>Unicast, Broadcast, Multicast</h4>
+  <ul>
+    <li><strong>Unicast:</strong> one sender &rarr; one destination.</li>
+    <li><strong>Broadcast:</strong> one sender &rarr; every host on the local network.</li>
+    <li><strong>Multicast:</strong> one sender &rarr; a specific group address (e.g. 224.10.10.5).</li>
+  </ul>
+  <h4>Public vs Private (RFC 1918) & Special Addresses</h4>
+  <table class="ref">
+    <tr><th>Range</th><th>Notes</th></tr>
+    <tr><td>10.0.0.0/8</td><td>10.0.0.0 – 10.255.255.255 (private)</td></tr>
+    <tr><td>172.16.0.0/12</td><td>172.16.0.0 – 172.31.255.255 (private)</td></tr>
+    <tr><td>192.168.0.0/16</td><td>192.168.0.0 – 192.168.255.255 (private)</td></tr>
+    <tr><td>127.0.0.0/8</td><td>Loopback — usually just 127.0.0.1, tests local TCP/IP</td></tr>
+    <tr><td>169.254.0.0/16</td><td>Link-local / APIPA — self-assigned when no DHCP server is found</td></tr>
+  </table>
+  <ul>
+    <li><strong>NAT</strong> translates private addresses to a public address, typically on the edge router.</li>
+    <li>Legacy classful addressing (Class A/B/C/D/E) wasted address space and was replaced by classless (CIDR) addressing.</li>
+  </ul>
+  `
+},
+{
+  num:'07', title:'Gateways & ARP',
+  html:`
+  <h4>Routers as Gateways</h4>
+  <ul>
+    <li>Every router interface is the boundary of a separate network. Hosts must use the router (the <strong>default gateway</strong>) to reach any other network.</li>
+    <li>Each host needs the default gateway's IP address — either static, or via DHCP.</li>
+    <li>A wireless router acting as a DHCP server hands out an internal (private) address, subnet mask, and its own interface address as the default gateway to internal hosts.</li>
+    <li>The router is the boundary between the <strong>internal/inside</strong> network (private) and the <strong>external/outside</strong> network (usually public, from the ISP).</li>
+  </ul>
+  <h4>MAC vs IP — Which Address Gets Used Where</h4>
+  <ul>
+    <li>Two addresses matter for delivery: the <strong>MAC address</strong> (NIC-to-NIC, same network only) and the <strong>IP address</strong> (source to final destination, can cross networks).</li>
+    <li><strong>Same network:</strong> destination MAC = the actual destination device's MAC.</li>
+    <li><strong>Remote network:</strong> destination MAC = the default gateway's (router interface's) MAC — the IP address stays the same all the way to the final destination, but the MAC address changes at every hop.</li>
+    <li>Each router re-encapsulates the packet into a new frame with new source/destination MACs for the next link.</li>
+    <li>For IPv6, the equivalent resolution process is <strong>ICMPv6 Neighbor Discovery (ND)</strong> instead of ARP.</li>
+  </ul>
+  <h4>ARP — Address Resolution Protocol</h4>
+  <ul>
+    <li>Purpose: resolve a known IPv4 address to an unknown MAC address, and maintain an ARP table of these mappings.</li>
+  </ul>
+  <div class="steps">
+    <div class="step"><h4>Broadcast the request</h4><p>Sending host broadcasts a frame (dest MAC = broadcast) containing the target's IPv4 address.</p></div>
+    <div class="step"><h4>Target replies</h4><p>Every host compares the IP in the message to its own; only the match replies directly with its MAC address.</p></div>
+    <div class="step"><h4>Cache the mapping</h4><p>The sender stores the IP&harr;MAC pair in its ARP table so it doesn't need to ARP again until the entry times out.</p></div>
+  </div>
+  <ul>
+    <li>Windows: <code>arp -a</code>. Cisco router: <code>show ip arp</code>.</li>
+    <li>Entries expire after a timer (OS-dependent) or can be cleared manually.</li>
+    <li><strong>Risks:</strong> excessive ARP broadcasts can hurt performance; ARP replies can be spoofed ("ARP poisoning"). Enterprise switches include mitigation features.</li>
+  </ul>
+  `
+},
+{
+  num:'09', title:'Subnetting — The Maths',
+  html:`
+  <h4>Why Subnet?</h4>
+  <ul>
+    <li>Broadcasts are stopped only by routers — each router interface bounds one broadcast domain.</li>
+    <li>Large broadcast domains = more broadcast traffic = worse performance. <strong>Subnetting</strong> breaks a big network into smaller broadcast domains.</li>
+    <li>Other reasons: enforce security policy between subnets, limit blast radius of abnormal traffic, organize by location / function / device type.</li>
+  </ul>
+  <h4>The Core Formulas</h4>
+  <ul>
+    <li><strong>Number of subnets created</strong> when you borrow <em>n</em> bits = 2<sup>n</sup></li>
+    <li><strong>Number of usable hosts per subnet</strong> with <em>h</em> host bits left = 2<sup>h</sup> &minus; 2 (minus network address and broadcast address)</li>
+    <li>Borrowing more bits for subnets &rarr; fewer bits left for hosts &rarr; more subnets but fewer hosts each. It's always a trade-off.</li>
+  </ul>
+  <table class="ref">
+    <tr><th>Prefix</th><th>Mask</th><th># Subnets (from a /24)</th><th># Usable Hosts</th></tr>
+    <tr><td>/25</td><td>255.255.255.128</td><td>2</td><td>126</td></tr>
+    <tr><td>/26</td><td>255.255.255.192</td><td>4</td><td>62</td></tr>
+    <tr><td>/27</td><td>255.255.255.224</td><td>8</td><td>30</td></tr>
+    <tr><td>/28</td><td>255.255.255.240</td><td>16</td><td>14</td></tr>
+    <tr><td>/29</td><td>255.255.255.248</td><td>32</td><td>6</td></tr>
+    <tr><td>/30</td><td>255.255.255.252</td><td>64</td><td>2</td></tr>
+  </table>
+  <h4>Subnetting Beyond One Octet</h4>
+  <ul>
+    <li>Subnetting a /16 or /8 works the same way — you're still just borrowing bits from the host portion, they just span into earlier octets.</li>
+    <li>Worked example: a network needing 100 subnets from a /16 &rarr; need 2<sup>n</sup> &ge; 100 &rarr; n = 7 (2<sup>7</sup> = 128 subnets) &rarr; new prefix /23.</li>
+    <li>Worked example: 1000 subnets from a /8 &rarr; 2<sup>n</sup> &ge; 1000 &rarr; n = 10 (1024 subnets) &rarr; new prefix /18.</li>
+  </ul>
+  <h4>Planning Subnets: Minimize Waste, Maximize Count</h4>
+  <ul>
+    <li>Two questions drive every subnetting decision: how many hosts does each subnet need, and how many subnets do you need in total?</li>
+    <li>Worked example: HQ has 172.16.0.0/22 (1022 hosts available). 5 sites need internet links (10 subnets total), largest subnet needs 40 addresses &rarr; choose /26 (62 usable hosts) for all 10 subnets — the smallest prefix that still covers the biggest requirement.</li>
+  </ul>
+  <div class="note">Exam tip: always find the <strong>largest</strong> host requirement first — your subnet size must be big enough for it, even if every other subnet is smaller (unless you're using VLSM — see Topic 10).</div>
+  `
+},
+{
+  num:'10', title:'Subnetting — Implementation (VLSM)',
+  html:`
+  <h4>The Problem With Fixed-Size Subnetting</h4>
+  <ul>
+    <li>Worked example: 7 subnets needed (4 LANs + 3 WAN links), largest LAN needs 28 hosts. Using one fixed mask (/27, 30 hosts each) for everything works — but each 2-host WAN link still gets 30 addresses, wasting 28 addresses &times; 3 links = 84 wasted addresses.</li>
+  </ul>
+  <h4>VLSM — Variable Length Subnet Masking</h4>
+  <ul>
+    <li>VLSM lets you "subnet a subnet" — every subnet can have its own prefix length sized exactly to what it needs.</li>
+    <li><strong>Golden rule:</strong> always satisfy the largest host requirement first, then keep subnetting the remaining space for smaller requirements.</li>
+    <li>Result: LANs get big blocks (e.g. /27 for 28 hosts), WAN links get tiny blocks (/30 for exactly 2 hosts) — almost zero waste.</li>
+  </ul>
+  <h4>Structured Address Planning</h4>
+  <ul>
+    <li>Before assigning any address, do a network requirement study: how many subnets, how many hosts per subnet, which devices belong where, which parts are private vs public.</li>
+    <li>Also plan DHCP address pools and Layer 2 VLAN pools as part of the same design.</li>
+  </ul>
+  <h4>Device Address Assignment Types</h4>
+  <table class="ref">
+    <tr><th>Device Type</th><th>Typical Addressing</th></tr>
+    <tr><td>End-user clients</td><td>DHCP (dynamic) — reduces manual errors</td></tr>
+    <tr><td>Servers & peripherals</td><td>Static — needs to be predictable</td></tr>
+    <tr><td>Internet-facing servers</td><td>Public IPv4, usually via NAT</td></tr>
+    <tr><td>Intermediary devices (switches, APs)</td><td>Static, for management/monitoring/security</td></tr>
+    <tr><td>Gateway (router/firewall interface)</td><td>Static — this is the default gateway address</td></tr>
+  </table>
+  <div class="note">This topic is exactly what the "Address Table Builder" tab on this page does — practice there until you can do it by hand.</div>
+  `
+},
+{
+  num:'11', title:'IPv6 Addressing',
+  html:`
+  <h4>Why IPv6?</h4>
+  <ul>
+    <li>IPv4's 32-bit space is running out. IPv6 uses a 128-bit address space — effectively unlimited for practical purposes.</li>
+    <li><strong>Coexistence strategies</strong> while migrating: <strong>Dual stack</strong> (run both protocols at once), <strong>Tunneling</strong> (IPv6 packet wrapped inside an IPv4 packet), <strong>Translation / NAT64</strong> (lets IPv6-only devices talk to IPv4-only devices).</li>
+  </ul>
+  <h4>Address Representation</h4>
+  <ul>
+    <li>128 bits, written in hexadecimal as 8 groups of 4 hex digits ("hextets"), separated by colons: <code>x:x:x:x:x:x:x:x</code>. Not case-sensitive.</li>
+    <li><strong>Rule 1 — Omit leading zeros</strong> within each hextet (not trailing zeros): <code>0db8</code> &rarr; <code>db8</code>.</li>
+    <li><strong>Rule 2 — Double colon (::)</strong> replaces one contiguous run of all-zero hextets. Can only be used <strong>once</strong> per address, otherwise the address would be ambiguous.</li>
+  </ul>
+  <table class="ref">
+    <tr><th>Form</th><th>Example</th></tr>
+    <tr><td>Full</td><td>2001:0db8:0000:1111:0000:0000:0000:0200</td></tr>
+    <tr><td>Leading zeros omitted</td><td>2001:db8:0:1111:0:0:0:200</td></tr>
+    <tr><td>Fully compressed</td><td>2001:db8:0:1111::200</td></tr>
+  </table>
+  <h4>Address Types</h4>
+  <ul>
+    <li><strong>Unicast</strong> — one interface. <strong>Multicast</strong> — one packet delivered to many destinations. <strong>Anycast</strong> — one address on multiple devices; delivered to the nearest one.</li>
+    <li>IPv6 has <strong>no broadcast address</strong> — the all-nodes multicast (ff02::1) achieves the same effect.</li>
+    <li><strong>Prefix length /64 is recommended</strong> for LANs — SLAAC needs a 64-bit Interface ID to work, and it keeps subnetting simple.</li>
+  </ul>
+  <table class="ref">
+    <tr><th>Address Type</th><th>Range</th><th>Notes</th></tr>
+    <tr><td>Global Unicast (GUA)</td><td>2000::/3</td><td>Globally routable, like a public IPv4 address; starts with 2 or 3</td></tr>
+    <tr><td>Unique Local (ULA)</td><td>fc00::/7 – fdff::/7</td><td>Like RFC 1918 private addresses, but NOT meant for security/hiding</td></tr>
+    <tr><td>Link-Local (LLA)</td><td>fe80::/10</td><td>Auto-created on every interface; never routed; used as default gateway address in practice</td></tr>
+    <tr><td>Multicast</td><td>ff00::/8</td><td>ff02::1 = all-nodes, ff02::2 = all-routers; also solicited-node multicast</td></tr>
+  </table>
+  <h4>GUA Structure</h4>
+  <ul>
+    <li><strong>Global Routing Prefix</strong> — assigned by the ISP, identifies the site.</li>
+    <li><strong>Subnet ID</strong> — the organization's own subnetting field, between the routing prefix and interface ID.</li>
+    <li><strong>Interface ID</strong> — the host portion, equivalent to the IPv4 host bits; recommended 64 bits wide.</li>
+    <li>All-0s host address = reserved Subnet-Router anycast address (routers only).</li>
+  </ul>
+  <h4>Basic Cisco Configuration</h4>
+  <ul>
+    <li>GUA: <code>ipv6 address 2001:db8:acad:1::1/64</code></li>
+    <li>LLA (manual): <code>ipv6 address fe80::1:1 link-local</code></li>
+    <li>Best practice: use the router's <strong>LLA</strong> as the default gateway address for hosts, not the GUA.</li>
+  </ul>
+  `
+},
+{
+  num:'12', title:'Routing & Transport (TCP/UDP)',
+  html:`
+  <h4>Why We Need Routing</h4>
+  <ul>
+    <li>A router connects multiple Layer 3 networks and forwards based on <strong>IP address</strong> (vs a switch, which forwards on MAC address).</li>
+    <li>If the source and destination's network portions don't match, a router must be involved.</li>
+    <li>The router de-encapsulates the incoming frame, reads the destination IP, decides the outbound interface, then re-encapsulates into a new frame for the next hop.</li>
+  </ul>
+  <h4>The Routing Table & Default Gateway</h4>
+  <ul>
+    <li>Routing tables store <strong>network</strong> addresses and best paths — not individual host addresses. Entries can be dynamic (learned from other routers) or static (manually configured).</li>
+    <li>No matching entry &rarr; the router drops the packet, unless a <strong>default route</strong> is configured to catch unknown destinations.</li>
+    <li>A host uses ARP to find the default gateway's MAC address, then sends all off-network traffic there — the gateway must be correctly configured or remote communication fails entirely.</li>
+  </ul>
+  <h4>Transport Layer: TCP vs UDP</h4>
+  <table class="ref">
+    <tr><th>Feature</th><th>TCP</th><th>UDP</th></tr>
+    <tr><td>Connection</td><td>Connection-oriented (3-way handshake)</td><td>Connectionless</td></tr>
+    <tr><td>Reliability</td><td>Guaranteed delivery, retransmits lost segments</td><td>Best-effort, no retransmission</td></tr>
+    <tr><td>Ordering</td><td>Sequence numbers reorder segments</td><td>Delivered/reassembled in the order received</td></tr>
+    <tr><td>Overhead</td><td>Higher (headers, ACKs, flow control)</td><td>Very low</td></tr>
+    <tr><td>Typical use</td><td>Web (HTTP/HTTPS), email, file transfer</td><td>VoIP, live video, DNS, DHCP</td></tr>
+  </table>
+  <h4>TCP Connection Lifecycle</h4>
+  <ul>
+    <li><strong>3-way handshake:</strong> (1) client &rarr; server SYN, (2) server &rarr; client SYN-ACK, (3) client &rarr; server ACK.</li>
+    <li><strong>Termination:</strong> (1) client sends FIN, (2) server ACKs it, (3) server sends its own FIN, (4) client ACKs — each direction closes independently.</li>
+    <li>TCP also supports <strong>SACK</strong> (selective acknowledgment), negotiated at handshake time, letting a receiver ACK specific non-contiguous received segments.</li>
+  </ul>
+  <h4>Port Numbers & Sockets</h4>
+  <table class="ref">
+    <tr><th>Port Range</th><th>Group</th></tr>
+    <tr><td>0 – 1023</td><td>Well-known ports (HTTP 80, HTTPS 443, DNS 53, SSH 22, FTP 20/21…)</td></tr>
+    <tr><td>1024 – 49151</td><td>Registered ports (assigned by IANA to specific applications)</td></tr>
+    <tr><td>49152 – 65535</td><td>Private/dynamic ("ephemeral") ports — assigned by the client OS per connection</td></tr>
+  </table>
+  <ul>
+    <li>A <strong>socket</strong> = IP address + port number, e.g. 192.168.1.10:443 — it's how multiple simultaneous conversations stay distinguishable.</li>
+    <li><code>netstat</code> shows active TCP connections — useful for spotting unexplained/suspicious connections.</li>
+  </ul>
+  `
+}
+];
+
+function renderNotes(){
+  const container = document.getElementById('notesContainer');
+  container.innerHTML = NOTES.map((t,i)=>`
+    <div class="topic-block ${i===0?'open':''}" id="topic-${i}">
+      <div class="topic-head" onclick="toggleTopic(${i})">
+        <div class="th-left">
+          <span class="topic-num">T${t.num}</span>
+          <h3>${t.title}</h3>
+        </div>
+        <span class="chev">&#9654;</span>
+      </div>
+      <div class="topic-body">${t.html}</div>
+    </div>
+  `).join('');
+}
+function toggleTopic(i){
+  document.getElementById('topic-'+i).classList.toggle('open');
+}
+renderNotes();
+
+
+/* =========================================================
+   CORE IP MATH HELPERS
+========================================================= */
+function ip2int(ip){
+  const parts = ip.trim().split('.').map(Number);
+  if(parts.length!==4 || parts.some(p=>isNaN(p)||p<0||p>255)) return null;
+  return ((parts[0]<<24) | (parts[1]<<16) | (parts[2]<<8) | parts[3]) >>> 0;
+}
+function int2ip(int){
+  return [(int>>>24)&255,(int>>>16)&255,(int>>>8)&255,int&255].join('.');
+}
+function int2bin(int){
+  return int.toString(2).padStart(32,'0');
+}
+function prefixToMask(prefix){
+  return prefix===0 ? 0 : (0xFFFFFFFF << (32-prefix)) >>> 0;
+}
+function subnetInfo(ip, prefix){
+  const ipInt = ip2int(ip);
+  if(ipInt===null) return null;
+  const maskInt = prefixToMask(prefix);
+  const networkInt = (ipInt & maskInt) >>> 0;
+  const hostBits = 32-prefix;
+  const blockSize = Math.pow(2,hostBits);
+  const broadcastInt = (networkInt + blockSize - 1) >>> 0;
+  const usableHosts = hostBits<=1 ? 0 : blockSize-2;
+  const firstUsable = hostBits<=1 ? networkInt : networkInt+1;
+  const lastUsable = hostBits<=1 ? broadcastInt : broadcastInt-1;
+  return {
+    ip, prefix, ipInt, maskInt, networkInt, broadcastInt,
+    mask: int2ip(maskInt), network: int2ip(networkInt), broadcast: int2ip(broadcastInt),
+    firstUsable: int2ip(firstUsable), lastUsable: int2ip(lastUsable),
+    totalHosts: blockSize, usableHosts
+  };
+}
+function bitHtml(int, netBits){
+  const bin = int2bin(int);
+  let out = '';
+  for(let i=0;i<32;i++){
+    const cls = i<netBits ? 'bit-n' : 'bit-h';
+    out += `<span class="${cls}">${bin[i]}</span>`;
+    if((i+1)%8===0 && i!==31) out += ' <span style="color:var(--muted)">.</span> ';
+  }
+  return out;
+}
+
+/* =========================================================
+   TAB 2: SINGLE SUBNET CALCULATOR
+========================================================= */
+function runCalc(){
+  const ip = document.getElementById('calcIp').value;
+  const prefix = parseInt(document.getElementById('calcPrefix').value,10);
+  const res = document.getElementById('calcResults');
+  if(!ip || isNaN(prefix) || prefix<0 || prefix>32){
+    res.innerHTML = `<div class="note" style="border-color:var(--red); color:var(--red); background:rgba(255,107,107,0.08);">Enter a valid IPv4 address and a prefix between 0 and 32.</div>`;
+    document.getElementById('calcSteps').style.display='none';
+    return;
+  }
+  const info = subnetInfo(ip, prefix);
+  if(!info){
+    res.innerHTML = `<div class="note" style="border-color:var(--red); color:var(--red); background:rgba(255,107,107,0.08);">That doesn't look like a valid IPv4 address (each octet must be 0–255).</div>`;
+    document.getElementById('calcSteps').style.display='none';
+    return;
+  }
+  res.innerHTML = `
+    <div class="result-grid">
+      <div class="result-cell"><div class="rl">Subnet Mask</div><div class="rv">${info.mask}</div></div>
+      <div class="result-cell"><div class="rl">Network Address</div><div class="rv">${info.network}/${info.prefix}</div></div>
+      <div class="result-cell"><div class="rl">Broadcast Address</div><div class="rv">${info.broadcast}</div></div>
+      <div class="result-cell"><div class="rl">First Usable Host</div><div class="rv">${info.firstUsable}</div></div>
+      <div class="result-cell"><div class="rl">Last Usable Host</div><div class="rv">${info.lastUsable}</div></div>
+      <div class="result-cell"><div class="rl">Usable Hosts</div><div class="rv">${info.usableHosts.toLocaleString()}</div></div>
+    </div>
+    <div style="margin-top:18px;">
+      <div class="bitstring">${bitHtml(info.ipInt, info.prefix)}</div>
+      <div class="legend">
+        <span><span class="dot" style="background:var(--cyan);"></span>Network bits (${info.prefix})</span>
+        <span><span class="dot" style="background:var(--amber);"></span>Host bits (${32-info.prefix})</span>
+      </div>
+    </div>
+  `;
+  const stepsBody = document.getElementById('calcStepsBody');
+  stepsBody.innerHTML = `
+    <div class="step"><h4>Convert the prefix to a mask</h4><p>/${info.prefix} means the first ${info.prefix} bits are 1s. That gives the subnet mask <strong>${info.mask}</strong>.</p></div>
+    <div class="step"><h4>AND the IP address with the mask</h4><p>${info.ip} ANDed bit-by-bit with ${info.mask} zeroes out every host bit, leaving the <strong>network address ${info.network}</strong>.</p></div>
+    <div class="step"><h4>Set all host bits to 1 for the broadcast</h4><p>Flip every host bit in the network address to 1 to get the <strong>broadcast address ${info.broadcast}</strong>.</p></div>
+    <div class="step"><h4>Usable range sits in between</h4><p>First usable = network address + 1 = <strong>${info.firstUsable}</strong>. Last usable = broadcast &minus; 1 = <strong>${info.lastUsable}</strong>. That's ${info.usableHosts.toLocaleString()} usable hosts (2<sup>${32-info.prefix}</sup> &minus; 2).</p></div>
+  `;
+  document.getElementById('calcSteps').style.display='block';
+}
+runCalc();
+
+/* =========================================================
+   TAB 3: DIVIDE INTO EQUAL SUBNETS
+========================================================= */
+document.getElementById('divMode').addEventListener('change', (e)=>{
+  const label = document.getElementById('divTargetLabel');
+  label.textContent = e.target.value==='subnets' ? 'Number of subnets' : 'Hosts needed per subnet';
+});
+
+function runDivide(){
+  const ip = document.getElementById('divIp').value;
+  const basePrefix = parseInt(document.getElementById('divPrefix').value,10);
+  const mode = document.getElementById('divMode').value;
+  const target = parseInt(document.getElementById('divTarget').value,10);
+  const summary = document.getElementById('divSummary');
+  const bitView = document.getElementById('divBitView');
+  const tableWrap = document.getElementById('divTableWrap');
+
+  const baseInfo = subnetInfo(ip, basePrefix);
+  if(!baseInfo || isNaN(target) || target<1){
+    summary.innerHTML = `<div class="note" style="border-color:var(--red); color:var(--red); background:rgba(255,107,107,0.08); margin-top:14px;">Check your base network and target value.</div>`;
+    bitView.innerHTML=''; tableWrap.innerHTML='';
+    return;
+  }
+
+  let bitsBorrowed, newPrefix;
+  if(mode==='subnets'){
+    bitsBorrowed = Math.ceil(Math.log2(target));
+    if(bitsBorrowed<0) bitsBorrowed=0;
+  } else {
+    const hostBitsNeeded = Math.ceil(Math.log2(target+2));
+    newPrefix = 32-hostBitsNeeded;
+    bitsBorrowed = newPrefix-basePrefix;
+    if(bitsBorrowed<0) bitsBorrowed=0;
+  }
+  newPrefix = basePrefix+bitsBorrowed;
+
+  if(newPrefix>30){
+    summary.innerHTML = `<div class="note" style="border-color:var(--red); color:var(--red); background:rgba(255,107,107,0.08); margin-top:14px;">That requires a /${newPrefix} mask, which leaves too few (or no) usable host addresses. Reduce the number of subnets or increase hosts-per-subnet needed.</div>`;
+    bitView.innerHTML=''; tableWrap.innerHTML='';
+    return;
+  }
+
+  const numSubnetsCreated = Math.pow(2,bitsBorrowed);
+  const blockSize = Math.pow(2, 32-newPrefix);
+  const usableHosts = (32-newPrefix)<=1 ? 0 : blockSize-2;
+
+  summary.innerHTML = `
+    <div class="result-grid" style="margin-top:16px;">
+      <div class="result-cell"><div class="rl">Bits Borrowed</div><div class="rv">${bitsBorrowed}</div></div>
+      <div class="result-cell"><div class="rl">New Prefix</div><div class="rv">/${newPrefix}</div></div>
+      <div class="result-cell"><div class="rl">New Mask</div><div class="rv">${int2ip(prefixToMask(newPrefix))}</div></div>
+      <div class="result-cell"><div class="rl">Subnets Created</div><div class="rv">${numSubnetsCreated.toLocaleString()}</div></div>
+      <div class="result-cell"><div class="rl">Usable Hosts / Subnet</div><div class="rv">${usableHosts.toLocaleString()}</div></div>
+    </div>
+  `;
+
+  bitView.innerHTML = `
+    <div style="margin-top:16px;">
+      <div class="bitstring">${bitHtml(baseInfo.networkInt, basePrefix)}</div>
+      <div class="legend">
+        <span><span class="dot" style="background:var(--cyan);"></span>Original network bits (/${basePrefix})</span>
+        <span><span class="dot" style="background:var(--purple);"></span>Borrowed subnet bits (${bitsBorrowed})</span>
+        <span><span class="dot" style="background:var(--amber);"></span>Remaining host bits (${32-newPrefix})</span>
+      </div>
+    </div>
+  `;
+  // re-color borrowed bits purple
+  const bin = int2bin(baseInfo.networkInt);
+  let coloredBits = '';
+  for(let i=0;i<32;i++){
+    let cls = 'bit-h';
+    if(i<basePrefix) cls='bit-n';
+    else if(i<newPrefix) cls='bit-borrow';
+    coloredBits += `<span class="${cls}">${bin[i]}</span>`;
+    if((i+1)%8===0 && i!==31) coloredBits += ' <span style="color:var(--muted)">.</span> ';
+  }
+  bitView.querySelector('.bitstring').innerHTML = coloredBits;
+
+  // build table — cap display to avoid freezing browser on huge subnet counts
+  const displayCap = 512;
+  const showCount = Math.min(numSubnetsCreated, displayCap);
+  let rows = '';
+  for(let i=0;i<showCount;i++){
+    const netInt = (baseInfo.networkInt + i*blockSize) >>> 0;
+    const bInfo = { network: int2ip(netInt), broadcast: int2ip(netInt+blockSize-1),
+      first: (32-newPrefix)<=1?int2ip(netInt):int2ip(netInt+1),
+      last: (32-newPrefix)<=1?int2ip(netInt+blockSize-1):int2ip(netInt+blockSize-2) };
+    rows += `<tr><td>Subnet ${i+1}</td><td>${bInfo.network}/${newPrefix}</td><td>${bInfo.first} – ${bInfo.last}</td><td>${bInfo.broadcast}</td></tr>`;
+  }
+  tableWrap.innerHTML = `
+    <table class="outtable">
+      <tr><th>#</th><th>Network Address</th><th>Usable Host Range</th><th>Broadcast</th></tr>
+      ${rows}
+    </table>
+    ${numSubnetsCreated>displayCap ? `<p style="font-size:12px; color:var(--muted); font-family:var(--mono); margin-top:8px;">Showing first ${displayCap} of ${numSubnetsCreated.toLocaleString()} subnets.</p>` : ''}
+  `;
+}
+
+/* =========================================================
+   TAB 4: VLSM ADDRESS TABLE BUILDER
+========================================================= */
+let reqRowCount = 0;
+function addReqRow(name='', hosts=''){
+  reqRowCount++;
+  const id = 'req-'+reqRowCount;
+  const container = document.getElementById('vlsmReqRows');
+  const row = document.createElement('div');
+  row.className = 'req-row';
+  row.id = id;
+  row.innerHTML = `
+    <input type="text" placeholder="e.g. Building A LAN" value="${name}" class="req-name">
+    <input type="number" placeholder="hosts" min="1" value="${hosts}" class="req-hosts">
+    <button onclick="document.getElementById('${id}').remove()" title="remove">✕</button>
+  `;
+  container.appendChild(row);
+}
+function loadSampleTopology(){
+  document.getElementById('vlsmReqRows').innerHTML='';
+  const sample = [
+    ['Building D LAN',28], ['Building A LAN',12], ['Building B LAN',6], ['Building C LAN',2],
+    ['WAN Link R1-R2',2], ['WAN Link R2-R3',2], ['WAN Link R3-R4',2]
+  ];
+  sample.forEach(([n,h])=>addReqRow(n,h));
+}
+addReqRow('Sales LAN',50);
+addReqRow('Engineering LAN',25);
+addReqRow('WAN Link',2);
+
+function allocateVLSM(baseIp, basePrefix, reqs){
+  const baseInfo = subnetInfo(baseIp, basePrefix);
+  if(!baseInfo) return {error:'Invalid base network address.'};
+  const baseNetInt = baseInfo.networkInt;
+  const baseBlockSize = Math.pow(2,32-basePrefix);
+  const baseEnd = baseNetInt + baseBlockSize;
+
+  const sorted = reqs.map((r,i)=>({...r, origIndex:i})).sort((a,b)=>b.hosts-a.hosts);
+  let cursor = baseNetInt;
+  const results = [];
+  for(const r of sorted){
+    let hostBits = Math.ceil(Math.log2(r.hosts+2));
+    if(hostBits<0) hostBits=0;
+    const blockSize = Math.pow(2, hostBits);
+    let netInt = Math.ceil(cursor/blockSize)*blockSize;
+    if(netInt + blockSize > baseEnd){
+      results.push({name:r.name, hostsNeeded:r.hosts, origIndex:r.origIndex, error:true});
+      continue;
+    }
+    const prefix = 32-hostBits;
+    const broadcastInt = netInt+blockSize-1;
+    const firstUsable = hostBits<=1?netInt:netInt+1;
+    const lastUsable = hostBits<=1?broadcastInt:broadcastInt-1;
+    results.push({
+      name: r.name, hostsNeeded: r.hosts, origIndex:r.origIndex,
+      prefix, mask:int2ip(prefixToMask(prefix)),
+      network:int2ip(netInt), broadcast:int2ip(broadcastInt),
+      firstUsable:int2ip(firstUsable), lastUsable:int2ip(lastUsable),
+      usableHosts: hostBits<=1?0:blockSize-2
+    });
+    cursor = netInt+blockSize;
+  }
+  results.sort((a,b)=>a.origIndex-b.origIndex);
+  return {results, totalBlockSize: baseBlockSize, usedSize: cursor-baseNetInt};
+}
+
+function runVLSM(){
+  const ip = document.getElementById('vlsmIp').value;
+  const prefix = parseInt(document.getElementById('vlsmPrefix').value,10);
+  const rows = Array.from(document.querySelectorAll('#vlsmReqRows .req-row'));
+  const reqs = rows.map(r=>({
+    name: r.querySelector('.req-name').value || 'Unnamed subnet',
+    hosts: parseInt(r.querySelector('.req-hosts').value,10)
+  })).filter(r=>!isNaN(r.hosts) && r.hosts>0);
+
+  const summary = document.getElementById('vlsmSummary');
+  const tableWrap = document.getElementById('vlsmTableWrap');
+
+  if(reqs.length===0){
+    summary.innerHTML = `<div class="note" style="border-color:var(--red); color:var(--red); background:rgba(255,107,107,0.08); margin-top:14px;">Add at least one requirement with a host count.</div>`;
+    tableWrap.innerHTML=''; return;
+  }
+
+  const out = allocateVLSM(ip, prefix, reqs);
+  if(out.error){
+    summary.innerHTML = `<div class="note" style="border-color:var(--red); color:var(--red); background:rgba(255,107,107,0.08); margin-top:14px;">${out.error}</div>`;
+    tableWrap.innerHTML=''; return;
+  }
+
+  const totalHostsNeeded = reqs.reduce((s,r)=>s+r.hosts,0);
+  const hadError = out.results.some(r=>r.error);
+  summary.innerHTML = `
+    <div class="result-grid" style="margin-top:16px;">
+      <div class="result-cell"><div class="rl">Base Block</div><div class="rv">${out.totalBlockSize.toLocaleString()} addresses</div></div>
+      <div class="result-cell"><div class="rl">Used</div><div class="rv">${out.usedSize.toLocaleString()} addresses</div></div>
+      <div class="result-cell"><div class="rl">Remaining</div><div class="rv">${(out.totalBlockSize-out.usedSize).toLocaleString()} addresses</div></div>
+      <div class="result-cell"><div class="rl">Total Hosts Requested</div><div class="rv">${totalHostsNeeded}</div></div>
+    </div>
+    ${hadError ? `<div class="note" style="border-color:var(--red); color:var(--red); background:rgba(255,107,107,0.08); margin-top:12px;">Base network is too small — one or more subnets could not be allocated (marked below). Try a larger base network (smaller prefix number).</div>` : ''}
+  `;
+
+  const rowsHtml = out.results.map(r=>{
+    if(r.error) return `<tr><td>${r.name}</td><td>${r.hostsNeeded}</td><td colspan="6" style="color:var(--red);">Not enough address space</td></tr>`;
+    return `<tr>
+      <td>${r.name}</td>
+      <td>${r.hostsNeeded}</td>
+      <td>${r.network}/${r.prefix}</td>
+      <td>${r.mask}</td>
+      <td>${r.firstUsable} – ${r.lastUsable}</td>
+      <td>${r.broadcast}</td>
+      <td>${r.usableHosts}</td>
+    </tr>`;
+  }).join('');
+  tableWrap.innerHTML = `
+    <table class="outtable">
+      <tr><th>Subnet / Link</th><th>Hosts Needed</th><th>Network</th><th>Mask</th><th>Usable Range</th><th>Broadcast</th><th>Usable Hosts</th></tr>
+      ${rowsHtml}
+    </table>
+  `;
+}
+
+
+/* =========================================================
+   TAB 5: IPv6 TRAINER
+========================================================= */
+function expandIPv6(addr){
+  addr = addr.trim().toLowerCase();
+  if(!addr) return null;
+  let head, tail;
+  if(addr.includes('::')){
+    const parts = addr.split('::');
+    if(parts.length!==2) return null;
+    head = parts[0]; tail = parts[1];
+  } else {
+    head = addr; tail = null;
+  }
+  const headParts = head ? head.split(':').filter(x=>x!=='') : [];
+  const tailParts = tail!==null ? tail.split(':').filter(x=>x!=='') : [];
+  for(const p of [...headParts, ...tailParts]){
+    if(!/^[0-9a-f]{1,4}$/.test(p)) return null;
+  }
+  let allParts;
+  if(tail!==null){
+    const missing = 8 - headParts.length - tailParts.length;
+    if(missing<0) return null;
+    allParts = [...headParts, ...Array(missing).fill('0'), ...tailParts];
+  } else {
+    if(headParts.length!==8) return null;
+    allParts = headParts;
+  }
+  return allParts.map(p=>p.padStart(4,'0')).join(':');
+}
+function compressIPv6(fullAddr){
+  const parts = fullAddr.split(':').map(p=>p.replace(/^0+(?=.)/,''));
+  let bestStart=-1, bestLen=0, curStart=-1, curLen=0;
+  for(let i=0;i<parts.length;i++){
+    if(parts[i]==='0'){
+      if(curStart===-1) curStart=i;
+      curLen++;
+      if(curLen>bestLen){bestLen=curLen; bestStart=curStart;}
+    } else { curStart=-1; curLen=0; }
+  }
+  if(bestLen>1){
+    const before = parts.slice(0,bestStart).join(':');
+    const after = parts.slice(bestStart+bestLen).join(':');
+    return (before?before:'')+'::'+(after?after:'');
+  }
+  return parts.join(':');
+}
+function randomIPv6(zeroChance=0.45){
+  const hextets = [];
+  for(let i=0;i<8;i++){
+    if(Math.random()<zeroChance && i>0 && i<6) hextets.push('0000');
+    else hextets.push(Math.floor(Math.random()*65536).toString(16).padStart(4,'0'));
+  }
+  // guarantee at least one zero run sometimes
+  return hextets.join(':');
+}
+
+let ipv6Mode = 'compress';
+function setIpv6Mode(mode){
+  ipv6Mode = mode;
+  document.querySelectorAll('[data-ipv6mode]').forEach(b=>b.classList.toggle('active', b.dataset.ipv6mode===mode));
+  renderIpv6Body();
+}
+function renderIpv6Body(){
+  const body = document.getElementById('ipv6Body');
+  if(ipv6Mode==='compress'){
+    body.innerHTML = `
+      <div style="margin-top:14px;">
+        <label>Full IPv6 Address (8 hextets)</label>
+        <input type="text" id="ipv6In" value="2001:0db8:0000:1111:0000:0000:0000:0200">
+        <div style="margin-top:12px;"><button class="btn" onclick="doCompress()">Compress</button></div>
+        <div id="ipv6Out"></div>
+      </div>`;
+    doCompress();
+  } else if(ipv6Mode==='expand'){
+    body.innerHTML = `
+      <div style="margin-top:14px;">
+        <label>Compressed IPv6 Address</label>
+        <input type="text" id="ipv6In" value="2001:db8:0:1111::200">
+        <div style="margin-top:12px;"><button class="btn" onclick="doExpand()">Expand</button></div>
+        <div id="ipv6Out"></div>
+      </div>`;
+    doExpand();
+  } else {
+    body.innerHTML = `
+      <div style="margin-top:14px;">
+        <p style="font-size:13.5px; color:var(--muted);">A full IPv6 address is shown below. Type its correctly compressed form, then check your answer.</p>
+        <div class="result-cell" style="margin-bottom:14px;"><div class="rl">Full Address</div><div class="rv" id="quizFull"></div></div>
+        <label>Your Compressed Answer</label>
+        <input type="text" id="quizAnswer" placeholder="e.g. 2001:db8::200">
+        <div style="margin-top:12px; display:flex; gap:10px;">
+          <button class="btn" onclick="checkQuiz()">Check Answer</button>
+          <button class="btn ghost" onclick="newQuiz()">New Address</button>
+        </div>
+        <div id="quizResult"></div>
+      </div>`;
+    newQuiz();
+  }
+}
+function doCompress(){
+  const val = document.getElementById('ipv6In').value;
+  const full = expandIPv6(val);
+  const out = document.getElementById('ipv6Out');
+  if(!full){
+    out.innerHTML = `<div class="note" style="border-color:var(--red); color:var(--red); background:rgba(255,107,107,0.08); margin-top:14px;">That's not a valid 8-hextet IPv6 address. Use full form like 2001:0db8:0000:....</div>`;
+    return;
+  }
+  const compressed = compressIPv6(full);
+  out.innerHTML = `
+    <div class="result-grid" style="margin-top:14px;">
+      <div class="result-cell"><div class="rl">Full (normalized)</div><div class="rv">${full}</div></div>
+      <div class="result-cell"><div class="rl">Compressed</div><div class="rv">${compressed}</div></div>
+    </div>
+    <div class="answer-box show" style="margin-top:14px;">
+      Rule 1 stripped leading zeros in each hextet. Rule 2 replaced the longest run of consecutive <code>0000</code> hextets with <code>::</code> (only the longest run — if two runs tie for longest, only the first one is replaced).
+    </div>
+  `;
+}
+function doExpand(){
+  const val = document.getElementById('ipv6In').value;
+  const full = expandIPv6(val);
+  const out = document.getElementById('ipv6Out');
+  if(!full){
+    out.innerHTML = `<div class="note" style="border-color:var(--red); color:var(--red); background:rgba(255,107,107,0.08); margin-top:14px;">That's not a valid IPv6 address — check the <code>::</code> is used at most once.</div>`;
+    return;
+  }
+  out.innerHTML = `
+    <div class="result-cell" style="margin-top:14px;"><div class="rl">Expanded (8 hextets)</div><div class="rv">${full}</div></div>
+  `;
+}
+let currentQuizFull = '';
+function newQuiz(){
+  currentQuizFull = randomIPv6();
+  document.getElementById('quizFull').textContent = currentQuizFull;
+  document.getElementById('quizAnswer').value='';
+  document.getElementById('quizResult').innerHTML='';
+}
+function checkQuiz(){
+  const userAns = document.getElementById('quizAnswer').value.trim().toLowerCase();
+  const correct = compressIPv6(currentQuizFull);
+  const userExpanded = expandIPv6(userAns);
+  const isCorrect = userExpanded === currentQuizFull && userAns===correct;
+  const result = document.getElementById('quizResult');
+  if(isCorrect){
+    result.innerHTML = `<div class="note" style="margin-top:14px;">✅ Correct! <strong>${correct}</strong> is right.</div>`;
+  } else if(userExpanded===currentQuizFull){
+    result.innerHTML = `<div class="note" style="border-color:var(--amber); margin-top:14px;">Close — that expands to the right address, but it isn't in the shortest form. Correct answer: <strong>${correct}</strong></div>`;
+  } else {
+    result.innerHTML = `<div class="note" style="border-color:var(--red); color:var(--red); background:rgba(255,107,107,0.08); margin-top:14px;">Not quite. Correct answer: <strong>${correct}</strong></div>`;
+  }
+}
+renderIpv6Body();
+
+
+/* =========================================================
+   PRACTICE TEST — QUESTION BANK
+   type: 'mcq' or 'fill'
+========================================================= */
+const TEST_QUESTIONS = [
+{topic:'T1', type:'mcq', q:'Which network type is specifically designed to allow a remote worker to connect to a corporate office?', opts:['Small Home Network','SOHO (Small Office/Home Office)','LAN (Local Area Network)','World Wide Network'], correct:1, explain:'SOHO networks connect a small number of devices, including remote workers, back to a corporate network.'},
+{topic:'T1', type:'mcq', q:'Which of the following is considered an "Intermediary Device"?', opts:['IP Phone','File Server','Multilayer Switch','Wireless Tablet'], correct:2, explain:'Intermediary devices (switches, routers, access points) forward traffic between end devices; they don\'t originate the data themselves.'},
+{topic:'T1', type:'mcq', q:'A network that can expand to support new users without degrading performance for existing users is described as:', opts:['Fault Tolerant','Scalable','High Latency','Circuit-switched'], correct:1, explain:'Scalability is the ability to grow quickly to support new users and applications without impacting existing users.'},
+{topic:'T1', type:'mcq', q:'Which network requirement manages resources so that priority traffic like voice/video calls is not degraded by less time-sensitive traffic?', opts:['Fault Tolerance','Scalability','Quality of Service (QoS)','Security'], correct:2, explain:'QoS prioritizes time-sensitive traffic over traffic that can tolerate delay.'},
+{topic:'T1', type:'mcq', q:'An ISP advertises 1 Gbps bandwidth, but a speed test shows only 400 Mbps. Which of these is NOT a plausible cause?', opts:['Network congestion','Protocol overhead','The color of the network cable','End-user hardware limitations'], correct:2, explain:'Congestion, protocol overhead, hardware limits, and connection type (Wi-Fi vs wired) all plausibly reduce real throughput — cable color has no effect.'},
+{topic:'T1', type:'mcq', q:'Why is an integrated (Wi-Fi) router generally more secure for a home network than a single PC connected directly to a modem?', opts:['It has a bigger antenna','It includes NAT/firewall features that hide internal devices from direct internet exposure','It uses a faster CPU','It doesn\'t need a password'], correct:1, explain:'The router\'s NAT and firewall functions shield internal devices from being directly reachable from the internet.'},
+{topic:'T1', type:'fill', q:'How many bits are in one byte?', answer:'8', explain:'A byte is a sequence of 8 bits — the basic unit end devices use to represent data.'},
+
+{topic:'T2', type:'mcq', q:'Which process converts information into a form acceptable for transmission over a specific medium?', opts:['Encapsulation','Timing','Encoding','Delivery'], correct:2, explain:'Encoding converts data (thoughts, letters, numbers) into signals suitable for the transmission medium.'},
+{topic:'T2', type:'mcq', q:'A "one-to-many" message sent to a specific group of hosts (not everyone) is:', opts:['Unicast','Multicast','Broadcast','Anycast'], correct:1, explain:'Multicast delivers to a defined group — like a WhatsApp group chat, as opposed to messaging one friend (unicast) or everyone (broadcast).'},
+{topic:'T2', type:'mcq', q:'What happens to a PDU as it passes DOWN the protocol stack toward transmission?', opts:['It is de-encapsulated','It is converted to an IP address','Each layer\'s protocol adds its own header information (encapsulation)','It is discarded by the router'], correct:2, explain:'Moving down the stack, each layer wraps the data with its own protocol information — this is encapsulation.'},
+{topic:'T2', type:'mcq', q:'The OSI Model is considered a "Reference" model while the TCP/IP Model is considered a "Protocol" model. Why?', opts:['OSI has fewer layers','OSI provides a conceptual framework without dictating specific protocols, while TCP/IP describes the actual suite of protocols in use','TCP/IP is only used for wireless networks','OSI is newer than TCP/IP'], correct:1, explain:'OSI is a teaching/reference framework; TCP/IP describes the real protocol suite that runs the internet today.'},
+{topic:'T2', type:'fill', q:'List the PDU names in order from top of the stack (Data) to the bottom (Physical transmission), separated by arrows or commas.', answer:'data, segment, packet, frame, bits', explain:'Data (app/presentation/session) → Segment (transport) → Packet (network) → Frame (data link) → Bits (physical).'},
+{topic:'T2', type:'mcq', q:'Sending a WhatsApp message to a single friend uses which delivery option? A group chat message uses which?', opts:['Both are unicast','Single friend = unicast, group chat = multicast','Single friend = broadcast, group chat = unicast','Both are multicast'], correct:1, explain:'One-to-one is unicast; one-to-a-defined-group is multicast.'},
+{topic:'T2', type:'mcq', q:'Which address changes at every router "hop" along a packet\'s path, and which stays the same from source to destination?', opts:['Layer 2 (MAC) changes; Layer 3 (IP) stays the same','Layer 3 (IP) changes; Layer 2 (MAC) stays the same','Both change at every hop','Neither changes'], correct:0, explain:'Every router re-encapsulates the packet into a new frame with new MAC addresses for the next link, but the source/destination IP addresses stay the same end-to-end.'},
+{topic:'T2', type:'mcq', q:'If a web server is on a remote network, which address appears as the frame\'s "Destination MAC Address" to get the data out of the local LAN?', opts:['The web server\'s own MAC address','The MAC address of the default gateway (router interface)','A broadcast MAC address','The DNS server\'s MAC address'], correct:1, explain:'Since the destination is remote, the frame is addressed at Layer 2 to the default gateway, which forwards it onward.'},
+{topic:'T2', type:'mcq', q:'What is the PDU name for the Data Link Layer (Layer 2)?', opts:['Frame','Segment','Packet','Bits'], correct:0, explain:'The Data Link layer PDU is called a Frame.'},
+{topic:'T2', type:'mcq', q:'The MAC sublayer is responsible for:', opts:['Media access control and encapsulation','Software communication','Binary encoding','Routing packets'], correct:0, explain:'MAC (Media Access Control) provides data link addressing and media access — implemented in hardware.'},
+{topic:'T2', type:'mcq', q:'Placing one message format inside another is called:', opts:['Encapsulation','De-encapsulation','Routing','Switching'], correct:0, explain:'Encapsulation wraps a message inside another protocol\'s format for delivery.'},
+{topic:'T2', type:'mcq', q:'In the encapsulation analogy, the IP protocol\'s function is similar to a(n):', opts:['Envelope','Letter','Pen','Ink'], correct:0, explain:'The IP protocol "wraps" the data with addressing, just like an envelope wraps a letter.'},
+{topic:'T2', type:'mcq', q:'What is the PDU name for the Transport Layer (Layer 4)?', opts:['Segment','Packet','Frame','Bits'], correct:0, explain:'The Transport layer PDU is called a Segment.'},
+{topic:'T2', type:'mcq', q:'What is the PDU name for the Network Layer (Layer 3)?', opts:['Packet','Segment','Frame','Bits'], correct:0, explain:'The Network layer PDU is called a Packet.'},
+{topic:'T2', type:'mcq', q:'De-encapsulation occurs when the recipient removes the letter from the envelope. True or False?', opts:['True','False'], correct:0, explain:'De-encapsulation is the reverse of encapsulation — stripping off protocol headers as data moves up the stack.'},
+{topic:'T2', type:'mcq', q:'Messages that are not correctly formatted according to protocol rules are:', opts:['Not successfully delivered','Automatically repaired','Ignored by routers only','Slowed down but still delivered'], correct:0, explain:'Incorrectly formatted messages fail delivery entirely — protocols require strict formatting.'},
+
+{topic:'T3', type:'mcq', q:'Which medium uses electrical impulses to represent data?', opts:['Fiber-optic cable','Copper wires','Wireless radio waves','Infrared'], correct:1, explain:'Copper cabling represents bits as electrical impulses (voltage changes).'},
+{topic:'T3', type:'mcq', q:'A "Signaling Method" refers to:', opts:['The format of the IP address','The rules of the 3-way handshake','How bit values "1" and "0" are represented on the physical medium','The color code of the UTP jacket'], correct:2, explain:'Signaling is how individual bits are physically represented as energy (voltage, light, radio) on the medium.'},
+{topic:'T3', type:'mcq', q:'Which media type is primarily used for high-traffic, point-to-point building interconnections?', opts:['UTP Cabling','Coaxial Cable','Fiber-Optic Cabling','Bluetooth'], correct:2, explain:'Fiber\'s high bandwidth and long-distance capability make it ideal for building-to-building backbone links.'},
+{topic:'T3', type:'mcq', q:'Which of the following is a limitation of wireless media?', opts:['High installation skills required','Susceptibility to interference','Very short distance (less than 1 meter)','High cable costs'], correct:1, explain:'Wireless signals are susceptible to interference from other RF sources and physical obstructions.'},
+{topic:'T3', type:'fill', q:'Fiber-optic cable can be made of glass or what other material?', answer:'plastic', explain:'Fiber-optic strands can be manufactured from either glass or plastic.'},
+{topic:'T3', type:'mcq', q:'Physical layer standards address which three functional areas?', opts:['Physical Components, Encoding, Signaling','Routing, Switching, Addressing','MAC, LLC, IP','TCP, UDP, ICMP'], correct:0, explain:'The three functional areas are the physical hardware/media, the encoding method, and the signaling method.'},
+{topic:'T3', type:'mcq', q:'WLANs generally operate in which duplex mode?', opts:['Full-duplex','Half-duplex','Simplex','Multi-duplex'], correct:1, explain:'Wireless LANs typically operate half-duplex — only one device transmits on the shared medium at a time.'},
+{topic:'T3', type:'mcq', q:'Which cabling type has the lowest media and connector costs among common cable types?', opts:['UTP (copper)','Fiber-optic','Coaxial','STP'], correct:0, explain:'UTP is the cheapest and easiest to install of the common cabling types, though it has lower bandwidth and distance than fiber.'},
+{topic:'T3', type:'mcq', q:'Which standard is used for low-power IoT applications?', opts:['Zigbee (802.15.4)','WiMAX (802.16)','Ethernet (802.3)','Fiber (802.8)'], correct:0, explain:'Zigbee (IEEE 802.15.4) is designed specifically for low-power, low-data-rate IoT devices.'},
+{topic:'T3', type:'mcq', q:'Which IEEE standard governs Wireless LAN (Wi-Fi)?', opts:['IEEE 802.11','IEEE 802.15','IEEE 802.3','IEEE 802.16'], correct:0, explain:'IEEE 802.11 is the Wi-Fi/WLAN standard.'},
+{topic:'T3', type:'mcq', q:'Which IEEE standard governs Bluetooth (WPAN)?', opts:['IEEE 802.15','IEEE 802.11','IEEE 802.3','IEEE 802.16'], correct:0, explain:'IEEE 802.15 covers Wireless Personal Area Networks, including Bluetooth.'},
+{topic:'T3', type:'mcq', q:'Compared to UTP, fiber-optic cable can carry signals over:', opts:['Relatively long distances','Only short distances','Identical distances','Zero distance'], correct:0, explain:'Fiber supports much longer runs than copper before signal loss requires a repeater.'},
+{topic:'T3', type:'mcq', q:'Fiber-optic cable is immune to electrical interference because:', opts:['It uses light instead of electricity','It is shielded in lead','It has no connectors','It only carries digital signals'], correct:0, explain:'Since fiber transmits light rather than electrical signals, it is immune to EMI/crosstalk.'},
+{topic:'T3', type:'mcq', q:'Wireless transmission uses modulation of:', opts:['Electromagnetic waves','Light pulses','Electrical impulses','Binary code'], correct:0, explain:'Wireless media encodes data by modulating radio frequency (electromagnetic) waves.'},
+{topic:'T3', type:'mcq', q:'Why is wireless security a particular concern compared to wired media?', opts:['Anyone within range can potentially gain access to the transmission','It requires a physical strand to tap','Encryption is impossible over wireless','It uses too much power'], correct:0, explain:'Unlike a wired connection, wireless signals radiate through open space, so anyone in range can attempt to intercept or access them.'},
+{topic:'T3', type:'mcq', q:'More users joining the same WLAN results in:', opts:['Reduced bandwidth for each user','Increased bandwidth for each user','No change to available bandwidth','Automatic channel doubling'], correct:0, explain:'Wireless bandwidth on a given channel is shared among all connected users.'},
+{topic:'T3', type:'mcq', q:'What two general devices are required to establish a basic Wireless LAN (WLAN)?', opts:['A Wireless Access Point/router, and wireless NICs on end devices','A switch and a hub','A router and a modem only','A firewall and a proxy server'], correct:0, explain:'A WAP (or wireless router) plus wireless NICs on the end devices are the minimum components needed for a WLAN.'},
+{topic:'T3', type:'mcq', q:'The physical layer accepts a complete frame from which layer?', opts:['Data Link Layer','Network Layer','Transport Layer','Application Layer'], correct:0, explain:'The Physical layer receives the completed frame from the Data Link layer and converts it to signals for transmission.'},
+{topic:'T3', type:'mcq', q:'In copper cables, data is encoded into:', opts:['Electrical impulses','Light pulses','Electromagnetic waves','Sound waves'], correct:0, explain:'Copper cabling represents data as electrical impulses.'},
+{topic:'T3', type:'mcq', q:'Do all physical connections offer the same level of performance?', opts:['Yes, all media perform identically','No — media type significantly affects performance', 'Only fiber and copper are equal','Only wireless varies'], correct:1, explain:'Copper, fiber, and wireless each have very different bandwidth, distance, and interference characteristics.'},
+{topic:'T3', type:'mcq', q:'What component connects a device to the network?', opts:['Network Interface Card (NIC)','CPU','Hard Drive','RAM'], correct:0, explain:'The NIC is the hardware interface that physically connects a device to the network medium.'},
+
+{topic:'T4', type:'mcq', q:'Which sublayer acts as the interface between networking software and device hardware?', opts:['MAC','LLC','Network','IP'], correct:1, explain:'LLC (Logical Link Control) sits between the upper-layer software and the MAC hardware layer.'},
+{topic:'T4', type:'mcq', q:'In a frame, where is the "Error Detection" field typically located?', opts:['Header','Payload','Trailer','Preamble'], correct:2, explain:'Error detection (e.g. FCS/CRC) is carried in the frame\'s trailer, checked after the full frame is received.'},
+{topic:'T4', type:'mcq', q:'A "Multicast" MAC address for IPv4 always begins with which sequence?', opts:['FF-FF-FF','00-07-E9','01-00-5E','33-33-00'], correct:2, explain:'IPv4 multicast Ethernet frames use destination MACs beginning with 01-00-5E.'},
+{topic:'T4', type:'mcq', q:'Which LAN topology is known for being highly scalable and easy to troubleshoot?', opts:['Bus','Ring','Star','Mesh'], correct:2, explain:'Star topology connects every device to a central switch, making it easy to add devices and isolate faults.'},
+{topic:'T4', type:'mcq', q:'If a MAC address is 00-60-2F-3A-07-BC, which part identifies the manufacturer and which is the unique serial number?', opts:['Vendor: 00-60-2F, Device: 3A-07-BC','Vendor: 3A-07-BC, Device: 00-60-2F','Vendor: 00-60, Device: 2F-3A-07-BC','There is no vendor portion'], correct:0, explain:'The first 3 bytes (24 bits) are the OUI (vendor); the last 3 bytes are the device-specific serial number.'},
+{topic:'T4', type:'mcq', q:'A switch is "unaware" of which of the following pieces of information?', opts:['Source MAC Address','Incoming Port Number','Data portion protocols (e.g. IPv4 or ARP)','Destination MAC Address'], correct:2, explain:'A Layer 2 switch only reads MAC addresses — it has no visibility into what protocol is carried inside the frame\'s data field.'},
+{topic:'T4', type:'mcq', q:'What is the term for a unicast frame whose destination address is not yet in the MAC address table?', opts:['Ghost Unicast','Unknown Unicast','Broadcast Unicast','Filtered Unicast'], correct:1, explain:'An "unknown unicast" is flooded out every port except the incoming one, since the switch doesn\'t know which port leads to it.'},
+{topic:'T4', type:'mcq', q:'What is the PDU name for the Data Link Layer? (recap)', opts:['Frame','Segment','Packet','Bits'], correct:0, explain:'Data Link layer PDU = Frame.'},
+{topic:'T4', type:'mcq', q:'The Data Link layer consists of LLC and:', opts:['MAC','IP','TCP','ARP'], correct:0, explain:'The Data Link layer has two sublayers: LLC and MAC.'},
+{topic:'T4', type:'mcq', q:'Which layer allows upper layer protocols to access the physical media?', opts:['Data Link Layer','Physical Layer','Transport Layer','Session Layer'], correct:0, explain:'The Data Link layer provides the interface between the upper layers and the physical transmission media.'},
+{topic:'T4', type:'mcq', q:'A broadcast frame is flooded out all Ethernet switch ports except:', opts:['The incoming port','Port 1','The internet port','VLAN ports'], correct:0, explain:'Broadcasts (and unknown unicasts) are always flooded out every port except the one the frame arrived on.'},
+{topic:'T4', type:'mcq', q:'A permanent link between exactly two endpoints is called:', opts:['Point-to-point','Hub and spoke','Mesh','Star'], correct:0, explain:'Point-to-point describes a single, dedicated connection between two devices.'},
+{topic:'T4', type:'fill', q:'How many bits long is an Ethernet MAC address?', answer:'48', explain:'A MAC address is 48 bits (6 bytes), typically shown in hexadecimal.'},
+{topic:'T4', type:'mcq', q:'A source MAC address in an Ethernet frame must always be a:', opts:['Unicast address','Broadcast address','Multicast address','Logical address'], correct:0, explain:'The source MAC always identifies the single NIC that transmitted the frame, so it must be unicast.'},
+{topic:'T4', type:'mcq', q:'What is the MAC address used for an Ethernet broadcast?', opts:['FF-FF-FF-FF-FF-FF','00-00-00-00-00-00','01-00-5E-00-00-01','33-33-00-00-00-01'], correct:0, explain:'FF-FF-FF-FF-FF-FF (all 1s) is the reserved Ethernet broadcast MAC address.'},
+{topic:'T4', type:'mcq', q:'Which topology shows the actual physical connections and how devices are interconnected?', opts:['Physical Topology','Logical Topology','Virtual Topology','Hybrid Topology'], correct:0, explain:'Physical topology maps the real cabling and device connections; logical topology maps how data actually flows.'},
+{topic:'T5', type:'mcq', q:'What does a Layer 2 switch use to make its forwarding decisions?', opts:['The destination IP address','The destination MAC address','The TCP port number','The VLAN name'], correct:1, explain:'Switches only look at Layer 2 MAC addresses — they are unaware of the IP packet or protocol inside the frame.'},
+{topic:'T5', type:'mcq', q:'A switch receives a frame whose destination MAC address is not in its MAC address table. What does it do?', opts:['Drops the frame','Sends it back out the incoming port','Floods it out every port except the incoming port','Sends an ARP request'], correct:2, explain:'This is called an "unknown unicast" — the switch floods it out all ports except the one it came in on, since it doesn\'t know where the destination is.'},
+{topic:'T5', type:'mcq', q:'Which switch forwarding method checks the CRC of the entire frame before forwarding it?', opts:['Fast-forward switching','Fragment-free switching','Store-and-forward switching','Cut-through switching'], correct:2, explain:'Store-and-forward receives the whole frame and validates the CRC before forwarding, so it can discard corrupt frames.'},
+{topic:'T5', type:'mcq', q:'Fragment-free switching checks how many bytes of a frame before forwarding it?', opts:['The first 8 bytes','The first 64 bytes','The entire frame','Only the header'], correct:1, explain:'Fragment-free checks the first 64 bytes, since most collisions and errors occur within that range.'},
+{topic:'T5', type:'mcq', q:'What is the most common cause of a duplex mismatch?', opts:['A faulty cable','One port set to half-duplex while the other is full-duplex','Both ports set to auto-negotiate','A loose Ethernet connector'], correct:1, explain:'Duplex mismatch happens when one side of a link is half-duplex and the other is full-duplex — usually from inconsistent autonegotiation settings.'},
+
+{topic:'T6', type:'mcq', q:'Which of these best describes IPv4 as a protocol?', opts:['Connection-oriented and guaranteed delivery','Connectionless and best-effort','Reliable but media-dependent','Guaranteed delivery but media independent'], correct:1, explain:'IPv4 is connectionless (no handshake) and best-effort (no delivery guarantee) — reliability is left to higher layers like TCP.'},
+{topic:'T6', type:'mcq', q:'Which IPv4 header field is decremented at every router hop, and causes the packet to be dropped when it reaches zero?', opts:['Header Checksum','Protocol','Time to Live (TTL)','Differentiated Services'], correct:2, explain:'TTL is the Layer 3 hop count; when it hits zero, the router discards the packet, preventing infinite routing loops.'},
+{topic:'T6', type:'fill', q:'What is the network address for host 192.168.10.50 with subnet mask 255.255.255.0?', answer:'192.168.10.0', explain:'ANDing 192.168.10.50 with 255.255.255.0 zeroes out the last octet, leaving 192.168.10.0.'},
+{topic:'T6', type:'fill', q:'What is the broadcast address for the network 10.20.30.0/24?', answer:'10.20.30.255', explain:'Setting all host bits to 1 in the last octet gives 10.20.30.255.'},
+{topic:'T6', type:'mcq', q:'Which of these is a private (RFC 1918) IPv4 address range?', opts:['11.0.0.0/8','172.16.0.0/12','192.0.0.0/24','200.10.0.0/16'], correct:1, explain:'The three RFC 1918 private ranges are 10.0.0.0/8, 172.16.0.0/12, and 192.168.0.0/16.'},
+{topic:'T6', type:'mcq', q:'What is the purpose of NAT (Network Address Translation)?', opts:['To assign MAC addresses to hosts','To translate private IPv4 addresses to a public address','To encrypt IP packets','To resolve domain names to IP addresses'], correct:1, explain:'NAT translates internal private addresses to a public, internet-routable address, typically on the edge router.'},
+{topic:'T6', type:'mcq', q:'A packet sent to 224.10.10.5 is an example of which transmission type?', opts:['Unicast','Broadcast','Multicast','Anycast'], correct:2, explain:'224.0.0.0–239.255.255.255 is the multicast range — one sender delivering to a specific group of receivers.'},
+
+{topic:'T7', type:'mcq', q:'When a host sends a packet to a destination on a remote network, what does it use as the destination MAC address in the Ethernet frame?', opts:['The destination host\'s MAC address','The default gateway\'s MAC address','A broadcast MAC address','Its own MAC address'], correct:1, explain:'Since the destination is on a different network, the frame\'s destination MAC is the default gateway (router interface) — the router will forward it on from there.'},
+{topic:'T7', type:'mcq', q:'What are the two basic functions of ARP?', opts:['Assigning IP addresses and routing packets','Resolving IPv4 addresses to MAC addresses and maintaining an ARP table','Encrypting frames and decrypting frames','Blocking broadcast traffic and filtering frames'], correct:1, explain:'ARP resolves a known IPv4 address to an unknown MAC address, and caches the result in a local ARP table.'},
+{topic:'T7', type:'mcq', q:'Which command shows the ARP table on a Windows 10 PC?', opts:['show ip arp','ipconfig /arp','arp -a','netstat -arp'], correct:2, explain:'On Windows, arp -a lists the current ARP cache. show ip arp is the Cisco IOS equivalent.'},
+{topic:'T7', type:'mcq', q:'What security risk is associated with ARP?', opts:['ARP addresses can expire too slowly','ARP replies can be spoofed for ARP poisoning attacks','ARP only works over IPv6','ARP requires a password'], correct:1, explain:'Because ARP has no built-in authentication, an attacker can send fake ARP replies to redirect traffic — this is ARP spoofing/poisoning.'},
+
+{topic:'T9', type:'fill', q:'How many usable hosts does a /28 subnet provide? (just the number)', answer:'14', explain:'/28 leaves 4 host bits: 2^4 − 2 = 14 usable hosts.'},
+{topic:'T9', type:'fill', q:'How many subnets are created if you borrow 3 bits from the host portion? (just the number)', answer:'8', explain:'2^3 = 8 subnets.'},
+{topic:'T9', type:'mcq', q:'A company needs at least 100 subnets from a 172.16.0.0/16 network. How many bits must be borrowed?', opts:['6 bits (64 subnets)','7 bits (128 subnets)','8 bits (256 subnets)','5 bits (32 subnets)'], correct:1, explain:'2^6=64 (too few), 2^7=128 which is the smallest power of two ≥ 100, so 7 bits must be borrowed.'},
+{topic:'T9', type:'mcq', q:'Which device is the only one that stops broadcast traffic from propagating further?', opts:['A switch','A hub','A router','A repeater'], correct:2, explain:'Routers do not forward broadcasts between interfaces — each router interface bounds a separate broadcast domain.'},
+{topic:'T9', type:'fill', q:'What subnet mask corresponds to a /27 prefix?', answer:'255.255.255.224', explain:'/27 = 11111111.11111111.11111111.11100000 = 255.255.255.224.'},
+
+{topic:'T10', type:'mcq', q:'What is the main advantage of VLSM over traditional fixed-size subnetting?', opts:['It uses fewer routers','It allows each subnet to have a mask sized exactly to its own host requirement, minimizing wasted addresses','It removes the need for a default gateway','It only works with IPv6'], correct:1, explain:'VLSM lets you "subnet a subnet" so small links (like WAN point-to-points) don\'t waste addresses sized for large LANs.'},
+{topic:'T10', type:'mcq', q:'When designing a VLSM addressing scheme, which requirement should you allocate first?', opts:['The smallest host requirement','Requirements in alphabetical order by subnet name','The largest host requirement','WAN links, regardless of size'], correct:2, explain:'Golden rule of VLSM: always satisfy the largest subnet first, then continue allocating smaller blocks in the remaining space.'},
+{topic:'T10', type:'mcq', q:'Which type of device should typically be assigned a static IP address rather than DHCP?', opts:['A student\'s laptop','A guest\'s smartphone','A file server','A visitor\'s tablet'], correct:2, explain:'Servers and peripherals need a predictable, unchanging address, so they\'re usually assigned statically rather than via DHCP.'},
+
+{topic:'T11', type:'mcq', q:'How many bits long is an IPv6 address?', opts:['32','64','128','256'], correct:2, explain:'IPv6 addresses are 128 bits, compared to IPv4\'s 32 bits.'},
+{topic:'T11', type:'fill', q:'Compress this IPv6 address: 2001:0db8:0000:0000:0000:0000:0000:0001', answer:'2001:db8::1', explain:'Leading zeros are dropped in each hextet, then the longest run of all-zero hextets is replaced with ::.'},
+{topic:'T11', type:'mcq', q:'What is the recommended prefix length for most IPv6 LANs?', opts:['/48','/56','/64','/96'], correct:2, explain:'/64 is recommended because SLAAC requires a 64-bit Interface ID, and it keeps subnetting simple.'},
+{topic:'T11', type:'mcq', q:'Which IPv6 address range is used for Link-Local Addresses (LLA)?', opts:['2000::/3','fc00::/7','fe80::/10','ff00::/8'], correct:2, explain:'fe80::/10 is the LLA range — every IPv6 interface auto-generates one, and it is never routed off the local link.'},
+{topic:'T11', type:'mcq', q:'What does the double colon (::) represent in an IPv6 address, and how many times can it appear?', opts:['A subnet boundary; can appear twice','One contiguous run of all-zero hextets; only once per address','A broadcast marker; can appear multiple times','The interface ID; always appears once'], correct:1, explain:'The :: represents exactly one contiguous run of all-zero hextets. Using it twice would make the address ambiguous.'},
+
+{topic:'T12', type:'mcq', q:'What does a router use to make its forwarding decisions, unlike a switch?', opts:['Layer 2 MAC address','Layer 3 IP address','Layer 4 port number','Layer 1 signal strength'], correct:1, explain:'Routers forward based on the Layer 3 IP address (specifically the network portion), while switches use Layer 2 MAC addresses.'},
+{topic:'T12', type:'mcq', q:'What happens when a router receives a packet whose destination network is not in its routing table and there is no default route?', opts:['It broadcasts the packet','It floods it out every interface','It drops the packet','It sends it back to the source unmodified'], correct:2, explain:'With no matching entry and no default route, the router has no path to use, so it drops the packet.'},
+{topic:'T12', type:'mcq', q:'Which transport layer protocol is connection-oriented and guarantees ordered, reliable delivery?', opts:['UDP','IP','TCP','ARP'], correct:2, explain:'TCP establishes a session (3-way handshake), tracks sequence numbers, and retransmits lost segments for reliable, ordered delivery.'},
+{topic:'T12', type:'mcq', q:'Which application type is the best fit for UDP rather than TCP?', opts:['File transfer where every byte must arrive correctly','A live VoIP call that can tolerate some data loss but not delay','A banking transaction','Sending a large email attachment'], correct:1, explain:'UDP suits live/streaming media where a little loss is tolerable but retransmission delay is not — like VoIP or live video.'},
+{topic:'T12', type:'fill', q:'What is the well-known TCP port number for HTTPS?', answer:'443', explain:'Port 443/TCP is the well-known port for HTTPS.'},
+{topic:'T12', type:'mcq', q:'What is the correct order of TCP\'s three-way handshake?', opts:['ACK, SYN, SYN-ACK','SYN, SYN-ACK, ACK','SYN-ACK, SYN, ACK','ACK, ACK, SYN'], correct:1, explain:'Client sends SYN, server replies SYN-ACK, client replies ACK — the session is now established.'},
+{topic:'T12', type:'mcq', q:'A source port of 51422 (used for an outgoing client connection) falls into which port group?', opts:['Well-known ports','Registered ports','Private/dynamic (ephemeral) ports','Reserved ports'], correct:2, explain:'49152–65535 is the private/dynamic (ephemeral) range, used by the client OS for outgoing connections.'}
+];
+
+function shuffleArray(arr){
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function renderTest(){
+  const countTag = document.querySelector('#panel-test .tag');
+  if(countTag) countTag.textContent = TEST_QUESTIONS.length + ' questions · mixed topics';
+  const container = document.getElementById('testContainer');
+  let html = '';
+  TEST_QUESTIONS.forEach((q,i)=>{
+    html += `<div class="qitem" id="q-${i}" data-idx="${i}">
+      <div class="qmeta">Question ${i+1} · ${q.topic}</div>
+      <div class="qtext">${q.q}</div>`;
+    if(q.type==='mcq'){
+      html += `<div class="qopts">`;
+      q.opts.forEach((opt,oi)=>{
+        html += `<label class="qopt" data-oi="${oi}">
+          <input type="radio" name="q${i}" value="${oi}"> ${opt}
+        </label>`;
+      });
+      html += `</div>`;
+    } else {
+      html += `<div class="fillin"><input type="text" id="fill-${i}" placeholder="Type your answer"></div>`;
+    }
+    html += `<div class="qexplain" id="exp-${i}"></div></div>`;
+  });
+  html += `
+    <div class="scorebar">
+      <div>
+        <div style="font-family:var(--mono); font-size:11px; color:var(--muted); text-transform:uppercase;">Practice Test</div>
+        <div class="sc" id="scoreDisplay">Not graded yet</div>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn ghost" onclick="resetTest()">Reset</button>
+        <button class="btn" onclick="gradeTest()">Grade My Test</button>
+      </div>
+    </div>
+  `;
+  container.innerHTML = html;
+}
+
+function gradeTest(){
+  let correctCount = 0;
+  TEST_QUESTIONS.forEach((q,i)=>{
+    const expDiv = document.getElementById('exp-'+i);
+    if(q.type==='mcq'){
+      const selected = document.querySelector(`input[name="q${i}"]:checked`);
+      const opts = document.querySelectorAll(`#q-${i} .qopt`);
+      opts.forEach(o=>o.classList.remove('correct','incorrect'));
+      if(selected){
+        const chosenIdx = parseInt(selected.value,10);
+        if(chosenIdx===q.correct){
+          correctCount++;
+          opts[chosenIdx].classList.add('correct');
+        } else {
+          opts[chosenIdx].classList.add('incorrect');
+          opts[q.correct].classList.add('correct');
+        }
+      } else {
+        opts[q.correct].classList.add('correct');
+      }
+      expDiv.textContent = q.explain;
+      expDiv.style.display='block';
+    } else {
+      const input = document.getElementById('fill-'+i);
+      const val = (input.value||'').trim().toLowerCase();
+      const correctVal = q.answer.toLowerCase();
+      const isRight = val===correctVal;
+      if(isRight) correctCount++;
+      input.style.borderColor = isRight ? 'var(--cyan)' : 'var(--red)';
+      expDiv.innerHTML = isRight
+        ? `Correct. ${q.explain}`
+        : `Correct answer: <strong class="correct-hl">${q.answer}</strong>. ${q.explain}`;
+      expDiv.style.display='block';
+    }
+  });
+  const pct = Math.round((correctCount/TEST_QUESTIONS.length)*100);
+  document.getElementById('scoreDisplay').textContent = `${correctCount} / ${TEST_QUESTIONS.length} correct (${pct}%)`;
+  document.querySelector('.scorebar').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function resetTest(){
+  renderTest();
+}
+
+renderTest();
+
+</script>
+</body>
+</html>
