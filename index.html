@@ -264,7 +264,7 @@ footer{text-align:center; color:var(--muted); font-size:12px; font-family:var(--
 <section class="panel" id="panel-vlsm">
   <div class="card">
     <h2>Address Table Builder <span class="tag">VLSM — variable-size subnets</span></h2>
-    <p class="lead">This is the real exam skill from Topic 10: given a base network and a list of LANs/WAN links with different host counts, build a full VLSM address table with zero wasted addresses. Largest requirement is always allocated first.</p>
+    <p class="lead">This is the real exam skill from Topic 10: given a base network and a list of LANs/WAN links with different host counts, build a full VLSM address table with zero wasted addresses. By default the largest requirement is allocated first (standard VLSM practice), but you can also pick a specific subnet to start from, or flip the order to smallest-first.</p>
     <div class="grid g2">
       <div>
         <label>Base Network Address</label>
@@ -280,8 +280,25 @@ footer{text-align:center; color:var(--muted); font-size:12px; font-family:var(--
     <div style="display:flex; gap:10px; margin-top:6px; flex-wrap:wrap;">
       <button class="btn ghost small" onclick="addReqRow()">+ Add Row</button>
       <button class="btn ghost small" onclick="loadSampleTopology()">Load Sample Topology (4 LANs + 3 WAN links)</button>
-      <button class="btn small" onclick="runVLSM()">Build Address Table</button>
     </div>
+
+    <div class="grid g2" style="margin-top:20px;">
+      <div>
+        <label>Start Allocation From</label>
+        <select id="vlsmStartFrom" onfocus="refreshStartOptions()">
+          <option value="">Auto — largest first (standard VLSM)</option>
+        </select>
+      </div>
+      <div>
+        <label>Allocate Remaining By</label>
+        <select id="vlsmSortOrder">
+          <option value="desc">Highest hosts first (standard VLSM — recommended)</option>
+          <option value="asc">Lowest hosts first</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-top:14px;"><button class="btn" onclick="runVLSM()">Build Address Table</button></div>
+
     <div id="vlsmSummary"></div>
     <div id="vlsmTableWrap"></div>
     <div id="vlsmWorkingWrap"></div>
@@ -1058,11 +1075,12 @@ function addReqRow(name='', hosts=''){
   row.className = 'req-row';
   row.id = id;
   row.innerHTML = `
-    <input type="text" placeholder="e.g. Building A LAN" value="${name}" class="req-name">
+    <input type="text" placeholder="e.g. Building A LAN" value="${name}" class="req-name" onchange="refreshStartOptions()">
     <input type="number" placeholder="hosts" min="1" value="${hosts}" class="req-hosts">
-    <button onclick="document.getElementById('${id}').remove()" title="remove">✕</button>
+    <button onclick="document.getElementById('${id}').remove(); refreshStartOptions();" title="remove">✕</button>
   `;
   container.appendChild(row);
+  refreshStartOptions();
 }
 function loadSampleTopology(){
   document.getElementById('vlsmReqRows').innerHTML='';
@@ -1076,18 +1094,42 @@ addReqRow('Sales LAN',50);
 addReqRow('Engineering LAN',25);
 addReqRow('WAN Link',2);
 
-function allocateVLSM(baseIp, basePrefix, reqs){
+function escapeHtml(str){
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function refreshStartOptions(){
+  const sel = document.getElementById('vlsmStartFrom');
+  const current = sel.value;
+  const rows = Array.from(document.querySelectorAll('#vlsmReqRows .req-row'));
+  const names = rows.map(r=>(r.querySelector('.req-name').value||'').trim()).filter(n=>n!=='');
+  sel.innerHTML = '<option value="">Auto — largest first (standard VLSM)</option>' +
+    names.map(n=>`<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
+  if(names.includes(current)) sel.value = current;
+}
+
+function allocateVLSM(baseIp, basePrefix, reqs, startName, sortOrder){
   const baseInfo = subnetInfo(baseIp, basePrefix);
   if(!baseInfo) return {error:'Invalid base network address.'};
   const baseNetInt = baseInfo.networkInt;
   const baseBlockSize = Math.pow(2,32-basePrefix);
   const baseEnd = baseNetInt + baseBlockSize;
 
-  const sorted = reqs.map((r,i)=>({...r, origIndex:i})).sort((a,b)=>b.hosts-a.hosts);
+  const withIndex = reqs.map((r,i)=>({...r, origIndex:i}));
+  // sort by chosen order: 'desc' = highest hosts first (standard VLSM), 'asc' = lowest hosts first
+  let ordered = [...withIndex].sort((a,b)=> sortOrder==='asc' ? a.hosts-b.hosts : b.hosts-a.hosts);
+  // if a specific subnet was chosen to start from, pull it to the front, keep the rest in the chosen order
+  if(startName){
+    const idx = ordered.findIndex(r=>r.name===startName);
+    if(idx>-1){
+      const [chosen] = ordered.splice(idx,1);
+      ordered = [chosen, ...ordered];
+    }
+  }
+
   let cursor = baseNetInt;
   const results = [];
   let allocOrder = 0;
-  for(const r of sorted){
+  for(const r of ordered){
     allocOrder++;
     const cursorBefore = cursor;
     let hostBits = Math.ceil(Math.log2(r.hosts+2));
@@ -1126,6 +1168,8 @@ function runVLSM(){
     name: r.querySelector('.req-name').value || 'Unnamed subnet',
     hosts: parseInt(r.querySelector('.req-hosts').value,10)
   })).filter(r=>!isNaN(r.hosts) && r.hosts>0);
+  const startName = document.getElementById('vlsmStartFrom').value;
+  const sortOrder = document.getElementById('vlsmSortOrder').value;
 
   const summary = document.getElementById('vlsmSummary');
   const tableWrap = document.getElementById('vlsmTableWrap');
@@ -1135,7 +1179,7 @@ function runVLSM(){
     tableWrap.innerHTML=''; document.getElementById('vlsmWorkingWrap').innerHTML=''; return;
   }
 
-  const out = allocateVLSM(ip, prefix, reqs);
+  const out = allocateVLSM(ip, prefix, reqs, startName, sortOrder);
   if(out.error){
     summary.innerHTML = `<div class="note" style="border-color:var(--red); color:var(--red); background:rgba(255,107,107,0.08); margin-top:14px;">${out.error}</div>`;
     tableWrap.innerHTML=''; document.getElementById('vlsmWorkingWrap').innerHTML=''; return;
