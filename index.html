@@ -284,6 +284,7 @@ footer{text-align:center; color:var(--muted); font-size:12px; font-family:var(--
     </div>
     <div id="vlsmSummary"></div>
     <div id="vlsmTableWrap"></div>
+    <div id="vlsmWorkingWrap"></div>
   </div>
 
   <div class="card">
@@ -1085,13 +1086,17 @@ function allocateVLSM(baseIp, basePrefix, reqs){
   const sorted = reqs.map((r,i)=>({...r, origIndex:i})).sort((a,b)=>b.hosts-a.hosts);
   let cursor = baseNetInt;
   const results = [];
+  let allocOrder = 0;
   for(const r of sorted){
+    allocOrder++;
+    const cursorBefore = cursor;
     let hostBits = Math.ceil(Math.log2(r.hosts+2));
     if(hostBits<0) hostBits=0;
     const blockSize = Math.pow(2, hostBits);
     let netInt = Math.ceil(cursor/blockSize)*blockSize;
+    const wasAligned = (netInt===cursorBefore);
     if(netInt + blockSize > baseEnd){
-      results.push({name:r.name, hostsNeeded:r.hosts, origIndex:r.origIndex, error:true});
+      results.push({name:r.name, hostsNeeded:r.hosts, origIndex:r.origIndex, allocOrder, error:true, hostBits, blockSize});
       continue;
     }
     const prefix = 32-hostBits;
@@ -1099,16 +1104,18 @@ function allocateVLSM(baseIp, basePrefix, reqs){
     const firstUsable = hostBits<=1?netInt:netInt+1;
     const lastUsable = hostBits<=1?broadcastInt:broadcastInt-1;
     results.push({
-      name: r.name, hostsNeeded: r.hosts, origIndex:r.origIndex,
+      name: r.name, hostsNeeded: r.hosts, origIndex:r.origIndex, allocOrder,
       prefix, mask:int2ip(prefixToMask(prefix)),
       network:int2ip(netInt), broadcast:int2ip(broadcastInt),
       firstUsable:int2ip(firstUsable), lastUsable:int2ip(lastUsable),
-      usableHosts: hostBits<=1?0:blockSize-2
+      usableHosts: hostBits<=1?0:blockSize-2,
+      hostBits, blockSize, cursorBefore, netInt, wasAligned
     });
     cursor = netInt+blockSize;
   }
+  const allocatedOrderResults = [...results].sort((a,b)=>a.allocOrder-b.allocOrder);
   results.sort((a,b)=>a.origIndex-b.origIndex);
-  return {results, totalBlockSize: baseBlockSize, usedSize: cursor-baseNetInt};
+  return {results, allocatedOrderResults, totalBlockSize: baseBlockSize, usedSize: cursor-baseNetInt};
 }
 
 function runVLSM(){
@@ -1125,13 +1132,13 @@ function runVLSM(){
 
   if(reqs.length===0){
     summary.innerHTML = `<div class="note" style="border-color:var(--red); color:var(--red); background:rgba(255,107,107,0.08); margin-top:14px;">Add at least one requirement with a host count.</div>`;
-    tableWrap.innerHTML=''; return;
+    tableWrap.innerHTML=''; document.getElementById('vlsmWorkingWrap').innerHTML=''; return;
   }
 
   const out = allocateVLSM(ip, prefix, reqs);
   if(out.error){
     summary.innerHTML = `<div class="note" style="border-color:var(--red); color:var(--red); background:rgba(255,107,107,0.08); margin-top:14px;">${out.error}</div>`;
-    tableWrap.innerHTML=''; return;
+    tableWrap.innerHTML=''; document.getElementById('vlsmWorkingWrap').innerHTML=''; return;
   }
 
   const totalHostsNeeded = reqs.reduce((s,r)=>s+r.hosts,0);
@@ -1151,18 +1158,69 @@ function runVLSM(){
     return `<tr>
       <td>${r.name}</td>
       <td>${r.hostsNeeded}</td>
-      <td>${r.network}/${r.prefix}</td>
-      <td>${r.mask}</td>
-      <td>${r.firstUsable} – ${r.lastUsable}</td>
-      <td>${r.broadcast}</td>
+      <td>${r.mask} /${r.prefix}</td>
       <td>${r.usableHosts}</td>
+      <td>${r.network}</td>
+      <td>${r.firstUsable}</td>
+      <td>${r.lastUsable}</td>
+      <td>${r.broadcast}</td>
     </tr>`;
   }).join('');
   tableWrap.innerHTML = `
     <table class="outtable">
-      <tr><th>Subnet / Link</th><th>Hosts Needed</th><th>Network</th><th>Mask</th><th>Usable Range</th><th>Broadcast</th><th>Usable Hosts</th></tr>
+      <tr>
+        <th>Subnet / Link</th>
+        <th>Requirements (No. IPs)</th>
+        <th>Subnet Mask</th>
+        <th>Usable Host</th>
+        <th>Network Address</th>
+        <th>First Usable IP Address</th>
+        <th>Last Usable IP Address</th>
+        <th>Broadcast Address</th>
+      </tr>
       ${rowsHtml}
     </table>
+  `;
+
+  const workingWrap = document.getElementById('vlsmWorkingWrap');
+  const workingHtml = out.allocatedOrderResults.map(r=>{
+    const cursorIp = int2ip(r.cursorBefore!==undefined ? r.cursorBefore : 0);
+    if(r.error){
+      return `
+      <div class="topic-block open" style="margin-top:14px;">
+        <div class="topic-head" style="cursor:default;">
+          <div class="th-left"><span class="topic-num">#${r.allocOrder}</span><h3>${r.name} — ${r.hostsNeeded} hosts needed</h3></div>
+        </div>
+        <div class="topic-body" style="max-height:none; padding:0 18px 18px;">
+          <div class="note" style="border-color:var(--red); color:var(--red); background:rgba(255,107,107,0.08);">
+            Needs a block of ${r.blockSize} addresses (/${32-r.hostBits}), but there isn't enough room left in the base network at this point in the allocation. Reduce other requirements or use a larger base network.
+          </div>
+        </div>
+      </div>`;
+    }
+    const alignNote = r.wasAligned
+      ? `The cursor (${cursorIp}) already sat on a /${r.prefix} boundary, so no addresses were skipped.`
+      : `The cursor (${cursorIp}) was NOT yet on a /${r.prefix} boundary, so it was rounded UP to the next multiple of ${r.blockSize} → <strong>${r.network}</strong>. This is why some address ranges appear "skipped" in the table above.`;
+    return `
+    <div class="topic-block open" style="margin-top:14px;">
+      <div class="topic-head" style="cursor:default;">
+        <div class="th-left"><span class="topic-num">#${r.allocOrder}</span><h3>${r.name} — ${r.hostsNeeded} hosts needed</h3></div>
+      </div>
+      <div class="topic-body" style="max-height:none; padding:0 18px 18px;">
+        <div class="steps">
+          <div class="step"><h4>Find the block size</h4><p>Usable hosts needed = ${r.hostsNeeded}. Smallest power of 2 ≥ (${r.hostsNeeded} + 2 for network &amp; broadcast) = <strong>${r.blockSize}</strong> addresses → that needs <strong>${r.hostBits}</strong> host bit${r.hostBits===1?'':'s'} (2<sup>${r.hostBits}</sup> = ${r.blockSize}).</p></div>
+          <div class="step"><h4>Convert to a prefix</h4><p>32 − ${r.hostBits} host bits = <strong>/${r.prefix}</strong>, i.e. mask <strong>${r.mask}</strong>.</p></div>
+          <div class="step"><h4>Place it on a valid boundary</h4><p>${alignNote}</p></div>
+          <div class="step"><h4>Read off the range</h4><p>Network = <strong>${r.network}</strong>. Broadcast = network + ${r.blockSize} − 1 = <strong>${r.broadcast}</strong>. Usable hosts = ${r.network} + 1 to broadcast − 1 = <strong>${r.firstUsable} – ${r.lastUsable}</strong> (${r.usableHosts} addresses).</p></div>
+          <div class="step"><h4>Move the cursor</h4><p>Next allocation starts right after this block, at <strong>${int2ip(r.netInt+r.blockSize)}</strong>.</p></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  workingWrap.innerHTML = `
+    <h4 style="font-family:var(--mono); font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em; margin:24px 0 4px;">Show Working — in the order each subnet was actually allocated (largest first)</h4>
+    ${workingHtml}
   `;
 }
 
