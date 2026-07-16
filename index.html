@@ -193,7 +193,7 @@ footer{text-align:center; color:var(--muted); font-size:12px; font-family:var(--
 <section class="panel active" id="panel-notes">
   <div class="card">
     <h2>Study Notes <span class="tag">click a topic to expand</span></h2>
-    <p class="lead">Condensed from your Topic 5, 6, 7, 9, 10, 11 and 12 slide decks. Skim these first, then go do the calculators — you learn subnetting by doing it, not reading it.</p>
+    <p class="lead">Condensed from your Topic 1–12 slide decks. Your test covers <strong>Topics 5 to 13</strong> — everything from Ethernet Switching onward is fully written up below (note the module skips a Topic 8, so the sequence runs 5, 6, 7, 9, 10, 11, 12). Skim these first, then go do the calculators — you learn subnetting and IPv6 by doing it, not reading it.</p>
     <div id="notesContainer"></div>
   </div>
 </section>
@@ -764,46 +764,84 @@ const NOTES = [
   html:`
   <h4>Why IPv6?</h4>
   <ul>
-    <li>IPv4's 32-bit space is running out. IPv6 uses a 128-bit address space — effectively unlimited for practical purposes.</li>
-    <li><strong>Coexistence strategies</strong> while migrating: <strong>Dual stack</strong> (run both protocols at once), <strong>Tunneling</strong> (IPv6 packet wrapped inside an IPv4 packet), <strong>Translation / NAT64</strong> (lets IPv6-only devices talk to IPv4-only devices).</li>
+    <li>IPv4's 32-bit space is running out due to a growing internet population, the limits of NAT, and the explosion of IoT devices. IPv6 uses a <strong>128-bit</strong> address space — effectively unlimited for practical purposes.</li>
+    <li><strong>Coexistence strategies</strong> while migrating (the goal is always native IPv6 end-to-end): <strong>Dual stack</strong> (device runs both IPv4 and IPv6 stacks at once), <strong>Tunneling</strong> (an IPv6 packet is encapsulated inside an IPv4 packet to cross an IPv4 network), <strong>Translation / NAT64</strong> (lets IPv6-only devices communicate with IPv4-only devices).</li>
   </ul>
-  <h4>Address Representation</h4>
+  <h4>Address Representation Basics</h4>
   <ul>
-    <li>128 bits, written in hexadecimal as 8 groups of 4 hex digits ("hextets"), separated by colons: <code>x:x:x:x:x:x:x:x</code>. Not case-sensitive.</li>
-    <li><strong>Rule 1 — Omit leading zeros</strong> within each hextet (not trailing zeros): <code>0db8</code> &rarr; <code>db8</code>.</li>
-    <li><strong>Rule 2 — Double colon (::)</strong> replaces one contiguous run of all-zero hextets. Can only be used <strong>once</strong> per address, otherwise the address would be ambiguous.</li>
+    <li>128 bits, written in hexadecimal as 8 groups of 4 hex digits. Each group is called a <strong>hextet</strong> (16 bits). Groups are separated by colons: <code>x:x:x:x:x:x:x:x</code>.</li>
+    <li>Not case-sensitive — <code>2001:DB8</code> and <code>2001:db8</code> are identical.</li>
+    <li>Each single hex digit = <strong>4 bits</strong>. Each hextet = 4 hex digits = <strong>16 bits</strong>. 8 hextets × 16 = 128 bits.</li>
+  </ul>
+
+  <h4>The Two Compression Rules</h4>
+  <ul>
+    <li><strong>Rule 1 — Omit leading zeros</strong> in each hextet (leading only, never trailing): <code>0db8</code> &rarr; <code>db8</code>, <code>00ab</code> &rarr; <code>ab</code>, <code>0a00</code> &rarr; <code>a00</code>. Trailing zeros must stay or the address becomes ambiguous.</li>
+    <li><strong>Rule 2 — Double colon (::)</strong> replaces one single contiguous run of all-zero hextets. It can only be used <strong>once</strong> per address — using it twice would make it impossible to know how many zero hextets each :: stands for.</li>
   </ul>
   <table class="ref">
     <tr><th>Form</th><th>Example</th></tr>
-    <tr><td>Full</td><td>2001:0db8:0000:1111:0000:0000:0000:0200</td></tr>
-    <tr><td>Leading zeros omitted</td><td>2001:db8:0:1111:0:0:0:200</td></tr>
-    <tr><td>Fully compressed</td><td>2001:db8:0:1111::200</td></tr>
+    <tr><td>Full (preferred)</td><td>2001:0db8:0000:1111:0000:0000:0000:0200</td></tr>
+    <tr><td>After Rule 1 (leading zeros omitted)</td><td>2001:db8:0:1111:0:0:0:200</td></tr>
+    <tr><td>After Rule 2 (fully compressed)</td><td>2001:db8:0:1111::200</td></tr>
   </table>
+
+  <h4>Compressing an Address — Step by Step</h4>
+  <div class="steps">
+    <div class="step"><h4>Drop the leading zeros in every hextet</h4><p>Go hextet by hextet and remove leading zeros only. <code>0000</code> becomes a single <code>0</code>. Example: <code>2001:0DB8:0000:00F3:0000:0000:0000:0001</code> &rarr; <code>2001:db8:0:f3:0:0:0:1</code>.</p></div>
+    <div class="step"><h4>Find the longest run of all-zero hextets</h4><p>Look for consecutive hextets that are just <code>0</code>. Here the run <code>0:0:0</code> (three hextets) is the longest.</p></div>
+    <div class="step"><h4>Replace that one run with ::</h4><p><code>2001:db8:0:f3:0:0:0:1</code> &rarr; <strong>2001:db8:0:f3::1</strong>. Done. If two runs are the same length, replace only the first one.</p></div>
+  </div>
+
+  <h4>Unmasking / Expanding a Compressed Address — Step by Step</h4>
+  <p>This is the reverse process — turning a short address back into the full 128-bit form. This is the one people lose marks on, so do it methodically:</p>
+  <div class="steps">
+    <div class="step"><h4>Count the hextets you can see</h4><p>Count the groups on each side of the <code>::</code>. A full address has 8 hextets total. Example: <code>FE80::B:0:0:A4</code> has <code>FE80</code> on the left (1) and <code>B:0:0:A4</code> on the right (4) = 5 visible hextets.</p></div>
+    <div class="step"><h4>Work out how many zero hextets the :: hides</h4><p>8 − (visible hextets) = number of all-zero hextets the <code>::</code> stands for. Here 8 − 5 = <strong>3</strong> hextets of <code>0000</code>.</p></div>
+    <div class="step"><h4>Expand the ::</h4><p>Replace the <code>::</code> with that many <code>0000</code> hextets: <code>FE80:0000:0000:0000:000B:0000:0000:00A4</code> (mentally, before padding).</p></div>
+    <div class="step"><h4>Pad every hextet back to 4 digits</h4><p>Add leading zeros so each hextet is exactly 4 hex digits: <code>B</code> &rarr; <code>000B</code>, <code>A4</code> &rarr; <code>00A4</code>. Final full form: <strong>FE80:0000:0000:0000:000B:0000:0000:00A4</strong>.</p></div>
+  </div>
+  <div class="note">Tip: the <a href="#" onclick="document.querySelector('[data-tab=ipv6]').click(); return false;" style="color:var(--cyan);">IPv6 Practice tab</a> does both directions live — use its "Compressed → Expand" mode to drill unmasking until it's automatic.</div>
+
+  <h4>Worked Compression Examples (from the tutorial)</h4>
+  <table class="ref">
+    <tr><th>Uncompressed (full)</th><th>Compressed</th></tr>
+    <tr><td>2001:0DB8:0000:00F3:0000:0000:0000:0001</td><td>2001:db8:0:f3::1</td></tr>
+    <tr><td>2001:0DB8:000A:0000:0000:0000:0000:0230</td><td>2001:db8:a::230</td></tr>
+    <tr><td>FE80:0000:0000:0000:000B:0000:0000:00A4</td><td>fe80::b:0:0:a4</td></tr>
+    <tr><td>2001:0DB8:0000:ABCD:0123:0000:0000:0000</td><td>2001:db8:0:abcd:123::</td></tr>
+  </table>
+  <div class="note">Watch the third one: <code>fe80::b:0:0:a4</code> — the <code>::</code> replaced the three leading zero hextets, so the two <code>0</code>s near the end must be written out (you already used your one allowed <code>::</code>).</div>
+
   <h4>Address Types</h4>
   <ul>
-    <li><strong>Unicast</strong> — one interface. <strong>Multicast</strong> — one packet delivered to many destinations. <strong>Anycast</strong> — one address on multiple devices; delivered to the nearest one.</li>
-    <li>IPv6 has <strong>no broadcast address</strong> — the all-nodes multicast (ff02::1) achieves the same effect.</li>
-    <li><strong>Prefix length /64 is recommended</strong> for LANs — SLAAC needs a 64-bit Interface ID to work, and it keeps subnetting simple.</li>
+    <li><strong>Unicast</strong> — uniquely identifies one interface. <strong>Multicast</strong> — one packet delivered to many destinations. <strong>Anycast</strong> — one address assigned to multiple devices; a packet is routed to the nearest one.</li>
+    <li>IPv6 has <strong>no broadcast address</strong> — the all-nodes multicast <code>ff02::1</code> achieves the same effect.</li>
+    <li><strong>Prefix length /64 is recommended</strong> for LANs — SLAAC needs a 64-bit Interface ID to work, and it keeps subnetting simple. Prefix length can range from 0 to 128.</li>
   </ul>
   <table class="ref">
     <tr><th>Address Type</th><th>Range</th><th>Notes</th></tr>
-    <tr><td>Global Unicast (GUA)</td><td>2000::/3</td><td>Globally routable, like a public IPv4 address; starts with 2 or 3</td></tr>
-    <tr><td>Unique Local (ULA)</td><td>fc00::/7 – fdff::/7</td><td>Like RFC 1918 private addresses, but NOT meant for security/hiding</td></tr>
-    <tr><td>Link-Local (LLA)</td><td>fe80::/10</td><td>Auto-created on every interface; never routed; used as default gateway address in practice</td></tr>
-    <tr><td>Multicast</td><td>ff00::/8</td><td>ff02::1 = all-nodes, ff02::2 = all-routers; also solicited-node multicast</td></tr>
+    <tr><td>Global Unicast (GUA)</td><td>2000::/3</td><td>Globally routable, like a public IPv4 address; currently only 2000::/3 is assigned, so it starts with a 2 or 3</td></tr>
+    <tr><td>Unique Local (ULA)</td><td>fc00::/7 – fdff::/7</td><td>Local addressing within/between a limited number of sites; NOT globally routed. Not intended as a security/hiding mechanism</td></tr>
+    <tr><td>Link-Local (LLA)</td><td>fe80::/10</td><td>Auto-created on every interface; never routed off the link; used as the default gateway address in practice</td></tr>
+    <tr><td>Loopback</td><td>::1</td><td>The IPv6 equivalent of 127.0.0.1</td></tr>
+    <tr><td>Unspecified</td><td>::</td><td>All zeros — used as a source address when a device has no address yet</td></tr>
+    <tr><td>Multicast</td><td>ff00::/8</td><td>ff02::1 = all-nodes, ff02::2 = all-routers; also solicited-node multicast. Multicast can only be a destination, never a source</td></tr>
   </table>
-  <h4>GUA Structure</h4>
+
+  <h4>GUA Structure — Isolating the Three Parts</h4>
   <ul>
-    <li><strong>Global Routing Prefix</strong> — assigned by the ISP, identifies the site.</li>
-    <li><strong>Subnet ID</strong> — the organization's own subnetting field, between the routing prefix and interface ID.</li>
-    <li><strong>Interface ID</strong> — the host portion, equivalent to the IPv4 host bits; recommended 64 bits wide.</li>
-    <li>All-0s host address = reserved Subnet-Router anycast address (routers only).</li>
+    <li>A GUA splits into three fields: <strong>Global Routing Prefix</strong> (assigned by the ISP, identifies the site), <strong>Subnet ID</strong> (the organization's own subnetting field), and <strong>Interface ID</strong> (the host portion, equivalent to IPv4 host bits, recommended 64 bits).</li>
+    <li>With a <strong>/64</strong>, the split is clean: the first 4 hextets (64 bits) are network, the last 4 hextets are the Interface ID.</li>
   </ul>
+  <div class="note">Worked example: <strong>2001:DB8:ACAD:A100::50 /64</strong>. Expanded = 2001:0DB8:ACAD:A100:0000:0000:0000:0050. With a /64: Global Routing Prefix (typically /48) = <code>2001:DB8:ACAD</code>, Subnet ID (the 4th hextet) = <code>A100</code>, Interface ID (last 4 hextets) = <code>::50</code> i.e. 0000:0000:0000:0050.</div>
+
   <h4>Basic Cisco Configuration</h4>
   <ul>
-    <li>GUA: <code>ipv6 address 2001:db8:acad:1::1/64</code></li>
-    <li>LLA (manual): <code>ipv6 address fe80::1:1 link-local</code></li>
-    <li>Best practice: use the router's <strong>LLA</strong> as the default gateway address for hosts, not the GUA.</li>
+    <li>Enable IPv6 routing globally: <code>ipv6 unicast-routing</code> (this also makes the router join the ff02::2 all-routers group).</li>
+    <li>GUA on an interface: <code>ipv6 address 2001:db8:acad:1::1/64</code></li>
+    <li>Manual LLA: <code>ipv6 address fe80::1:1 link-local</code></li>
+    <li>Best practice: use the router's <strong>LLA</strong> as the default gateway address for hosts, not the GUA. With DHCPv6 or SLAAC, the router's LLA is automatically used as the default gateway.</li>
   </ul>
   `
 },
@@ -1522,6 +1560,13 @@ const TEST_QUESTIONS = [
 
 {topic:'T11', type:'mcq', q:'How many bits long is an IPv6 address?', opts:['32','64','128','256'], correct:2, explain:'IPv6 addresses are 128 bits, compared to IPv4\'s 32 bits.'},
 {topic:'T11', type:'fill', q:'Compress this IPv6 address: 2001:0db8:0000:0000:0000:0000:0000:0001', answer:'2001:db8::1', explain:'Leading zeros are dropped in each hextet, then the longest run of all-zero hextets is replaced with ::.'},
+{topic:'T11', type:'fill', q:'Expand (unmask) this address to full 128-bit form: fe80::b:0:0:a4', answer:'fe80:0000:0000:0000:000b:0000:0000:00a4', explain:'5 hextets are visible, so :: hides 8−5=3 zero hextets. Then pad every hextet to 4 digits: b→000b, a4→00a4.'},
+{topic:'T11', type:'fill', q:'Expand (unmask) this address to full 128-bit form: 2001:db8::1', answer:'2001:0db8:0000:0000:0000:0000:0000:0001', explain:'2 hextets visible (2001 and 1), so :: hides 8−2=6 zero hextets, then pad each hextet to 4 digits.'},
+{topic:'T11', type:'fill', q:'Compress this IPv6 address: 2001:0DB8:000A:0000:0000:0000:0000:0230', answer:'2001:db8:a::230', explain:'Drop leading zeros (000a→a, 0230→230), then replace the run of four zero hextets with ::.'},
+{topic:'T11', type:'mcq', q:'How many all-zero hextets does the "::" represent in the address 2001:db8:acad::1 ?', opts:['2','3','4','5'], correct:2, explain:'Four hextets are visible (2001, db8, acad, 1), so :: stands for 8−4 = 4 zero hextets.'},
+{topic:'T11', type:'mcq', q:'Why can the double colon (::) only be used once in an IPv6 address?', opts:['It makes the address too long','Using it twice would make it ambiguous how many zero hextets each :: represents','Cisco IOS does not support two ::','It is only a style preference'], correct:1, explain:'With two ::, you could not tell how the 8 hextets are split between them, so the address would be ambiguous.'},
+{topic:'T11', type:'mcq', q:'A single hexadecimal digit in an IPv6 address represents how many bits?', opts:['1 bit','4 bits','8 bits','16 bits'], correct:1, explain:'Each hex digit = 4 bits. A hextet (4 hex digits) = 16 bits; 8 hextets = 128 bits.'},
+{topic:'T11', type:'fill', q:'What is the fully compressed form of the IPv6 loopback address (equivalent to 127.0.0.1)?', answer:'::1', explain:'The loopback is 0000:...:0001, which compresses to ::1.'},
 {topic:'T11', type:'mcq', q:'What is the recommended prefix length for most IPv6 LANs?', opts:['/48','/56','/64','/96'], correct:2, explain:'/64 is recommended because SLAAC requires a 64-bit Interface ID, and it keeps subnetting simple.'},
 {topic:'T11', type:'mcq', q:'Which IPv6 address range is used for Link-Local Addresses (LLA)?', opts:['2000::/3','fc00::/7','fe80::/10','ff00::/8'], correct:2, explain:'fe80::/10 is the LLA range — every IPv6 interface auto-generates one, and it is never routed off the local link.'},
 {topic:'T11', type:'mcq', q:'What does the double colon (::) represent in an IPv6 address, and how many times can it appear?', opts:['A subnet boundary; can appear twice','One contiguous run of all-zero hextets; only once per address','A broadcast marker; can appear multiple times','The interface ID; always appears once'], correct:1, explain:'The :: represents exactly one contiguous run of all-zero hextets. Using it twice would make the address ambiguous.'},
@@ -1607,7 +1652,14 @@ function gradeTest(){
       const input = document.getElementById('fill-'+i);
       const val = (input.value||'').trim().toLowerCase();
       const correctVal = q.answer.toLowerCase();
-      const isRight = val===correctVal;
+      let isRight = val===correctVal;
+      // IPv6-aware matching: if both the answer and the response look like IPv6,
+      // accept any equivalent form (compressed vs expanded, leading zeros, case)
+      if(!isRight && correctVal.includes(':') && val.includes(':')){
+        const a = expandIPv6(val);
+        const b = expandIPv6(correctVal);
+        if(a && b && a===b) isRight = true;
+      }
       if(isRight) correctCount++;
       input.style.borderColor = isRight ? 'var(--cyan)' : 'var(--red)';
       expDiv.innerHTML = isRight
