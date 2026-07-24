@@ -186,7 +186,8 @@ footer{text-align:center; color:var(--muted); font-size:12px; font-family:var(--
   <button data-tab="divide"><span class="n">03</span>Divide Into Subnets</button>
   <button data-tab="vlsm"><span class="n">04</span>Address Table Builder (VLSM)</button>
   <button data-tab="ipv6"><span class="n">05</span>IPv6 Practice</button>
-  <button data-tab="test"><span class="n">06</span>Practice Test</button>
+  <button data-tab="commands"><span class="n">06</span>IOS Commands</button>
+  <button data-tab="test"><span class="n">07</span>Practice Test</button>
 </nav>
 
 <!-- ============ PANEL: NOTES ============ -->
@@ -340,6 +341,32 @@ footer{text-align:center; color:var(--muted); font-size:12px; font-family:var(--
       <tr><td>All-nodes multicast</td><td>ff02::1</td><td>Every IPv6 device on the link</td></tr>
       <tr><td>All-routers multicast</td><td>ff02::2</td><td>Every IPv6 router on the link</td></tr>
     </table>
+  </div>
+</section>
+
+<!-- ============ PANEL: IOS COMMANDS ============ -->
+<section class="panel" id="panel-commands">
+  <div class="card">
+    <h2>Cisco IOS Command Reference <span class="tag">every command, explained</span></h2>
+    <p class="lead">Every command line you'll touch in the ITN / Packet Tracer assignment, grouped by what you're trying to do. Each row shows the command, the mode/prompt it runs in, and plainly what it does and why. For the 5-minute interview, be ready to say the <em>purpose</em>, not just the syntax.</p>
+    <input type="text" id="cmdSearch" placeholder="🔍 Filter commands… (e.g. 'vty', 'password', 'ipv6', 'show')" oninput="filterCommands()" style="margin-bottom:6px;">
+    <div id="cmdCount" style="font-family:var(--mono); font-size:11px; color:var(--muted); margin-bottom:10px;"></div>
+    <div id="cmdContainer"></div>
+  </div>
+
+  <div class="card">
+    <h2>Mode Map — Where Each Prompt Lives</h2>
+    <p class="lead">IOS is modal: the prompt tells you where you are, and which commands are legal. You walk down into modes and back up with <code>exit</code> / <code>end</code>.</p>
+    <table class="ref">
+      <tr><th>Prompt</th><th>Mode</th><th>How you got there</th><th>What you can do</th></tr>
+      <tr><td>Router&gt;</td><td>User EXEC</td><td>Default on login</td><td>Look only — basic show commands, ping</td></tr>
+      <tr><td>Router#</td><td>Privileged EXEC</td><td><code>enable</code></td><td>Full show/debug, save config, reload</td></tr>
+      <tr><td>Router(config)#</td><td>Global Config</td><td><code>configure terminal</code></td><td>Device-wide settings (hostname, banner…)</td></tr>
+      <tr><td>Router(config-if)#</td><td>Interface Config</td><td><code>interface g0/0</code></td><td>Settings for one interface (IP, no shutdown)</td></tr>
+      <tr><td>Router(config-line)#</td><td>Line Config</td><td><code>line console 0</code> / <code>line vty 0 15</code></td><td>Console / VTY / AUX access settings</td></tr>
+      <tr><td>Router(config-router)#</td><td>Router Config</td><td><code>router ospf 1</code> etc.</td><td>Routing protocol settings</td></tr>
+    </table>
+    <div class="note">Shortcut keys: <code>Ctrl+Z</code> or <code>end</code> jumps from any config mode straight back to Privileged EXEC. <code>exit</code> goes up exactly one level. <code>do &lt;command&gt;</code> runs a privileged command (like <code>do show ip int brief</code>) without leaving config mode.</div>
   </div>
 </section>
 
@@ -887,6 +914,135 @@ const NOTES = [
     <li><code>netstat</code> shows active TCP connections — useful for spotting unexplained/suspicious connections.</li>
   </ul>
   `
+},
+{
+  num:'CLI', title:'Cisco IOS Commands — What Each One Does',
+  html:`
+  <p style="font-size:14px; color:var(--muted);">Every command from your basic switch/router config sheet, grouped by purpose. For the interview, don't just memorise the syntax — be ready to say <em>what it does</em> and <em>why you run it</em>.</p>
+
+  <h4>Moving Between Command Modes</h4>
+  <table class="ref">
+    <tr><th>Command</th><th>Prompt you land in</th><th>What it does / why</th></tr>
+    <tr><td>enable</td><td>Router#</td><td>Enters <strong>privileged EXEC mode</strong> ("enable mode"). Needed before you can view full config or make changes. Read-only user mode (&gt;) can't do much.</td></tr>
+    <tr><td>configure terminal</td><td>Router(config)#</td><td>Enters <strong>global configuration mode</strong>, where you actually change the device's settings.</td></tr>
+    <tr><td>interface vlan 1</td><td>Router(config-if)#</td><td>Drops into a specific interface (here the switch's VLAN 1 management interface) so the next commands apply to it.</td></tr>
+    <tr><td>line console 0</td><td>Router(config-line)#</td><td>Enters the console line so you can secure physical console access.</td></tr>
+    <tr><td>exit</td><td>up one level</td><td>Backs out of the current mode one step. <code>end</code> or Ctrl-Z jumps straight back to privileged EXEC.</td></tr>
+  </table>
+
+  <h4>Setting Passwords (Securing the Device)</h4>
+  <table class="ref">
+    <tr><th>Command</th><th>What it does / why</th></tr>
+    <tr><td>line console 0<br>password <em>cisco</em><br>login</td><td>Sets a password on the <strong>console port</strong> and <code>login</code> activates the prompt, so anyone plugging into the console must authenticate. Without <code>login</code>, the password is ignored.</td></tr>
+    <tr><td>enable secret <em>class</em></td><td>Sets the password required to enter <strong>privileged EXEC mode</strong>. <code>secret</code> stores it <strong>hashed (encrypted)</strong> — always prefer it over <code>enable password</code>, which is plaintext.</td></tr>
+    <tr><td>service password-encryption</td><td>Encrypts <strong>all</strong> plaintext passwords in the running config (like the console password) so they aren't readable in <code>show running-config</code>. Weak encryption, but stops shoulder-surfing.</td></tr>
+  </table>
+
+  <h4>Login Banner</h4>
+  <table class="ref">
+    <tr><th>Command</th><th>What it does / why</th></tr>
+    <tr><td>banner motd # <em>message</em> #</td><td>Sets the <strong>message-of-the-day</strong> shown at login. The <code>#</code> characters are delimiters marking the start and end of the text. Used for legal "authorized personnel only" warnings.</td></tr>
+  </table>
+
+  <h4>Assigning an IP Address (Management / Interface)</h4>
+  <table class="ref">
+    <tr><th>Command</th><th>What it does / why</th></tr>
+    <tr><td>interface vlan 1</td><td>Selects the switch's <strong>SVI</strong> (Switch Virtual Interface) — a switch has no routed ports by default, so VLAN 1 is how you give the whole switch one management IP.</td></tr>
+    <tr><td>ip address 192.168.1.157 255.255.255.240</td><td>Assigns the <strong>IPv4 address and subnet mask</strong> to that interface. On a router's physical port (e.g. G0/0), this is the gateway address for that LAN.</td></tr>
+    <tr><td>no shutdown</td><td>Administratively <strong>enables</strong> the interface. Interfaces are shut down by default — without this, the IP is configured but the port stays "administratively down".</td></tr>
+    <tr><td>ipv6 address 2001:db8:acad:a::1/64</td><td>Assigns an IPv6 <strong>GUA</strong> to the interface.</td></tr>
+    <tr><td>ipv6 address fe80::1 link-local</td><td>Manually sets the <strong>link-local address</strong> — memorable, and used as the IPv6 default gateway for hosts on that link.</td></tr>
+  </table>
+
+  <h4>Saving the Configuration</h4>
+  <table class="ref">
+    <tr><th>Command</th><th>What it does / why</th></tr>
+    <tr><td>copy running-config startup-config</td><td>Copies the live <strong>running-config</strong> (in RAM, lost on reboot) into <strong>startup-config</strong> (in NVRAM, survives reboot). Run this or your work is gone after a power cycle. Short form: <code>copy run start</code> / <code>wr</code>.</td></tr>
+  </table>
+
+  <h4>Verifying / Showing (the "did it work?" commands)</h4>
+  <table class="ref">
+    <tr><th>Command</th><th>What it shows / why you run it</th></tr>
+    <tr><td>show ip interface brief</td><td>One-line summary of <strong>every interface</strong>: its IP address and status (up/up, down, administratively down). The fastest way to confirm addressing and that ports are enabled.</td></tr>
+    <tr><td>show mac address-table</td><td>The switch's learned <strong>MAC-to-port</strong> mappings — proves the switch is learning source MACs correctly.</td></tr>
+    <tr><td>show running-config</td><td>Displays the <strong>entire live configuration</strong> — used to review everything you've set, and to confirm passwords are encrypted.</td></tr>
+    <tr><td>show ip route</td><td>The router's <strong>routing table</strong> — which networks it knows and how it reaches them.</td></tr>
+    <tr><td>show ipv6 interface brief</td><td>Same as the IPv4 version, but lists each interface's IPv6 addresses (including the auto-generated LLA).</td></tr>
+  </table>
+  <div class="note">Interview-ready one-liners: "<strong>enable secret</strong> is hashed, <strong>enable password</strong> is plaintext." · "<strong>no shutdown</strong> turns the interface on." · "<strong>copy run start</strong> makes the config survive a reboot." · "A switch uses a <strong>VLAN 1 SVI</strong> for its management IP because its ports aren't routed."</div>
+  `
+},
+{
+  num:'A2', title:'Assignment 2 (Subnetting) — Interview Prep',
+  html:`
+  <p style="font-size:14px; color:var(--muted);">Likely questions your teacher may ask about the 192.168.1.0/24 subnetting task, with model answers based on your submitted design. Practice saying these out loud — the interview tests whether <em>you</em> understand the working, not whether the answer is on the page.</p>
+
+  <h4>📌 Official Assessment Briefs &amp; Deadlines</h4>
+  <div class="note" style="border-color:var(--amber); background:rgba(255,180,84,0.08); color:#ffd9a0;">
+    <strong>Assignment 2 — 100 marks total (25% of LU grade)</strong>, split into two parts:
+    <ul style="margin:8px 0 0;">
+      <li><strong>Part 1 — Take-Home Packet Tracer PTSA (80 marks):</strong> automated practical on your NetAcad dashboard (modeled on the ITN Practice PTSA). Complete from home before <strong>Sun 26 July, 2359hrs</strong>. <strong>3 tries</strong>, <strong>1h 15m per try</strong>, system records your <strong>highest</strong> score. Also submit your <strong>subnet calculation sheet on PoliteMall (15 marks)</strong>.</li>
+      <li><strong>Part 2 — Face-to-Face Technical Review (20 marks):</strong> a strict <strong>5-minute interview</strong> with your tutor during the Week 15 revision session. You'll be asked to verify you understand the <strong>commands you configured</strong> and the <strong>subnetting steps matching your topology</strong>.</li>
+    </ul>
+    <div style="margin-top:8px;"><strong>How to prepare:</strong> attempt NetAcad early; be able to explain <em>why</em> each command is used and <em>how</em> to calculate a subnet range on scratch paper; double-check your NetAcad login.</div>
+  </div>
+
+  <table class="ref">
+    <tr><th>Key dates &amp; deliverables</th><th>Detail</th></tr>
+    <tr><td>NetAcad PTSA attempts</td><td>Complete all tries before Sun 26 July 2359hrs (highest of 3 tries counts)</td></tr>
+    <tr><td>Subnetting Calculation Sheet</td><td>Submit to PoliteMall by this Sunday (15 marks)</td></tr>
+    <tr><td>Week 15 (next week)</td><td>Face-to-Face Technical Review &amp; Assignment Q&amp;A — the 5-min interview</td></tr>
+    <tr><td>Week 16</td><td>Written Test 2 (see below)</td></tr>
+  </table>
+
+  <div class="note" style="border-color:var(--cyan); background:rgba(34,211,184,0.06);">
+    <strong>Written Test 2 — Week 16, on BrightSpace/PoliteMall via LockDown Browser (25 marks, 1h 15m; +15 min if extra time granted).</strong> Install &amp; test LockDown Browser beforehand. Structure:
+    <ul style="margin:8px 0 0;">
+      <li><strong>Section A</strong> — Multiple Choice &amp; True/False: 20 questions × 0.5 = <strong>10 marks</strong></li>
+      <li><strong>Section B</strong> — Subnetting &amp; IP Addressing: a <strong>VLSM calculation scenario</strong> = <strong>9 marks</strong></li>
+      <li><strong>Section C</strong> — Short Answer: scenario questions = <strong>6 marks</strong></li>
+    </ul>
+    <div style="margin-top:8px;">This toolkit maps directly onto the test: the <strong>Practice Test</strong> tab drills Section A, the <strong>Address Table Builder</strong> covers Section B's VLSM scenario, and the interview Q&amp;A below covers Section C's short-answer style.</div>
+  </div>
+
+  <h4>The Scenario (recap)</h4>
+  <ul>
+    <li>Base network <strong>192.168.1.0/24</strong>. First split into <strong>/27</strong> subnets (30 hosts each) wasting the fewest addresses; then, starting at the 5th subnet, re-subnet into <strong>/28</strong> subnets (14 hosts each).</li>
+    <li>Key facts from your table: 4th subnet (CS Dept) = 192.168.1.96/27, gateway = <strong>192.168.1.126</strong> (highest host). Subnet 6 (LAB 214-A) = 192.168.1.144/28, gateway = <strong>192.168.1.158</strong>, switch SVI = <strong>192.168.1.157</strong> (second highest).</li>
+  </ul>
+
+  <h4>Q1 — Why did you choose a /27 mask for the 30-host requirement?</h4>
+  <p>Because I need 30 usable hosts. Usable hosts = 2<sup>h</sup> − 2, so I need 2<sup>h</sup> − 2 ≥ 30 → 2<sup>h</sup> ≥ 32 → h = 5 host bits. 32 − 5 = <strong>/27</strong>, which gives exactly 30 usable hosts (2<sup>5</sup> − 2). A /26 would work too but wastes 32 extra addresses per subnet, so /27 wastes the fewest.</p>
+
+  <h4>Q2 — Why is 192.168.1.126 the gateway for the CS Department subnet?</h4>
+  <p>The CS subnet is the 4th /27: 192.168.1.96 – 192.168.1.127. The network address is .96 and the broadcast is .127. The task said assign the <strong>highest usable host</strong> to the router's G0/0, and the highest usable = broadcast − 1 = <strong>192.168.1.126</strong>.</p>
+
+  <h4>Q3 — How did you get the /28 subnets, and why start from the 5th subnet?</h4>
+  <p>The first four /27s already use 192.168.1.0 – .127. The 5th /27 would start at .128, so I re-subnet from <strong>192.168.1.128</strong> onward. For 14 hosts: 2<sup>h</sup> − 2 ≥ 14 → 2<sup>h</sup> ≥ 16 → h = 4 → <strong>/28</strong> (16 addresses, 14 usable). That gives .128/28, .144/28, .160/28, .176/28, etc.</p>
+
+  <h4>Q4 — Which subnet is LAB 214-A, and what are its addresses?</h4>
+  <p>It's the <strong>2nd of the new /28 subnets</strong> = <strong>192.168.1.144/28</strong> (Subnet 6 overall). Range .144 – .159: network .144, usable .145 – .158, broadcast .159. Router G0/1 = highest usable = <strong>192.168.1.158</strong>; switch VLAN 1 SVI = second-highest = <strong>192.168.1.157</strong>.</p>
+
+  <h4>Q5 — Why does the switch get an IP on VLAN 1 instead of on a normal port?</h4>
+  <p>A Layer 2 switch's ports aren't routed, so they can't hold an IP. To manage the switch remotely it needs one IP on a <strong>Switch Virtual Interface (SVI)</strong>, and VLAN 1 is the default management VLAN. That's the 192.168.1.157 address on the LAB 214-A switch.</p>
+
+  <h4>Q6 — What's the switch's default gateway and why does a switch even need one?</h4>
+  <p>Its gateway is <strong>192.168.1.158</strong> (the router's G0/1). A switch needs a default gateway so that <em>management traffic</em> (e.g. SSH/ping from a device on another subnet) can be replied to across networks — without it, the switch could only talk to hosts on its own subnet.</p>
+
+  <h4>Q7 — How is the difference between network, first host, last host, and broadcast worked out?</h4>
+  <p>For any subnet: the <strong>network address</strong> has all host bits 0; the <strong>broadcast</strong> has all host bits 1; <strong>first usable</strong> = network + 1; <strong>last usable</strong> = broadcast − 1. Example for 192.168.1.96/27: network .96, broadcast .127, usable .97 – .126.</p>
+
+  <h4>Q8 — What is the "magic number" / block size trick you used?</h4>
+  <p>Block size = 256 − (last octet of the mask). For /27 the mask is 255.255.255.<strong>224</strong>, so block size = 256 − 224 = <strong>32</strong> — subnets step .0, .32, .64, .96… For /28 the mask is .240, block size = 256 − 240 = <strong>16</strong> — subnets step .128, .144, .160… This is the fastest way to list boundaries without binary.</p>
+
+  <h4>Q9 — Explain the IPv6 addresses in your table (2001:db8:acad:a::1/64, fe80::1).</h4>
+  <p><code>2001:db8:acad:a::1/64</code> is a <strong>GUA</strong> — globally routable, /64 so the first four hextets are the network. The <code>:a</code> and <code>:b</code> hextets are the <strong>Subnet ID</strong> distinguishing the two LANs. <code>fe80::1</code> is the interface's <strong>link-local address</strong>, which hosts use as their IPv6 default gateway. Hosts get <code>...::ff</code> and <code>...::15</code> as their interface IDs.</p>
+
+  <h4>Q10 — Could you have used VLSM here? Was this FLSM or VLSM?</h4>
+  <p>The first four /27s are <strong>fixed-length (FLSM)</strong> — all the same size. Re-subnetting the remaining space into smaller /28s makes the overall scheme <strong>VLSM</strong> (variable-length), because different subnets end up with different masks. VLSM is what lets the 14-host LANs use a smaller /28 instead of wasting a full /27.</p>
+
+  <div class="note">Curveballs to be ready for: "How many usable hosts does a /27 give?" (30) · "What's the mask for /28 in dotted decimal?" (255.255.255.240) · "If I added a 2-host WAN link, what mask would you use?" (/30) · "What command saves your config?" (copy run start) · "What does <code>no shutdown</code> do?" (enables the interface).</div>
+  `
 }
 ];
 
@@ -896,7 +1052,7 @@ function renderNotes(){
     <div class="topic-block ${i===0?'open':''}" id="topic-${i}">
       <div class="topic-head" onclick="toggleTopic(${i})">
         <div class="th-left">
-          <span class="topic-num">T${t.num}</span>
+          <span class="topic-num">${/^\d+$/.test(t.num) ? 'T'+t.num : t.num}</span>
           <h3>${t.title}</h3>
         </div>
         <span class="chev">&#9654;</span>
@@ -909,6 +1065,185 @@ function toggleTopic(i){
   document.getElementById('topic-'+i).classList.toggle('open');
 }
 renderNotes();
+
+/* =========================================================
+   IOS COMMAND REFERENCE — DATA + RENDER + FILTER
+========================================================= */
+const CMD_GROUPS = [
+  {
+    cat: 'Navigating Modes',
+    rows: [
+      ['enable', 'Router&gt;', 'Enter <strong>privileged EXEC mode</strong> (the # prompt). Needed before you can save config, run debug, or enter global config. Short form: <code>en</code>.'],
+      ['disable', 'Router#', 'Drop back down from privileged EXEC to user EXEC mode.'],
+      ['configure terminal', 'Router#', 'Enter <strong>global configuration mode</strong> to change device-wide settings. Short form: <code>conf t</code>.'],
+      ['exit', 'any', 'Move <strong>up one</strong> mode level (e.g. from interface config back to global config).'],
+      ['end', 'any config', 'Jump straight back to <strong>privileged EXEC</strong> from any config sub-mode. Same as <code>Ctrl+Z</code>.'],
+      ['do &lt;command&gt;', 'any config', 'Run a <strong>privileged EXEC command without leaving config mode</strong>, e.g. <code>do show ip interface brief</code>.'],
+    ]
+  },
+  {
+    cat: 'Device Identity & Housekeeping',
+    rows: [
+      ['hostname R1', 'config', 'Sets the device <strong>name</strong> shown in the prompt — helps you tell devices apart in a topology.'],
+      ['no hostname', 'config', 'Reverts the name back to the default (Router / Switch).'],
+      ['banner motd # ... #', 'config', 'Sets the <strong>message-of-the-day</strong> banner shown at login. The <code>#</code> is a delimiter marking the start/end of the text. Used for "authorized personnel only" legal warnings.'],
+      ['banner login # ... #', 'config', 'A banner shown <strong>before</strong> the username/password prompt.'],
+      ['no ip domain-lookup', 'config', 'Stops the device trying to <strong>DNS-resolve mistyped commands</strong> — saves you waiting through a long timeout when you fat-finger a command. Common quality-of-life command in labs.'],
+      ['clock set 10:30:00 26 July 2025', 'Router#', 'Sets the device software clock (privileged EXEC), used for accurate log timestamps.'],
+    ]
+  },
+  {
+    cat: 'Securing Access — Passwords & Lines',
+    rows: [
+      ['enable secret class', 'config', 'Sets the password to enter <strong>privileged EXEC mode</strong>, stored <strong>hashed/encrypted</strong>. Always prefer this over enable password.'],
+      ['enable password cisco', 'config', 'Older way to protect privileged EXEC — stored in <strong>plaintext</strong>, so avoid it. If both are set, <code>enable secret</code> wins.'],
+      ['line console 0', 'config', 'Enter <strong>console line</strong> config to secure the physical console port.'],
+      ['line vty 0 15', 'config', 'Enter the <strong>virtual terminal (VTY) lines</strong> config. VTY lines are the <strong>remote</strong> login sessions (Telnet/SSH). <code>0 15</code> means all 16 lines (0 through 15), so up to 16 simultaneous remote sessions are secured at once.'],
+      ['line aux 0', 'config', 'Enter the <strong>auxiliary line</strong> config (an old dial-up/modem management port). Usually secured or disabled.'],
+      ['password cisco', 'config-line', 'Sets the password on the current line (console or VTY). Must be paired with <code>login</code> to take effect.'],
+      ['login', 'config-line', 'Tells the line to <strong>prompt for the line password</strong>. Without it, the password is ignored and access may be open.'],
+      ['login local', 'config-line', 'Prompt for a <strong>local username + password</strong> (from <code>username</code> commands) instead of just a shared line password. Required for SSH.'],
+      ['exec-timeout 5 0', 'config-line', 'Auto-logs the line out after <strong>5 minutes 0 seconds</strong> of inactivity — a security best practice. <code>exec-timeout 0 0</code> disables timeout (never do this in production).'],
+      ['logging synchronous', 'config-line', 'Stops console log messages from <strong>interrupting what you\'re typing</strong> by reprinting your command line after a log pops up. Quality-of-life command.'],
+      ['service password-encryption', 'config', 'Encrypts <strong>all plaintext passwords</strong> in the config (console, VTY, enable password) so they aren\'t readable in show running-config. Weak (Type 7) encryption, but stops shoulder-surfing.'],
+      ['username admin secret cisco123', 'config', 'Creates a <strong>local user account</strong> with a hashed password — needed for <code>login local</code> and SSH.'],
+    ]
+  },
+  {
+    cat: 'Remote Access — SSH (secure) & Telnet',
+    rows: [
+      ['ip domain-name example.com', 'config', 'Sets a <strong>domain name</strong> — required before you can generate the RSA crypto keys for SSH.'],
+      ['crypto key generate rsa', 'config', 'Generates the <strong>RSA key pair</strong> that encrypts SSH sessions. You\'ll be asked for a modulus size (1024 or higher).'],
+      ['ip ssh version 2', 'config', 'Forces the more secure <strong>SSH version 2</strong>.'],
+      ['transport input ssh', 'config-line (vty)', 'Restricts the VTY lines to accept <strong>only SSH</strong> (encrypted) connections, blocking insecure Telnet.'],
+      ['transport input telnet ssh', 'config-line (vty)', 'Allows both Telnet and SSH on the VTY lines.'],
+      ['transport input none', 'config-line (vty)', 'Disables all remote login on those lines.'],
+    ]
+  },
+  {
+    cat: 'Interfaces & IPv4 Addressing',
+    rows: [
+      ['interface gigabitethernet 0/0/0', 'config', 'Enter config for a specific <strong>router interface</strong>. Short form: <code>int g0/0/0</code>. This is the gateway port for a LAN.'],
+      ['interface vlan 1', 'config', 'Enter the switch\'s <strong>SVI (Switch Virtual Interface)</strong>. A Layer 2 switch\'s ports aren\'t routed, so VLAN 1 holds the switch\'s single management IP.'],
+      ['interface range fa0/1 - 24', 'config', 'Configure <strong>many interfaces at once</strong> (here ports 1–24) — saves repeating commands.'],
+      ['ip address 192.168.1.126 255.255.255.224', 'config-if', 'Assigns the <strong>IPv4 address + subnet mask</strong> to the interface. On a router LAN port this is the default gateway hosts will use.'],
+      ['ip address dhcp', 'config-if', 'Tells the interface to <strong>obtain its IPv4 address from a DHCP server</strong> instead of a static one.'],
+      ['no shutdown', 'config-if', '<strong>Enables (turns on)</strong> the interface. Interfaces are administratively down by default — without this the IP is set but the port stays dead. Short form: <code>no shut</code>.'],
+      ['shutdown', 'config-if', 'Administratively <strong>disables</strong> the interface.'],
+      ['description Link to CS Dept', 'config-if', 'Adds a <strong>human-readable label</strong> to the interface for documentation — appears in show commands.'],
+      ['duplex full', 'config-if', 'Forces <strong>full-duplex</strong> (simultaneous send/receive). <code>duplex auto</code> negotiates it.'],
+      ['speed 100', 'config-if', 'Forces the port <strong>speed</strong> to 100 Mbps. <code>speed auto</code> negotiates it.'],
+    ]
+  },
+  {
+    cat: 'Switch-Specific (VLANs, Port Security)',
+    rows: [
+      ['vlan 10', 'config', 'Creates <strong>VLAN 10</strong> and enters VLAN config to name it.'],
+      ['name Sales', 'config-vlan', 'Names the VLAN for documentation.'],
+      ['switchport mode access', 'config-if', 'Sets the port as an <strong>access port</strong> (carries one VLAN, for an end device).'],
+      ['switchport access vlan 10', 'config-if', 'Assigns the access port to <strong>VLAN 10</strong>.'],
+      ['switchport mode trunk', 'config-if', 'Sets the port as a <strong>trunk</strong> — carries multiple VLANs between switches.'],
+      ['switchport port-security', 'config-if', 'Enables <strong>port security</strong>, limiting which/how many MAC addresses can use the port.'],
+      ['switchport port-security maximum 2', 'config-if', 'Allows at most <strong>2 MAC addresses</strong> on the port.'],
+      ['switchport port-security mac-address sticky', 'config-if', 'Makes the switch <strong>learn and save</strong> the connected MAC automatically ("sticky").'],
+      ['switchport port-security violation shutdown', 'config-if', 'On a violation, <strong>shut the port down</strong> (err-disabled). Other modes: <code>protect</code>, <code>restrict</code>.'],
+    ]
+  },
+  {
+    cat: 'IPv6 Addressing',
+    rows: [
+      ['ipv6 unicast-routing', 'config', 'Globally <strong>enables IPv6 routing</strong> on the router (forwarding + joining the ff02::2 all-routers group). Without it the router won\'t route IPv6.'],
+      ['ipv6 address 2001:db8:acad:1::1/64', 'config-if', 'Assigns an IPv6 <strong>Global Unicast Address (GUA)</strong> to the interface.'],
+      ['ipv6 address fe80::1 link-local', 'config-if', 'Manually sets a <strong>link-local address (LLA)</strong> — memorable, and used as the IPv6 default gateway for hosts on that link.'],
+      ['ipv6 address 2001:db8:acad:1::/64 eui-64', 'config-if', 'Assigns the network prefix and lets the router <strong>auto-build the interface ID</strong> from its MAC (EUI-64).'],
+      ['ipv6 enable', 'config-if', 'Enables IPv6 on the interface and auto-generates an LLA even without a GUA.'],
+    ]
+  },
+  {
+    cat: 'Routing',
+    rows: [
+      ['ip route 0.0.0.0 0.0.0.0 192.168.1.1', 'config', 'A <strong>default (static) route</strong> — "send anything I don\'t have a route for to 192.168.1.1". The 0.0.0.0/0 matches every destination.'],
+      ['ip route 10.0.0.0 255.0.0.0 192.168.1.2', 'config', 'A <strong>static route</strong> to a specific network via a next-hop address.'],
+      ['ipv6 route ::/0 2001:db8::1', 'config', 'An <strong>IPv6 default route</strong>.'],
+      ['router ospf 1', 'config', 'Enters <strong>OSPF</strong> routing-protocol config (process ID 1).'],
+      ['network 192.168.1.0 0.0.0.255 area 0', 'config-router', 'Tells OSPF which <strong>interfaces/networks to advertise</strong> (note the wildcard mask).'],
+      ['ip default-gateway 192.168.1.158', 'config', 'On a <strong>Layer 2 switch</strong>, sets its default gateway so management traffic can be answered across subnets.'],
+    ]
+  },
+  {
+    cat: 'Saving, Erasing & Reloading',
+    rows: [
+      ['copy running-config startup-config', 'Router#', 'Saves the live config (RAM) into <strong>NVRAM</strong> so it survives a reboot. Short forms: <code>copy run start</code>, <code>wr</code>. <strong>Do this or your work is lost on reload.</strong>'],
+      ['write memory', 'Router#', 'Older equivalent of copy run start.'],
+      ['erase startup-config', 'Router#', '<strong>Wipes the saved config</strong> from NVRAM — next reload boots to factory defaults. Short: <code>erase start</code>.'],
+      ['delete vlan.dat', 'Router#', 'On a switch, deletes the <strong>VLAN database</strong> (VLANs aren\'t stored in startup-config). Needed for a full reset.'],
+      ['reload', 'Router#', '<strong>Reboots</strong> the device. Prompts to save first if there are unsaved changes.'],
+    ]
+  },
+  {
+    cat: 'Verifying — the "show" Commands',
+    rows: [
+      ['show ip interface brief', 'Router#', 'One-line summary of <strong>every interface</strong>: IP address + status (up/up, down, administratively down). Fastest check that addressing/ports are correct. Short: <code>show ip int br</code>.'],
+      ['show ipv6 interface brief', 'Router#', 'Same as above but lists each interface\'s <strong>IPv6 addresses</strong> (including the auto LLA).'],
+      ['show running-config', 'Router#', 'Displays the <strong>entire live config</strong>. Used to review everything and confirm passwords are encrypted. Short: <code>show run</code>.'],
+      ['show startup-config', 'Router#', 'Shows the <strong>saved</strong> config in NVRAM — compare against running-config to see unsaved changes.'],
+      ['show mac address-table', 'Switch#', 'The switch\'s learned <strong>MAC-to-port</strong> mappings — proves it\'s learning source MACs.'],
+      ['show ip route', 'Router#', 'The <strong>routing table</strong> — which networks the router knows and how it reaches them.'],
+      ['show vlan brief', 'Switch#', 'Lists all <strong>VLANs</strong> and which ports are in each.'],
+      ['show interfaces', 'Router#', 'Detailed per-interface stats: errors, duplex, speed, packet counts.'],
+      ['show version', 'Router#', 'IOS version, uptime, model, and the <strong>configuration register</strong>.'],
+      ['show ip protocols', 'Router#', 'Which routing protocols are running and what they advertise.'],
+      ['show cdp neighbors', 'Router#', 'Directly connected Cisco devices (via CDP) — handy for mapping a topology.'],
+      ['show ssh', 'Router#', 'Active SSH sessions.'],
+    ]
+  },
+  {
+    cat: 'Troubleshooting & Testing',
+    rows: [
+      ['ping 192.168.1.1', 'any EXEC', 'Tests <strong>reachability</strong> to an IP by sending ICMP echoes. First check for connectivity problems.'],
+      ['ping 2001:db8:acad:1::1', 'any EXEC', 'IPv6 ping.'],
+      ['traceroute 8.8.8.8', 'any EXEC', 'Shows the <strong>hop-by-hop path</strong> a packet takes to a destination — pinpoints where it fails.'],
+      ['telnet 192.168.1.1', 'any EXEC', 'Opens an (insecure) remote session; also used to test if a port/service responds.'],
+      ['ssh -l admin 192.168.1.1', 'any EXEC', 'Opens a <strong>secure</strong> remote session as user "admin".'],
+      ['debug ip icmp', 'Router#', 'Live real-time diagnostics for ICMP. Powerful but heavy — always <code>no debug all</code> / <code>undebug all</code> when done.'],
+      ['show interfaces status', 'Switch#', 'Quick port status/speed/duplex/VLAN overview.'],
+    ]
+  },
+];
+
+function renderCommands(){
+  const container = document.getElementById('cmdContainer');
+  let total = 0;
+  container.innerHTML = CMD_GROUPS.map(g=>{
+    const rows = g.rows.map(r=>{
+      total++;
+      return `<tr class="cmd-row"><td><code>${r[0]}</code></td><td style="white-space:nowrap;color:var(--muted);">${r[1]}</td><td>${r[2]}</td></tr>`;
+    }).join('');
+    return `<div class="cmd-group">
+      <h4 style="color:var(--cyan); font-size:13.5px; text-transform:uppercase; letter-spacing:0.04em; margin:22px 0 8px;">${g.cat}</h4>
+      <table class="ref cmd-table">
+        <tr><th style="width:26%;">Command</th><th style="width:14%;">Mode / Prompt</th><th>What it does &amp; why</th></tr>
+        ${rows}
+      </table>
+    </div>`;
+  }).join('');
+  document.getElementById('cmdCount').textContent = total + ' commands listed';
+}
+function filterCommands(){
+  const q = document.getElementById('cmdSearch').value.trim().toLowerCase();
+  let shown = 0;
+  document.querySelectorAll('#cmdContainer .cmd-group').forEach(group=>{
+    let groupHas = false;
+    group.querySelectorAll('.cmd-row').forEach(row=>{
+      const match = row.textContent.toLowerCase().includes(q);
+      row.style.display = match ? '' : 'none';
+      if(match){ groupHas = true; shown++; }
+    });
+    group.style.display = groupHas ? '' : 'none';
+  });
+  document.getElementById('cmdCount').textContent = q ? (shown + ' matching command' + (shown===1?'':'s')) : (document.querySelectorAll('#cmdContainer .cmd-row').length + ' commands listed');
+}
+renderCommands();
 
 
 /* =========================================================
@@ -1577,7 +1912,25 @@ const TEST_QUESTIONS = [
 {topic:'T12', type:'mcq', q:'Which application type is the best fit for UDP rather than TCP?', opts:['File transfer where every byte must arrive correctly','A live VoIP call that can tolerate some data loss but not delay','A banking transaction','Sending a large email attachment'], correct:1, explain:'UDP suits live/streaming media where a little loss is tolerable but retransmission delay is not — like VoIP or live video.'},
 {topic:'T12', type:'fill', q:'What is the well-known TCP port number for HTTPS?', answer:'443', explain:'Port 443/TCP is the well-known port for HTTPS.'},
 {topic:'T12', type:'mcq', q:'What is the correct order of TCP\'s three-way handshake?', opts:['ACK, SYN, SYN-ACK','SYN, SYN-ACK, ACK','SYN-ACK, SYN, ACK','ACK, ACK, SYN'], correct:1, explain:'Client sends SYN, server replies SYN-ACK, client replies ACK — the session is now established.'},
-{topic:'T12', type:'mcq', q:'A source port of 51422 (used for an outgoing client connection) falls into which port group?', opts:['Well-known ports','Registered ports','Private/dynamic (ephemeral) ports','Reserved ports'], correct:2, explain:'49152–65535 is the private/dynamic (ephemeral) range, used by the client OS for outgoing connections.'}
+{topic:'T12', type:'mcq', q:'A source port of 51422 (used for an outgoing client connection) falls into which port group?', opts:['Well-known ports','Registered ports','Private/dynamic (ephemeral) ports','Reserved ports'], correct:2, explain:'49152–65535 is the private/dynamic (ephemeral) range, used by the client OS for outgoing connections.'},
+
+{topic:'CLI', type:'mcq', q:'Which command moves you from user EXEC mode (>) into privileged EXEC mode (#)?', opts:['configure terminal','enable','login','interface vlan 1'], correct:1, explain:'"enable" enters privileged EXEC mode, required before viewing full config or making changes.'},
+{topic:'CLI', type:'mcq', q:'What does "no shutdown" do on an interface?', opts:['Deletes the interface config','Administratively enables (turns on) the interface','Saves the running config','Encrypts the password'], correct:1, explain:'Interfaces are shut down by default; "no shutdown" enables them so the configured IP becomes active.'},
+{topic:'CLI', type:'mcq', q:'Why is "enable secret" preferred over "enable password"?', opts:['It is shorter to type','It stores the password hashed/encrypted, not in plaintext','It works without a login command','It applies only to the console port'], correct:1, explain:'"enable secret" is stored as a hash, while "enable password" is plaintext in the config.'},
+{topic:'CLI', type:'fill', q:'Which command saves the running configuration so it survives a reboot? (full form)', answer:'copy running-config startup-config', explain:'copy running-config startup-config writes RAM config into NVRAM. Short form: copy run start.'},
+{topic:'CLI', type:'mcq', q:'What does "service password-encryption" do?', opts:['Sets the enable password','Encrypts all plaintext passwords in the config so they are not readable','Requires a password on the console','Enables SSH'], correct:1, explain:'It encrypts otherwise-plaintext passwords (like the console password) in show running-config.'},
+{topic:'CLI', type:'mcq', q:'Which command gives you a one-line status (IP + up/down) of every interface?', opts:['show mac address-table','show running-config','show ip interface brief','show ip route'], correct:2, explain:'show ip interface brief is the fastest way to confirm addressing and whether ports are up.'},
+{topic:'CLI', type:'mcq', q:'On a Layer 2 switch, where do you assign the management IP address?', opts:['On any access port','On the VLAN 1 SVI (interface vlan 1)','On the console line','On the enable secret'], correct:1, explain:'Switch ports are not routed, so the management IP goes on a Switch Virtual Interface — VLAN 1 by default.'},
+{topic:'CLI', type:'mcq', q:'In "banner motd # ... #", what is the role of the # symbol?', opts:['It comments out the line','It is the delimiter marking the start and end of the message','It encrypts the banner','It sets the banner colour'], correct:1, explain:'The # is a delimiting character; the banner text is everything between the two delimiters.'},
+
+{topic:'A2', type:'fill', q:'Assignment 2: how many usable hosts does a /27 subnet provide? (number only)', answer:'30', explain:'/27 leaves 5 host bits: 2^5 − 2 = 30 usable hosts — matching the 30-host requirement.'},
+{topic:'A2', type:'fill', q:'Assignment 2: the CS Department is the 4th /27 subnet (192.168.1.96/27). What address is assigned to the router G0/0 (highest usable host)?', answer:'192.168.1.126', explain:'Broadcast is .127, so the highest usable host is .126.'},
+{topic:'A2', type:'mcq', q:'Assignment 2: why does the LAB 214-A switch get its IP on VLAN 1 rather than a normal port?', opts:['VLAN 1 is faster','A Layer 2 switch\'s ports aren\'t routed, so the management IP goes on the VLAN 1 SVI','It is required by the router','To save addresses'], correct:1, explain:'Switch ports have no IP; the management address lives on a Switch Virtual Interface (VLAN 1 by default).'},
+{topic:'A2', type:'fill', q:'Assignment 2: to provide 14 usable hosts wasting the fewest addresses, what prefix length do you use?', answer:'/28', explain:'2^h − 2 ≥ 14 → 2^h ≥ 16 → h=4 host bits → /28 (16 addresses, 14 usable).'},
+{topic:'A2', type:'mcq', q:'Assignment 2: the re-subnetting into /28s starts at 192.168.1.128. Why there?', opts:['It is a random choice','The first four /27 subnets already used .0–.127, so the next free address is .128','.128 is the only valid /28 boundary','The router requires it'], correct:1, explain:'Four /27s (.0, .32, .64, .96) consume up to .127, so re-subnetting continues from .128.'},
+{topic:'A2', type:'mcq', q:'Assignment 2: the switch SVI is 192.168.1.157/28 and its gateway is 192.168.1.158. Why does a switch need a default gateway at all?', opts:['To route user traffic between VLANs','So management traffic (e.g. ping/SSH) from other subnets can be answered across networks','To assign DHCP addresses','It does not actually need one'], correct:1, explain:'The gateway lets the switch reply to management traffic originating on a different subnet.'},
+{topic:'A2', type:'mcq', q:'Assignment 2: making the first four subnets /27 but later subnets /28 is an example of what?', opts:['FLSM only','VLSM (variable-length subnet masking)','Classful addressing','Supernetting'], correct:1, explain:'Different subnets ending up with different masks is VLSM — it reduces waste for the smaller 14-host LANs.'},
+{topic:'A2', type:'fill', q:'Assignment 2: using the block-size trick, what is the block size (magic number) for a /28 mask (255.255.255.240)?', answer:'16', explain:'256 − 240 = 16, so /28 subnets step in 16s: .128, .144, .160, .176…'}
 ];
 
 function shuffleArray(arr){
