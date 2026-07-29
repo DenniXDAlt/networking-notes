@@ -120,6 +120,32 @@ button.btn.small{padding:6px 12px; font-size:11.5px;}
 .bit-n{color:var(--cyan); background:rgba(34,211,184,0.12); border-radius:3px; padding:1px 2px;}
 .bit-h{color:var(--amber); background:rgba(255,180,84,0.10); border-radius:3px; padding:1px 2px;}
 .bit-borrow{color:var(--purple); background:rgba(167,139,250,0.14); border-radius:3px; padding:1px 2px;}
+
+/* Config walkthrough flow */
+.flow-block{border:1px solid var(--line); border-radius:12px; margin-bottom:20px; overflow:hidden; background:var(--panel-2);}
+.flow-head{display:flex; align-items:center; gap:12px; padding:14px 18px; background:rgba(34,211,184,0.05); border-bottom:1px solid var(--line);}
+.flow-head .fnum{font-family:var(--mono); font-size:12px; color:#04231d; background:var(--cyan); border-radius:6px; padding:3px 9px; font-weight:700;}
+.flow-head h3{margin:0; font-size:16px;}
+.flow-head .fgoal{margin-left:auto; font-family:var(--mono); font-size:11px; color:var(--muted);}
+.flow-body{padding:16px 18px;}
+.flow-intro{font-size:13.5px; color:var(--muted); margin:0 0 14px; line-height:1.5;}
+.terminal{background:#05080d; border:1px solid var(--line); border-radius:10px; overflow:hidden; margin-bottom:6px;}
+.terminal-bar{display:flex; align-items:center; gap:6px; padding:8px 12px; background:#0c1119; border-bottom:1px solid var(--line);}
+.terminal-bar .dot{width:10px; height:10px; border-radius:50%;}
+.terminal-bar .title{margin-left:8px; font-family:var(--mono); font-size:11px; color:var(--muted);}
+.terminal-bar .copy{margin-left:auto; font-family:var(--mono); font-size:10.5px; color:var(--cyan); background:transparent; border:1px solid var(--cyan-dim); border-radius:5px; padding:3px 9px; cursor:pointer;}
+.terminal-bar .copy:hover{background:rgba(34,211,184,0.1);}
+.terminal-body{padding:12px 14px; font-family:var(--mono); font-size:12.5px; line-height:1.85; overflow-x:auto;}
+.tline{display:block; white-space:pre; }
+.tprompt{color:var(--muted);}
+.tcmd{color:var(--cyan);}
+.tcomment{color:var(--amber); opacity:0.85;}
+.flow-note{font-size:12.5px; color:var(--muted); background:var(--bg); border-left:3px solid var(--cyan-dim); padding:8px 12px; border-radius:0 6px 6px 0; margin-top:10px;}
+.flow-pill-tabs{display:flex; gap:6px; margin-bottom:18px; flex-wrap:wrap;}
+.flow-pill-tabs button{font-family:var(--mono); font-size:12px; padding:8px 15px; border-radius:20px; border:1px solid var(--line); background:transparent; color:var(--muted); cursor:pointer;}
+.flow-pill-tabs button.active{background:var(--cyan); border-color:var(--cyan); color:#04231d; font-weight:700;}
+.flow-section{display:none;}
+.flow-section.active{display:block;}
 .legend{display:flex; gap:16px; font-family:var(--mono); font-size:11.5px; color:var(--muted); margin-top:10px;}
 .legend span.dot{display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:5px; vertical-align:middle;}
 
@@ -187,7 +213,8 @@ footer{text-align:center; color:var(--muted); font-size:12px; font-family:var(--
   <button data-tab="vlsm"><span class="n">04</span>Address Table Builder (VLSM)</button>
   <button data-tab="ipv6"><span class="n">05</span>IPv6 Practice</button>
   <button data-tab="commands"><span class="n">06</span>IOS Commands</button>
-  <button data-tab="test"><span class="n">07</span>Practice Test</button>
+  <button data-tab="flow"><span class="n">07</span>Config Walkthrough</button>
+  <button data-tab="test"><span class="n">08</span>Practice Test</button>
 </nav>
 
 <!-- ============ PANEL: NOTES ============ -->
@@ -367,6 +394,23 @@ footer{text-align:center; color:var(--muted); font-size:12px; font-family:var(--
       <tr><td>Router(config-router)#</td><td>Router Config</td><td><code>router ospf 1</code> etc.</td><td>Routing protocol settings</td></tr>
     </table>
     <div class="note">Shortcut keys: <code>Ctrl+Z</code> or <code>end</code> jumps from any config mode straight back to Privileged EXEC. <code>exit</code> goes up exactly one level. <code>do &lt;command&gt;</code> runs a privileged command (like <code>do show ip int brief</code>) without leaving config mode.</div>
+  </div>
+</section>
+
+<!-- ============ PANEL: CONFIG WALKTHROUGH ============ -->
+<section class="panel" id="panel-flow">
+  <div class="card">
+    <h2>Config Walkthrough <span class="tag">follow top to bottom</span></h2>
+    <p class="lead">Each block is a complete command flow in the exact order you type it — starting from <code>enable</code>, into <code>configure terminal</code>, and back out with <code>end</code> + save. Grey text is the prompt (don't type it), cyan is what you type, amber is a comment explaining the line. Pick a section:</p>
+    <div class="flow-pill-tabs" id="flowTabs">
+      <button class="active" data-flow="hardening">🔒 Device Hardening</button>
+      <button data-flow="ipv4">🌐 IPv4 Addressing</button>
+      <button data-flow="ipv6">🧬 IPv6 Addressing</button>
+      <button data-flow="ssh">🔑 Remote Access (SSH)</button>
+      <button data-flow="switch">🔀 Switch Setup</button>
+      <button data-flow="verify">✅ Verify &amp; Save</button>
+    </div>
+    <div id="flowContent"></div>
   </div>
 </section>
 
@@ -1244,6 +1288,307 @@ function filterCommands(){
   document.getElementById('cmdCount').textContent = q ? (shown + ' matching command' + (shown===1?'':'s')) : (document.querySelectorAll('#cmdContainer .cmd-row').length + ' commands listed');
 }
 renderCommands();
+
+/* =========================================================
+   CONFIG WALKTHROUGH — ORDERED COMMAND FLOWS
+   Each line: ['prompt', 'command', 'optional comment']
+========================================================= */
+const FLOWS = {
+  hardening: [
+    {
+      title: 'Enter config mode & name the device',
+      goal: 'first steps',
+      intro: 'Every configuration starts the same way: get into privileged mode, then into global config. Name the device so you can tell it apart in your topology.',
+      lines: [
+        ['Router>', 'enable', 'go to privileged EXEC (# prompt)'],
+        ['Router#', 'configure terminal', 'enter global config mode'],
+        ['Router(config)#', 'hostname R1', 'rename the device — prompt changes instantly'],
+      ]
+    },
+    {
+      title: 'Secure privileged EXEC mode',
+      goal: 'enable secret',
+      intro: 'Protect the "#" mode so not just anyone can make changes. Always use secret (hashed), never enable password (plaintext).',
+      lines: [
+        ['R1(config)#', 'enable secret class', 'password to enter privileged mode, stored encrypted'],
+      ]
+    },
+    {
+      title: 'Secure the console line (physical port)',
+      goal: 'line console 0',
+      intro: 'The console port is the physical cable connection. Set a password and turn on login so anyone plugging in must authenticate.',
+      lines: [
+        ['R1(config)#', 'line console 0', 'enter console line config'],
+        ['R1(config-line)#', 'password cisco', 'set the console password'],
+        ['R1(config-line)#', 'login', 'REQUIRED — actually enforces the password prompt'],
+        ['R1(config-line)#', 'exec-timeout 5 0', 'auto-logout after 5 min idle (security)'],
+        ['R1(config-line)#', 'logging synchronous', 'stop log messages interrupting your typing'],
+        ['R1(config-line)#', 'exit', 'back up to global config'],
+      ]
+    },
+    {
+      title: 'Secure the VTY lines (remote login)',
+      goal: 'line vty 0 15',
+      intro: 'VTY lines are the virtual lines used for remote Telnet/SSH sessions. 0 15 secures all 16 of them at once.',
+      lines: [
+        ['R1(config)#', 'line vty 0 15', 'enter all 16 virtual terminal lines'],
+        ['R1(config-line)#', 'password cisco', 'set the remote-login password'],
+        ['R1(config-line)#', 'login', 'enforce the password on remote logins'],
+        ['R1(config-line)#', 'exec-timeout 5 0', 'idle timeout on remote sessions too'],
+        ['R1(config-line)#', 'exit', 'back up to global config'],
+      ]
+    },
+    {
+      title: 'Encrypt all plaintext passwords + set a banner',
+      goal: 'service password-encryption',
+      intro: 'One command encrypts every remaining plaintext password (like the console/VTY ones) in the config file. Add a legal warning banner.',
+      lines: [
+        ['R1(config)#', 'service password-encryption', 'scrambles all plaintext passwords in the config'],
+        ['R1(config)#', 'banner motd #Authorized access only!#', 'login warning; # marks start & end of text'],
+        ['R1(config)#', 'end', 'jump back to privileged EXEC (same as Ctrl+Z)'],
+        ['R1#', 'copy running-config startup-config', 'SAVE — or you lose it all on reboot'],
+      ]
+    },
+  ],
+
+  ipv4: [
+    {
+      title: 'Configure a router LAN interface',
+      goal: 'router G0/0',
+      intro: 'Give the router\'s interface the IP that will be the default gateway for that LAN. The highest usable host in the subnet is a common convention.',
+      lines: [
+        ['Router>', 'enable', ''],
+        ['Router#', 'configure terminal', ''],
+        ['Router(config)#', 'interface gigabitethernet 0/0', 'enter the LAN-facing interface (short: int g0/0)'],
+        ['Router(config-if)#', 'description Link to CS Dept LAN', 'optional label for documentation'],
+        ['Router(config-if)#', 'ip address 192.168.1.126 255.255.255.224', 'IP + /27 mask (this is the gateway address)'],
+        ['Router(config-if)#', 'no shutdown', 'TURN THE PORT ON — it\'s off by default'],
+        ['Router(config-if)#', 'end', ''],
+        ['Router#', 'copy run start', 'save'],
+      ]
+    },
+    {
+      title: 'Add a default route (send unknown traffic out)',
+      goal: 'ip route',
+      intro: 'A default route is a catch-all: "anything I don\'t have a specific route for, send to this next hop." 0.0.0.0 0.0.0.0 matches every destination.',
+      lines: [
+        ['Router(config)#', 'ip route 0.0.0.0 0.0.0.0 192.168.1.1', 'default route via next-hop 192.168.1.1'],
+      ]
+    },
+  ],
+
+  ipv6: [
+    {
+      title: 'Turn on IPv6 routing (do this first!)',
+      goal: 'ipv6 unicast-routing',
+      intro: 'A router will NOT route IPv6 until you enable it globally. Forgetting this is the #1 IPv6 lab mistake.',
+      lines: [
+        ['Router>', 'enable', ''],
+        ['Router#', 'configure terminal', ''],
+        ['Router(config)#', 'ipv6 unicast-routing', 'globally enables IPv6 routing/forwarding'],
+      ]
+    },
+    {
+      title: 'Configure IPv6 on the interface',
+      goal: 'GUA + LLA',
+      intro: 'Give the interface a Global Unicast Address (the routable one) and a memorable Link-Local Address (used as the gateway by hosts on the link).',
+      lines: [
+        ['Router(config)#', 'interface gigabitethernet 0/0', 'enter the interface'],
+        ['Router(config-if)#', 'ipv6 address 2001:db8:acad:1::1/64', 'the Global Unicast Address (GUA), /64 network'],
+        ['Router(config-if)#', 'ipv6 address fe80::1 link-local', 'set a clean, memorable link-local address'],
+        ['Router(config-if)#', 'no shutdown', 'enable the interface'],
+        ['Router(config-if)#', 'end', ''],
+        ['Router#', 'copy run start', 'save'],
+      ]
+    },
+    {
+      title: 'Add an IPv6 default route (optional)',
+      goal: 'ipv6 route',
+      intro: 'The IPv6 version of the catch-all default route. ::/0 matches every IPv6 destination.',
+      lines: [
+        ['Router(config)#', 'ipv6 route ::/0 2001:db8:acad:1::1', 'IPv6 default route via next hop'],
+      ]
+    },
+  ],
+
+  ssh: [
+    {
+      title: 'Prerequisites — hostname & domain name',
+      goal: 'before keys',
+      intro: 'SSH encryption keys are built from the hostname + domain name, so both must be set first (and not left at default).',
+      lines: [
+        ['Router>', 'enable', ''],
+        ['Router#', 'configure terminal', ''],
+        ['Router(config)#', 'hostname R1', 'must not be the default "Router"'],
+        ['R1(config)#', 'ip domain-name example.com', 'needed to generate the crypto keys'],
+      ]
+    },
+    {
+      title: 'Create a local user & generate RSA keys',
+      goal: 'crypto key',
+      intro: 'SSH needs a local username/password to log in with, and an RSA key pair to encrypt the session.',
+      lines: [
+        ['R1(config)#', 'username admin secret cisco123', 'a local account (hashed password)'],
+        ['R1(config)#', 'crypto key generate rsa', 'generate the encryption keys'],
+        ['R1(config)#', '  (choose 1024 or higher when prompted)', 'modulus size — bigger = more secure', true],
+        ['R1(config)#', 'ip ssh version 2', 'force the more secure SSHv2'],
+      ]
+    },
+    {
+      title: 'Restrict the VTY lines to SSH only',
+      goal: 'transport input ssh',
+      intro: 'Finally, tell the remote-login lines to use your local accounts and accept only encrypted SSH (blocking insecure Telnet).',
+      lines: [
+        ['R1(config)#', 'line vty 0 15', 'enter the virtual terminal lines'],
+        ['R1(config-line)#', 'login local', 'authenticate against local usernames (needed for SSH)'],
+        ['R1(config-line)#', 'transport input ssh', 'accept ONLY SSH — no plaintext Telnet'],
+        ['R1(config-line)#', 'end', ''],
+        ['R1#', 'copy run start', 'save'],
+      ]
+    },
+  ],
+
+  switch: [
+    {
+      title: 'Give a switch a management IP (VLAN 1 SVI)',
+      goal: 'interface vlan 1',
+      intro: 'A Layer 2 switch has no routed ports, so its single management IP lives on the VLAN 1 Switch Virtual Interface (SVI).',
+      lines: [
+        ['Switch>', 'enable', ''],
+        ['Switch#', 'configure terminal', ''],
+        ['Switch(config)#', 'hostname SW1', 'name the switch'],
+        ['SW1(config)#', 'interface vlan 1', 'enter the management SVI'],
+        ['SW1(config-if)#', 'ip address 192.168.1.157 255.255.255.240', 'the switch management IP (/28)'],
+        ['SW1(config-if)#', 'no shutdown', 'bring the SVI up'],
+        ['SW1(config-if)#', 'exit', ''],
+        ['SW1(config)#', 'ip default-gateway 192.168.1.158', 'so mgmt traffic can cross subnets'],
+        ['SW1(config)#', 'end', ''],
+        ['SW1#', 'copy run start', 'save'],
+      ]
+    },
+    {
+      title: 'Create a VLAN & assign an access port',
+      goal: 'vlan + switchport',
+      intro: 'Create the VLAN, then put an end-device port into it as an access port.',
+      lines: [
+        ['SW1(config)#', 'vlan 10', 'create VLAN 10'],
+        ['SW1(config-vlan)#', 'name Sales', 'name it'],
+        ['SW1(config-vlan)#', 'exit', ''],
+        ['SW1(config)#', 'interface fastethernet 0/1', 'enter the port'],
+        ['SW1(config-if)#', 'switchport mode access', 'make it an access (end-device) port'],
+        ['SW1(config-if)#', 'switchport access vlan 10', 'put it in VLAN 10'],
+        ['SW1(config-if)#', 'end', ''],
+      ]
+    },
+    {
+      title: 'Enable basic port security',
+      goal: 'port-security',
+      intro: 'Lock a port to a limited number of learned MAC addresses and shut it down on violation.',
+      lines: [
+        ['SW1(config)#', 'interface fastethernet 0/1', ''],
+        ['SW1(config-if)#', 'switchport port-security', 'turn on port security'],
+        ['SW1(config-if)#', 'switchport port-security maximum 2', 'allow at most 2 MACs'],
+        ['SW1(config-if)#', 'switchport port-security mac-address sticky', 'auto-learn & save the MAC'],
+        ['SW1(config-if)#', 'switchport port-security violation shutdown', 'shut the port on a violation'],
+        ['SW1(config-if)#', 'end', ''],
+      ]
+    },
+  ],
+
+  verify: [
+    {
+      title: 'Check your work (show commands)',
+      goal: 'verify',
+      intro: 'After configuring, always verify. These run in privileged EXEC (# prompt). If addresses/status look wrong, you caught it before the tutor did.',
+      lines: [
+        ['R1#', 'show ip interface brief', 'IP + up/down status of every interface'],
+        ['R1#', 'show ipv6 interface brief', 'same, for IPv6 addresses (incl. LLA)'],
+        ['R1#', 'show running-config', 'review the whole live config'],
+        ['R1#', 'show ip route', 'the routing table'],
+        ['SW1#', 'show mac address-table', 'switch\'s learned MAC-to-port map'],
+        ['SW1#', 'show vlan brief', 'VLANs and their ports'],
+      ]
+    },
+    {
+      title: 'Test connectivity',
+      goal: 'ping / traceroute',
+      intro: 'Prove devices can actually reach each other. Ping first; if it fails, traceroute shows where it breaks.',
+      lines: [
+        ['R1#', 'ping 192.168.1.1', 'test reachability (ICMP echo)'],
+        ['R1#', 'ping 2001:db8:acad:1::1', 'IPv6 ping'],
+        ['R1#', 'traceroute 192.168.2.1', 'show the hop-by-hop path'],
+      ]
+    },
+    {
+      title: 'Save (never skip this)',
+      goal: 'copy run start',
+      intro: 'The running-config lives in RAM and is wiped on reboot. Copy it to NVRAM to make it permanent.',
+      lines: [
+        ['R1#', 'copy running-config startup-config', 'save config to NVRAM (survives reboot)'],
+        ['R1#', '  (press Enter to confirm the filename)', '', true],
+      ]
+    },
+  ],
+};
+
+function renderFlow(section){
+  const blocks = FLOWS[section];
+  const content = document.getElementById('flowContent');
+  content.innerHTML = blocks.map((b, i)=>{
+    const linesHtml = b.lines.map(l=>{
+      const [prompt, cmd, comment, isMeta] = l;
+      if(isMeta){
+        // meta line: whole thing is a dim comment/instruction
+        return `<span class="tline"><span class="tcomment">${cmd}${comment?'  ← '+comment:''}</span></span>`;
+      }
+      const commentHtml = comment ? `  <span class="tcomment">! ${comment}</span>` : '';
+      return `<span class="tline"><span class="tprompt">${prompt} </span><span class="tcmd">${cmd}</span>${commentHtml}</span>`;
+    }).join('');
+    // plain text for copy (commands only, no comments/prompts)
+    const copyText = b.lines.filter(l=>!l[3] && l[1] && !l[1].trim().startsWith('(')).map(l=>l[1]).join('\n');
+    const copyId = `flowcopy-${section}-${i}`;
+    return `
+    <div class="flow-block">
+      <div class="flow-head">
+        <span class="fnum">${i+1}</span>
+        <h3>${b.title}</h3>
+        <span class="fgoal">${b.goal}</span>
+      </div>
+      <div class="flow-body">
+        <p class="flow-intro">${b.intro}</p>
+        <div class="terminal">
+          <div class="terminal-bar">
+            <span class="dot" style="background:#ff5f56;"></span>
+            <span class="dot" style="background:#ffbd2e;"></span>
+            <span class="dot" style="background:#27c93f;"></span>
+            <span class="title">IOS CLI</span>
+            <button class="copy" data-copy="${copyId}" onclick="copyFlow('${copyId}', this)">Copy commands</button>
+          </div>
+          <div class="terminal-body" id="${copyId}" data-raw="${encodeURIComponent(copyText)}">${linesHtml}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function copyFlow(id, btn){
+  const el = document.getElementById(id);
+  const raw = decodeURIComponent(el.getAttribute('data-raw'));
+  navigator.clipboard.writeText(raw).then(()=>{
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copied';
+    setTimeout(()=>btn.textContent = orig, 1500);
+  }).catch(()=>{
+    btn.textContent = 'Copy failed';
+  });
+}
+document.querySelectorAll('#flowTabs button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('#flowTabs button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderFlow(btn.dataset.flow);
+  });
+});
+renderFlow('hardening');
 
 
 /* =========================================================
