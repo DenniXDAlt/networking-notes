@@ -146,6 +146,43 @@ button.btn.small{padding:6px 12px; font-size:11.5px;}
 .flow-pill-tabs button.active{background:var(--cyan); border-color:var(--cyan); color:#04231d; font-weight:700;}
 .flow-section{display:none;}
 .flow-section.active{display:block;}
+
+/* Mock exam papers */
+.exam-picker{display:flex; gap:10px; flex-wrap:wrap; margin:6px 0 4px;}
+.exam-picker button{font-family:var(--mono); font-size:12.5px; padding:10px 18px; border-radius:8px; border:1px solid var(--line); background:var(--panel-2); color:var(--text); cursor:pointer;}
+.exam-picker button.active{background:var(--cyan); border-color:var(--cyan); color:#04231d; font-weight:700;}
+.exam-meta{display:flex; gap:18px; flex-wrap:wrap; font-family:var(--mono); font-size:11.5px; color:var(--muted); margin:14px 0 6px;}
+.exam-meta b{color:var(--cyan);}
+.section-head{display:flex; align-items:baseline; gap:12px; margin:26px 0 4px; padding-bottom:8px; border-bottom:2px solid var(--cyan-dim);}
+.section-head h3{margin:0; font-size:18px; color:var(--cyan);}
+.section-head .smarks{margin-left:auto; font-family:var(--mono); font-size:12px; color:var(--amber);}
+.section-desc{font-size:13px; color:var(--muted); margin:6px 0 14px;}
+.exam-q{border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-bottom:12px; background:var(--panel-2);}
+.exam-q .eqhead{font-family:var(--mono); font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:6px; display:flex; justify-content:space-between;}
+.exam-q .eqtext{font-size:14.5px; margin-bottom:10px; line-height:1.5;}
+.exam-q .eqtext code{background:var(--bg); padding:1px 5px; border-radius:4px; color:var(--amber);}
+.eq-opts{display:grid; gap:7px;}
+.eq-opt{display:flex; align-items:center; gap:10px; padding:8px 12px; border:1px solid var(--line); border-radius:8px; cursor:pointer; font-size:13.5px;}
+.eq-opt:hover{border-color:var(--cyan-dim);}
+.eq-opt.correct{border-color:var(--cyan); background:rgba(34,211,184,0.08);}
+.eq-opt.incorrect{border-color:var(--red); background:rgba(255,107,107,0.08);}
+.eq-explain{display:none; margin-top:10px; font-size:12.5px; color:var(--muted); background:var(--bg); border-left:3px solid var(--cyan-dim); padding:8px 12px; border-radius:0 6px 6px 0;}
+.eq-short textarea{width:100%; min-height:70px; background:var(--bg); border:1px solid var(--line); color:var(--text); border-radius:8px; padding:10px 12px; font-family:var(--sans); font-size:13.5px; resize:vertical;}
+.eq-model{display:none; margin-top:10px; font-size:13px; background:rgba(34,211,184,0.05); border:1px solid var(--cyan-dim); border-radius:8px; padding:10px 12px;}
+.eq-model .ml{font-family:var(--mono); font-size:10.5px; color:var(--cyan); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:5px;}
+.eq-selfmark{display:none; margin-top:8px; gap:8px; align-items:center; font-size:12px; color:var(--muted);}
+.eq-selfmark.show{display:flex;}
+.eq-selfmark button{font-family:var(--mono); font-size:11px; padding:5px 12px; border-radius:6px; border:1px solid var(--line); background:transparent; color:var(--muted); cursor:pointer;}
+.eq-selfmark button.on-yes{background:var(--cyan); color:#04231d; border-color:var(--cyan); font-weight:700;}
+.eq-selfmark button.on-part{background:var(--amber); color:#3a2600; border-color:var(--amber); font-weight:700;}
+.eq-selfmark button.on-no{background:var(--red); color:#3a0000; border-color:var(--red); font-weight:700;}
+.eq-vlsm-input{width:100%; margin-top:6px;}
+.exam-scorebar{position:sticky; bottom:16px; background:var(--panel); border:1px solid var(--cyan-dim); border-radius:12px; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; margin-top:22px; box-shadow:0 8px 30px rgba(0,0,0,0.5); flex-wrap:wrap; gap:12px;}
+.exam-scorebar .esc{font-family:var(--mono); font-size:19px; color:var(--cyan);}
+.vlsm-scenario{background:rgba(255,180,84,0.06); border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:0 8px 8px 0; padding:14px 16px; margin-bottom:14px; font-size:13.5px; line-height:1.6;}
+.vlsm-scenario table{width:100%; border-collapse:collapse; margin-top:10px; font-family:var(--mono); font-size:12px;}
+.vlsm-scenario th{color:var(--cyan); text-align:left; padding:5px 8px; border-bottom:1px solid var(--line);}
+.vlsm-scenario td{padding:5px 8px; border-bottom:1px solid var(--line);}
 .legend{display:flex; gap:16px; font-family:var(--mono); font-size:11.5px; color:var(--muted); margin-top:10px;}
 .legend span.dot{display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:5px; vertical-align:middle;}
 
@@ -215,6 +252,7 @@ footer{text-align:center; color:var(--muted); font-size:12px; font-family:var(--
   <button data-tab="commands"><span class="n">06</span>IOS Commands</button>
   <button data-tab="flow"><span class="n">07</span>Config Walkthrough</button>
   <button data-tab="test"><span class="n">08</span>Practice Test</button>
+  <button data-tab="exam"><span class="n">09</span>Mock Exam Papers</button>
 </nav>
 
 <!-- ============ PANEL: NOTES ============ -->
@@ -423,6 +461,17 @@ footer{text-align:center; color:var(--muted); font-size:12px; font-family:var(--
   <div id="testContainer"></div>
 </section>
 
+<!-- ============ PANEL: MOCK EXAM PAPERS ============ -->
+<section class="panel" id="panel-exam">
+  <div class="card">
+    <h2>Mock Exam Papers <span class="tag">Written Test 2 format</span></h2>
+    <p class="lead">Full timed papers built to the exact Written Test 2 structure — <strong>25 marks, 1h 15m</strong>. Section A (20 MCQ/TF × 0.5 = 10), Section B (VLSM scenario = 9), Section C (short answer = 6). Every paper spans the whole syllabus (Topics 1–12). Do a paper closed-book, hit <strong>Submit &amp; Grade</strong>, then self-mark Sections B &amp; C against the model answers.</p>
+    <div class="exam-picker" id="examPicker"></div>
+    <div id="examMeta" class="exam-meta"></div>
+    <div id="examBody"></div>
+  </div>
+</section>
+
 <footer>Built for DenniXD's IT1x13 revision — Networking Today · Protocols &amp; Models · Physical Layer · Data Link &amp; Ethernet · Ethernet Switching · IPv4 · Gateways &amp; ARP · Subnetting Maths &amp; Implementation · IPv6 · Routing &amp; Transport</footer>
 </div>
 
@@ -519,6 +568,17 @@ const NOTES = [
     <tr><td>2. Data Link</td><td rowspan="2">Network Access</td></tr>
     <tr><td>1. Physical</td></tr>
   </table>
+  <div class="note">Memory trick (OSI top → bottom): <strong>"All People Seem To Need Data Processing"</strong> — Application, Presentation, Session, Transport, Network, Data Link, Physical.</div>
+  <table class="ref">
+    <tr><th>Layer</th><th>Key role</th><th>Examples / device</th></tr>
+    <tr><td>7 Application</td><td>Network services to apps</td><td>HTTP, FTP, SMTP, DNS</td></tr>
+    <tr><td>6 Presentation</td><td>Format, encryption, compression</td><td>SSL/TLS</td></tr>
+    <tr><td>5 Session</td><td>Start/manage/end sessions</td><td>—</td></tr>
+    <tr><td>4 Transport</td><td>Reliable (TCP) or unreliable (UDP) delivery, ports</td><td>TCP, UDP</td></tr>
+    <tr><td>3 Network</td><td>Logical addressing + routing</td><td>IP · <strong>Router</strong></td></tr>
+    <tr><td>2 Data Link</td><td>Node-to-node on same segment, MAC</td><td><strong>Switch</strong></td></tr>
+    <tr><td>1 Physical</td><td>Raw bit transmission</td><td>Cables, radio, light · <strong>Hub</strong></td></tr>
+  </table>
   <h4>The PDU Stack Journey</h4>
   <ul>
     <li>As data moves <strong>down</strong> the stack toward transmission, each layer's protocol adds its own header (and sometimes trailer) information — this is <strong>encapsulation</strong>, and the data's name (the PDU, Protocol Data Unit) changes at each layer.</li>
@@ -569,13 +629,29 @@ const NOTES = [
     <li><strong>Fiber is superior in:</strong> bandwidth (much higher) and distance (much longer runs without a repeater).</li>
     <li><strong>UTP (copper) is superior in:</strong> cost (lowest media/connector cost of the common cable types) and ease of installation (requires less specialized skill).</li>
   </ul>
-  <h4>Wireless & IEEE Standards</h4>
+  <h4>Copper Cable Categories &amp; Types</h4>
+  <table class="ref">
+    <tr><th>Cable</th><th>Detail</th></tr>
+    <tr><td>Cat5e</td><td>Up to 1 Gbps — common older LAN cable</td></tr>
+    <tr><td>Cat6</td><td>10 Gbps over short runs</td></tr>
+    <tr><td>Cat6a</td><td>10 Gbps over a full 100 m — standard for new office builds</td></tr>
+    <tr><td>UTP (Unshielded Twisted Pair)</td><td>No shielding; cheap, flexible; most office LANs</td></tr>
+    <tr><td>STP (Shielded Twisted Pair)</td><td>Metallic shielding; needs grounding; for high-interference areas (factory floors, near machinery)</td></tr>
+    <tr><td>Straight-through cable</td><td>Same pin layout both ends → connects <strong>different</strong> device types (PC↔Switch, Switch↔Router)</td></tr>
+    <tr><td>Crossover cable</td><td>TX/RX pins swapped → connects <strong>same</strong> device types (PC↔PC, Switch↔Switch). Less needed with auto-MDI-X</td></tr>
+  </table>
+  <h4>Fiber Modes</h4>
+  <ul>
+    <li><strong>Single-mode:</strong> uses a laser, thin core, very long range (backbone/carrier links).</li>
+    <li><strong>Multi-mode:</strong> uses LED, thicker core, shorter range (within a building/campus).</li>
+  </ul>
+  <h4>Wireless &amp; IEEE Standards</h4>
   <table class="ref">
     <tr><th>Standard</th><th>Technology</th></tr>
-    <tr><td>IEEE 802.11</td><td>Wireless LAN (Wi-Fi)</td></tr>
-    <tr><td>IEEE 802.15</td><td>Wireless PAN (Bluetooth)</td></tr>
+    <tr><td>IEEE 802.11</td><td>Wireless LAN (Wi-Fi). <strong>Wi-Fi 6 (802.11ax)</strong> uses OFDMA + MU-MIMO to serve many devices at once — key in dense areas like lecture halls</td></tr>
+    <tr><td>IEEE 802.15</td><td>Wireless PAN (Bluetooth) — ~10 m, peripherals</td></tr>
     <tr><td>IEEE 802.16</td><td>WiMAX</td></tr>
-    <tr><td>IEEE 802.15.4</td><td>Zigbee — designed for low-power IoT applications</td></tr>
+    <tr><td>IEEE 802.15.4</td><td>Zigbee — low-power IoT (smart bulbs, sensors); batteries last years</td></tr>
   </table>
   <ul>
     <li>To build a Wireless LAN (WLAN) you need at minimum: (1) a <strong>Wireless Access Point (WAP)</strong> or wireless router, and (2) <strong>wireless NICs</strong> on every end device that will join it.</li>
@@ -1589,6 +1665,511 @@ document.querySelectorAll('#flowTabs button').forEach(btn=>{
   });
 });
 renderFlow('hardening');
+
+/* =========================================================
+   MOCK EXAM PAPERS — Written Test 2 format
+   sectionA: MCQ/TF (0.5 each), sectionB: VLSM (9), sectionC: short answer (6)
+========================================================= */
+const EXAM_PAPERS = [
+{
+  id:'P1', name:'Paper 1',
+  sectionA:[
+    {q:'Which network type connects remote/home employees to a corporate network, typically using VPNs?', opts:['Small Home','SOHO','WAN','Peer-to-peer'], c:1, e:'SOHO (Small Office/Home Office) links remote workers into the corporate network.'},
+    {q:'Which characteristic uses redundant paths so traffic reroutes automatically if a link fails?', opts:['Scalability','Quality of Service','Fault Tolerance','Security'], c:2, e:'Fault tolerance = redundant paths so a single failure doesn\'t bring down the network.'},
+    {q:'TRUE or FALSE: QoS prioritises time-sensitive traffic like VoIP over a file download on the same link.', opts:['True','False'], c:0, e:'True — QoS gives priority bandwidth to delay-sensitive traffic.'},
+    {q:'A protocol is best defined as:', opts:['A type of cable','An agreed set of rules for how devices communicate','A routing algorithm','A hardware address'], c:1, e:'Protocols are agreed rules governing message format, timing, and error handling.'},
+    {q:'Which OSI layer handles logical addressing (IP) and routing?', opts:['Layer 2 Data Link','Layer 3 Network','Layer 4 Transport','Layer 1 Physical'], c:1, e:'Layer 3 (Network) does logical addressing and routing; routers operate here.'},
+    {q:'What is the PDU name at the Transport layer?', opts:['Frame','Packet','Segment','Bits'], c:2, e:'Transport layer PDU = Segment.'},
+    {q:'Encapsulation adds protocol headers as data travels:', opts:['UP the stack','DOWN the stack','Only at Layer 1','Only at Layer 7'], c:1, e:'Encapsulation wraps data with headers going DOWN the stack; de-encapsulation is the reverse going up.'},
+    {q:'Which medium is immune to electromagnetic interference (EMI)?', opts:['UTP copper','Coaxial','Fiber-optic','STP copper'], c:2, e:'Fiber uses light, so it is immune to EMI.'},
+    {q:'A straight-through cable is used to connect:', opts:['PC to PC','Switch to switch','DIFFERENT device types (PC to switch)','Router to router'], c:2, e:'Straight-through connects different device types; crossover connects like devices.'},
+    {q:'Which wireless standard is used for low-power IoT sensors and smart bulbs?', opts:['Wi-Fi (802.11)','Bluetooth (802.15)','Zigbee (802.15.4)','WiMAX (802.16)'], c:2, e:'Zigbee (802.15.4) is low-power/low-data-rate for IoT; batteries last years.'},
+    {q:'How many bits is an Ethernet MAC address?', opts:['32 bits','48 bits','64 bits','128 bits'], c:1, e:'A MAC address is 48 bits = 12 hex digits.'},
+    {q:'The first 3 bytes of a MAC address are the:', opts:['Vendor-assigned serial','OUI (identifies the manufacturer)','Broadcast prefix','Checksum'], c:1, e:'The OUI (Organisationally Unique Identifier) identifies the NIC vendor.'},
+    {q:'What is the Ethernet broadcast MAC address?', opts:['00-00-00-00-00-00','01-00-5E-00-00-00','FF-FF-FF-FF-FF-FF','FE-80-00-00-00-01'], c:2, e:'FF-FF-FF-FF-FF-FF is the one-to-all broadcast MAC.'},
+    {q:'Modern LANs predominantly use which topology?', opts:['Bus','Ring','Star (central switch)','Mesh'], c:2, e:'Star topology with a central switch is the modern standard.'},
+    {q:'Full-duplex means:', opts:['Send OR receive at a time','Send AND receive simultaneously','Broadcast only','Half the bandwidth'], c:1, e:'Full-duplex allows simultaneous send and receive with no collisions — used by switches.'},
+    {q:'A switch that receives a frame for an unknown destination MAC will:', opts:['Drop it','Flood it out all ports except the incoming one','Return it to sender','Convert it to broadcast permanently'], c:1, e:'Unknown unicast is flooded out all ports except the one it arrived on.'},
+    {q:'Which IPv4 range is private (RFC 1918)?', opts:['172.16.0.0/12','8.8.0.0/16','1.1.1.0/24','200.1.1.0/24'], c:0, e:'10.0.0.0/8, 172.16.0.0/12, and 192.168.0.0/16 are the private ranges.'},
+    {q:'A /27 subnet provides how many usable hosts?', opts:['14','30','62','126'], c:1, e:'/27 leaves 5 host bits: 2^5 − 2 = 30.'},
+    {q:'TRUE or FALSE: ARP resolves a known IP address to an unknown MAC address.', opts:['True','False'], c:0, e:'True — ARP maps a known IPv4 address to its MAC address.'},
+    {q:'Which command enables an interface that is administratively down?', opts:['enable','no shutdown','interface up','power on'], c:1, e:'"no shutdown" administratively enables the interface.'},
+  ],
+  sectionB:{
+    scenario:`A company has been assigned the network <code>172.16.0.0/24</code>. Design a VLSM addressing scheme for the following requirements (largest first). For <strong>each</strong> subnet give the <strong>network address</strong>, <strong>subnet mask (/prefix)</strong>, <strong>usable host range</strong>, and <strong>broadcast address</strong>.`,
+    table:[['Subnet A — Admin LAN','50 hosts'],['Subnet B — Staff LAN','25 hosts'],['Subnet C — Guest LAN','10 hosts'],['WAN Link 1','2 hosts'],['WAN Link 2','2 hosts']],
+    model:`<strong>Allocate largest first from 172.16.0.0:</strong><br>
+    • <b>Subnet A (50 hosts)</b> → needs 64 block → /26 → <b>172.16.0.0/26</b>, mask 255.255.255.192, usable 172.16.0.1–172.16.0.62, broadcast 172.16.0.63<br>
+    • <b>Subnet B (25 hosts)</b> → needs 32 block → /27 → <b>172.16.0.64/27</b>, mask 255.255.255.224, usable 172.16.0.65–172.16.0.94, broadcast 172.16.0.95<br>
+    • <b>Subnet C (10 hosts)</b> → needs 16 block → /28 → <b>172.16.0.96/28</b>, mask 255.255.255.240, usable 172.16.0.97–172.16.0.110, broadcast 172.16.0.111<br>
+    • <b>WAN Link 1 (2 hosts)</b> → needs 4 block → /30 → <b>172.16.0.112/30</b>, mask 255.255.255.252, usable 172.16.0.113–172.16.0.114, broadcast 172.16.0.115<br>
+    • <b>WAN Link 2 (2 hosts)</b> → /30 → <b>172.16.0.116/30</b>, mask 255.255.255.252, usable 172.16.0.117–172.16.0.118, broadcast 172.16.0.119<br>
+    <em>Tip: check your answer instantly in the Address Table Builder tab using base 172.16.0.0 /24.</em>`
+  },
+  sectionC:[
+    {marks:2, q:'Explain the difference between the Physical and Logical topology of a network. Give one example of each.', model:'Physical topology = the actual cable layout and where devices/cables physically sit. Logical topology = how data actually flows between devices, regardless of physical layout. Example: a network can be physically a star (all cables to a central switch) but logically behave differently depending on VLANs/paths. Physical shows cable runs; logical shows data flow.'},
+    {marks:2, q:'A host wants to send a packet to a device on a REMOTE network. Explain which destination MAC address it puts in the frame and why.', model:'It uses the default gateway (router interface) MAC address, not the final destination\'s MAC. MAC addressing only works on the local segment, so to leave the LAN the frame must go to the router. The destination IP stays the final destination throughout, but the MAC changes at every hop as each router re-encapsulates the frame.'},
+    {marks:2, q:'State two reasons why an organisation would subnet its network.', model:'Any two of: (1) reduce broadcast domain size / broadcast traffic to improve performance; (2) apply security policy between subnets / isolate departments; (3) organise the network logically by location, function, or device type; (4) contain faults and abnormal traffic to a smaller area.'},
+  ]
+},
+{
+  id:'P2', name:'Paper 2',
+  sectionA:[
+    {q:'Which memory trick lists the OSI layers top to bottom?', opts:['"Please Do Not Throw Sausage Pizza Away"','"All People Seem To Need Data Processing"','"Every Good Boy Deserves Fudge"','"King Philip Came Over For Good Soup"'], c:1, e:'"All People Seem To Need Data Processing" = Application→Physical (top to bottom).'},
+    {q:'How many layers does the TCP/IP model have?', opts:['4','5','6','7'], c:0, e:'TCP/IP has 4 layers: Application, Transport, Internet, Network Access.'},
+    {q:'Which cable category supports 10 Gbps over 100 m and is the standard for new office builds?', opts:['Cat5','Cat5e','Cat6a','Cat3'], c:2, e:'Cat6a supports 10 Gbps over a full 100 m run.'},
+    {q:'Single-mode fiber differs from multi-mode fiber in that it:', opts:['Uses LED and short range','Uses laser and long range','Is made of copper','Only carries electrical signals'], c:1, e:'Single-mode uses a laser for long-range; multi-mode uses LED for shorter range.'},
+    {q:'A multicast MAC address for IPv4 begins with:', opts:['FF-FF-FF','01-00-5E','00-00-00','FE-80-00'], c:1, e:'IPv4 multicast frames use destination MACs starting 01-00-5E.'},
+    {q:'TRUE or FALSE: A switch forwards a broadcast frame out every port including the one it arrived on.', opts:['True','False'], c:1, e:'False — it floods out every port EXCEPT the incoming one.'},
+    {q:'Which device operates primarily at OSI Layer 3?', opts:['Hub','Switch','Router','Repeater'], c:2, e:'Routers operate at Layer 3 (Network), forwarding on IP addresses.'},
+    {q:'The subnet mask for a /28 network in dotted decimal is:', opts:['255.255.255.192','255.255.255.224','255.255.255.240','255.255.255.248'], c:2, e:'/28 = 255.255.255.240 (block size 16).'},
+    {q:'How many subnets are created if you borrow 4 host bits?', opts:['8','16','24','32'], c:1, e:'2^4 = 16 subnets.'},
+    {q:'Which is a valid fully-compressed form of 2001:0db8:0000:0000:0000:0000:0000:0001?', opts:['2001:db8::1','2001:db8:0::0:1','2001::db8::1','2001:0db8::1'], c:0, e:'Drop leading zeros then replace the long zero run once with :: → 2001:db8::1.'},
+    {q:'The IPv6 address range fe80::/10 is used for:', opts:['Global Unicast','Unique Local','Link-Local','Multicast'], c:2, e:'fe80::/10 = link-local, auto-created on every interface, never routed off-link.'},
+    {q:'Which IPv6 command globally enables routing on a router?', opts:['ip routing','ipv6 unicast-routing','enable ipv6','router ipv6'], c:1, e:'ipv6 unicast-routing enables IPv6 forwarding.'},
+    {q:'TCP differs from UDP because TCP is:', opts:['Connectionless','Best-effort with no acknowledgements','Connection-oriented and reliable','Only used for streaming'], c:2, e:'TCP is connection-oriented (3-way handshake) and reliable; UDP is connectionless/best-effort.'},
+    {q:'Which port number is HTTPS?', opts:['21','80','443','53'], c:2, e:'HTTPS uses TCP port 443.'},
+    {q:'What is the correct order of the TCP three-way handshake?', opts:['SYN, ACK, SYN-ACK','SYN, SYN-ACK, ACK','ACK, SYN, SYN-ACK','SYN-ACK, ACK, SYN'], c:1, e:'SYN → SYN-ACK → ACK.'},
+    {q:'TRUE or FALSE: Half-duplex means a device can send and receive at the same time.', opts:['True','False'], c:1, e:'False — half-duplex is send OR receive at a time; full-duplex is simultaneous.'},
+    {q:'Which command saves the running config so it survives a reboot?', opts:['write erase','copy running-config startup-config','reload','show run'], c:1, e:'copy running-config startup-config writes RAM config into NVRAM.'},
+    {q:'A Layer 2 switch\'s management IP is assigned to:', opts:['Any access port','The VLAN 1 SVI','The console line','The enable secret'], c:1, e:'Switch ports aren\'t routed, so the management IP goes on the VLAN 1 SVI.'},
+    {q:'Which show command gives a one-line up/down + IP status of all interfaces?', opts:['show version','show ip interface brief','show mac address-table','show running-config'], c:1, e:'show ip interface brief is the quick interface status check.'},
+    {q:'What does TTL in the IPv4 header prevent?', opts:['Fragmentation','Packets looping forever','MAC spoofing','Broadcast storms'], c:1, e:'TTL decrements each hop and drops the packet at 0, preventing infinite routing loops.'},
+  ],
+  sectionB:{
+    scenario:`You are given <code>192.168.10.0/24</code>. Create a VLSM scheme for the requirements below (allocate largest first). For each, give <strong>network address</strong>, <strong>prefix</strong>, <strong>usable range</strong>, and <strong>broadcast</strong>.`,
+    table:[['Sales Department','60 hosts'],['Engineering','28 hosts'],['Management','12 hosts'],['Server VLAN','5 hosts'],['Router-to-Router link','2 hosts']],
+    model:`<strong>From 192.168.10.0, largest first:</strong><br>
+    • <b>Sales (60)</b> → 64 block → /26 → <b>192.168.10.0/26</b>, usable .1–.62, broadcast .63<br>
+    • <b>Engineering (28)</b> → 32 block → /27 → <b>192.168.10.64/27</b>, usable .65–.94, broadcast .95<br>
+    • <b>Management (12)</b> → 16 block → /28 → <b>192.168.10.96/28</b>, usable .97–.110, broadcast .111<br>
+    • <b>Server VLAN (5)</b> → 8 block → /29 → <b>192.168.10.112/29</b>, usable .113–.118, broadcast .119<br>
+    • <b>Router link (2)</b> → 4 block → /30 → <b>192.168.10.120/30</b>, usable .121–.122, broadcast .123<br>
+    <em>Verify in the Address Table Builder with base 192.168.10.0 /24.</em>`
+  },
+  sectionC:[
+    {marks:2, q:'Explain what encapsulation is and name the PDU at the Transport, Network, and Data Link layers.', model:'Encapsulation is adding protocol headers (and a trailer at Layer 2) as data moves down the stack, each layer wrapping the data from the layer above. PDUs: Transport = Segment, Network = Packet, Data Link = Frame (Physical = Bits).'},
+    {marks:2, q:'Describe two differences between a hub and a switch.', model:'Any two: (1) A hub is half-duplex and shares bandwidth among all ports; a switch is full-duplex giving each port dedicated bandwidth. (2) A hub floods all traffic out every port; a switch learns MAC addresses and forwards only to the correct port. (3) A hub is a Layer 1 device; a switch is a Layer 2 device with a MAC address table.'},
+    {marks:2, q:'A technician configured an interface with an IP address but it still shows "administratively down". What command fixes this and why?', model:'The command is "no shutdown". Interfaces are shut down by default, so even with an IP assigned, the port stays administratively down until "no shutdown" enables it.'},
+  ]
+},
+{
+  id:'P3', name:'Paper 3',
+  sectionA:[
+    {q:'Which of these is an END device (not intermediary)?', opts:['Router','Multilayer switch','File server','Wireless access point'], c:2, e:'A file server is an end device (origin/destination of data). The others forward traffic.'},
+    {q:'A byte consists of how many bits?', opts:['4','8','16','32'], c:1, e:'1 byte = 8 bits.'},
+    {q:'Which layer converts frames into electrical, light, or radio signals?', opts:['Data Link','Network','Physical','Transport'], c:2, e:'The Physical layer transmits raw bits as signals on the medium.'},
+    {q:'STP cabling is preferred over UTP in:', opts:['Cheap home installs','High-interference environments like factory floors','Fiber backbones','Wireless networks'], c:1, e:'STP has shielding for high-EMI environments (needs proper grounding).'},
+    {q:'Which is TRUE about Wi-Fi (WLAN)?', opts:['It is full-duplex','It operates in half-duplex (shared medium)','It is immune to interference','It needs no access point'], c:1, e:'WLANs generally operate half-duplex and share the medium; more users = less bandwidth each.'},
+    {q:'TRUE or FALSE: The source MAC address in a frame must always be a unicast address.', opts:['True','False'], c:0, e:'True — the source must identify the single NIC that sent it, so it is unicast.'},
+    {q:'The IPv4 header field that identifies the upper-layer protocol (TCP/UDP/ICMP) is:', opts:['TTL','Protocol','Checksum','Version'], c:1, e:'The Protocol field names the next-layer protocol.'},
+    {q:'The broadcast address of 192.168.5.0/26 is:', opts:['192.168.5.63','192.168.5.127','192.168.5.255','192.168.5.64'], c:0, e:'/26 block size 64: subnet .0–.63, so broadcast = .63.'},
+    {q:'How many usable hosts does a /30 provide?', opts:['0','2','4','6'], c:1, e:'/30 = 4 addresses − 2 = 2 usable (ideal for point-to-point WAN links).'},
+    {q:'How many hextets are in a full IPv6 address?', opts:['4','6','8','16'], c:2, e:'8 hextets × 16 bits = 128 bits.'},
+    {q:'The "::" in an IPv6 address may be used:', opts:['As many times as needed','Exactly once','Only at the start','Only at the end'], c:1, e:'Only once — using it twice would make the address ambiguous.'},
+    {q:'Which IPv6 type is one address on multiple devices, delivered to the nearest one?', opts:['Unicast','Multicast','Anycast','Broadcast'], c:2, e:'Anycast delivers to the nearest of several devices sharing the address. (IPv6 has no broadcast.)'},
+    {q:'UDP is the best choice for:', opts:['File transfer','Banking transactions','Live VoIP / video streaming','Email'], c:2, e:'UDP suits live media where low delay matters more than perfect reliability.'},
+    {q:'A socket is defined as:', opts:['A MAC address only','An IP address + port number','A subnet mask','A routing table entry'], c:1, e:'A socket = IP address + port, e.g. 192.168.1.10:443.'},
+    {q:'A router receives a packet for an unknown network with no default route. It will:', opts:['Broadcast it','Drop the packet','Flood all interfaces','Return to sender'], c:1, e:'With no matching route and no default route, the router drops the packet.'},
+    {q:'TRUE or FALSE: "enable secret" stores the password in plaintext.', opts:['True','False'], c:1, e:'False — enable secret is hashed/encrypted; enable password is plaintext.'},
+    {q:'The command "line vty 0 15" configures:', opts:['The console port','All 16 virtual terminal (remote login) lines','The auxiliary port','VLAN 15'], c:1, e:'VTY 0–15 are the 16 virtual lines for Telnet/SSH remote sessions.'},
+    {q:'Which command is needed (with a domain name & RSA keys) to allow secure remote login?', opts:['transport input telnet','transport input ssh','no login','banner motd'], c:1, e:'transport input ssh restricts VTY lines to encrypted SSH only.'},
+    {q:'Border of a broadcast domain is defined by a:', opts:['Hub','Switch','Router','Repeater'], c:2, e:'Routers do not forward broadcasts, so each router interface bounds a broadcast domain.'},
+    {q:'In VLSM, you always allocate:', opts:['Smallest requirement first','Largest requirement first','WAN links first','Alphabetically'], c:1, e:'Golden rule: allocate the largest host requirement first to avoid fragmenting the space.'},
+  ],
+  sectionB:{
+    scenario:`A campus is assigned <code>10.10.10.0/24</code>. Produce a VLSM plan for the requirements below (largest first). Give <strong>network address</strong>, <strong>prefix</strong>, <strong>usable range</strong>, and <strong>broadcast</strong> for each.`,
+    table:[['Lecture Hall','100 hosts'],['Library','50 hosts'],['Staff Room','20 hosts'],['Lab A','10 hosts'],['Uplink to core','2 hosts']],
+    model:`<strong>From 10.10.10.0, largest first:</strong><br>
+    • <b>Lecture Hall (100)</b> → 128 block → /25 → <b>10.10.10.0/25</b>, usable .1–.126, broadcast .127<br>
+    • <b>Library (50)</b> → 64 block → /26 → <b>10.10.10.128/26</b>, usable .129–.190, broadcast .191<br>
+    • <b>Staff Room (20)</b> → 32 block → /27 → <b>10.10.10.192/27</b>, usable .193–.222, broadcast .223<br>
+    • <b>Lab A (10)</b> → 16 block → /28 → <b>10.10.10.224/28</b>, usable .225–.238, broadcast .239<br>
+    • <b>Uplink (2)</b> → 4 block → /30 → <b>10.10.10.240/30</b>, usable .241–.242, broadcast .243<br>
+    <em>Verify in the Address Table Builder with base 10.10.10.0 /24.</em>`
+  },
+  sectionC:[
+    {marks:2, q:'Explain the purpose of ARP and describe the two steps of the ARP process.', model:'ARP resolves a known IPv4 address to an unknown MAC address so a frame can be delivered locally. Step 1: the sender broadcasts an ARP request (dest MAC = broadcast) asking "who has this IP?". Step 2: only the device with that IP replies directly (unicast) with its MAC, which the sender then caches in its ARP table.'},
+    {marks:2, q:'Compare the OSI model and the TCP/IP model — state one similarity and one difference.', model:'Similarity: both are layered models describing how data moves from application to application across a network, using encapsulation. Difference: OSI has 7 layers and is a reference/teaching model; TCP/IP has 4 layers and is the practical model actually used on the internet (its Application layer combines OSI layers 5–7, and Network Access combines layers 1–2).'},
+    {marks:2, q:'A switch needs to be managed remotely from a different subnet. State the two things (addresses/settings) it must have configured and why.', model:'(1) A management IP on the VLAN 1 SVI, because switch ports aren\'t routed and it needs one IP to be reachable. (2) A default gateway (ip default-gateway), so it can reply to management traffic that originates on a different subnet — without it the switch could only answer hosts on its own subnet.'},
+  ]
+},
+{
+  id:'P4', name:'Paper 4 (Hard)',
+  sectionA:[
+    {q:'A host has IP 172.19.135.77 with mask 255.255.248.0. What is its network ID?', opts:['172.19.128.0','172.19.135.0','172.19.134.0','172.19.132.0'], c:0, e:'255.255.248.0 = /21, block size in the 3rd octet = 256−248 = 8. 135 falls in the 128–135 block, so network = 172.19.128.0.'},
+    {q:'Which statement about the IPv4 header TTL field is correct?', opts:['It is incremented by each switch','It is decremented by each router; the packet is dropped at 0','It counts fragments','It stores the source port'], c:1, e:'TTL is a Layer 3 hop count decremented by each router, dropping the packet at 0 to stop loops.'},
+    {q:'How many /27 subnets can be created from a single 192.168.0.0/24 block?', opts:['4','8','16','32'], c:1, e:'/24 → /27 borrows 3 bits: 2^3 = 8 subnets.'},
+    {q:'The broadcast address of 10.45.200.10/22 is:', opts:['10.45.200.255','10.45.203.255','10.45.201.255','10.45.207.255'], c:1, e:'/22 block size in 3rd octet = 4. 200 is in the 200–203 block, so broadcast = 10.45.203.255.'},
+    {q:'Which is TRUE about a collision domain vs a broadcast domain?', opts:['A switch creates one collision domain per port; a router bounds a broadcast domain','A hub separates collision domains','A switch is one big collision domain','Routers extend broadcast domains'], c:0, e:'Each switch port is its own collision domain; routers do not forward broadcasts, so they bound broadcast domains.'},
+    {q:'A frame arrives at a switch with a destination MAC not in its table. This is a(n):', opts:['Broadcast','Unknown unicast (flooded)','Multicast to 01-00-5E','Collision'], c:1, e:'Unknown unicast → flooded out all ports except the incoming one.'},
+    {q:'Which pair correctly matches PDU to layer?', opts:['Segment – Network','Packet – Transport','Frame – Data Link','Bits – Network'], c:2, e:'Data Link PDU = Frame. (Transport = Segment, Network = Packet, Physical = Bits.)'},
+    {q:'TRUE or FALSE: UDP provides sequencing and retransmission of lost segments.', opts:['True','False'], c:1, e:'False — that is TCP. UDP is best-effort with no sequencing or retransmission.'},
+    {q:'Which address is a valid host address in 200.1.1.64/26?', opts:['200.1.1.64','200.1.1.127','200.1.1.100','200.1.1.128'], c:2, e:'/26 block .64–.127: .64 is network, .127 is broadcast, so .100 is a valid host. .128 is a different subnet.'},
+    {q:'The main reason /31 subnets exist is to:', opts:['Support 2 usable hosts','Support exactly 2 addresses for point-to-point links with no waste','Replace /24','Enable multicast'], c:1, e:'RFC 3021 /31 uses both addresses for a point-to-point link (no network/broadcast waste).'},
+    {q:'A multicast IPv4 packet is sent to 239.1.1.1. Which is TRUE?', opts:['It reaches every host on the LAN','It reaches only hosts subscribed to that group','It is a broadcast','It is unroutable'], c:1, e:'Multicast (224.0.0.0–239.255.255.255) reaches only the subscribed group.'},
+    {q:'Which OSI layer is responsible for encryption (e.g. TLS) and data format translation?', opts:['Session','Presentation','Application','Transport'], c:1, e:'The Presentation layer handles format translation, encryption, and compression.'},
+    {q:'A packet must cross 3 routers to reach its destination. How many times does the destination MAC change end-to-end?', opts:['0 times','1 time','It changes at each hop (multiple times)','Only at the last hop'], c:2, e:'The destination IP stays constant, but the MAC is rewritten at every hop as each router re-encapsulates the frame.'},
+    {q:'Which is the correct fully-expanded form of 2001:db8::a:0:0:1?', opts:['2001:0db8:0000:0000:000a:0000:0000:0001','2001:0db8:0000:000a:0000:0000:0000:0001','2001:0db8:000a:0000:0000:0000:0000:0001','2001:0db8:0000:0000:0000:000a:0000:0001'], c:0, e:'5 visible hextets (2001, db8, a, 0, 0, 1 = 6 actually) — :: fills to 8. Expanded: 2001:0db8:0000:0000:000a:0000:0000:0001.'},
+    {q:'ARP operates by:', opts:['Unicasting a request to the gateway','Broadcasting a request; only the matching host unicasts a reply','Multicasting to 01-00-5E','Using DNS'], c:1, e:'ARP broadcasts "who has this IP?"; only the owner replies with its MAC.'},
+    {q:'Which is NOT a private IPv4 range?', opts:['10.0.0.0/8','172.16.0.0/12','192.168.0.0/16','172.32.0.0/12'], c:3, e:'The 172 private range is 172.16.0.0–172.31.255.255; 172.32.x is public.'},
+    {q:'Store-and-forward switching differs from cut-through because it:', opts:['Forwards after reading only the destination MAC','Checks the full frame FCS before forwarding','Never buffers frames','Only works at Layer 3'], c:1, e:'Store-and-forward receives the whole frame and validates the FCS/CRC before forwarding.'},
+    {q:'TRUE or FALSE: A default gateway is required for a host to reach devices on the same subnet.', opts:['True','False'], c:1, e:'False — same-subnet traffic is delivered directly; the gateway is only needed to reach other subnets.'},
+    {q:'Which statement about fiber is TRUE?', opts:['Multi-mode uses a laser for very long range','Single-mode uses LED for short range','Single-mode uses a laser for long range','Fiber is susceptible to EMI'], c:2, e:'Single-mode = laser, long range; multi-mode = LED, shorter range. Fiber is immune to EMI.'},
+    {q:'An application needs guaranteed, in-order delivery of a file. Which transport protocol and why?', opts:['UDP — lower overhead','TCP — reliability, sequencing, retransmission','IP — it routes','ICMP — it tests reachability'], c:1, e:'TCP guarantees ordered, reliable delivery via sequence numbers and retransmission.'},
+  ],
+  sectionB:{
+    scenario:`A branch office is assigned <code>192.168.20.0/24</code>. Using <strong>VLSM</strong>, design an addressing scheme (largest first). For each subnet give <strong>network address</strong>, <strong>prefix</strong>, <strong>usable range</strong>, and <strong>broadcast</strong>. Then state the <strong>default gateway</strong> for each LAN, using the <em>first usable</em> address as the gateway.`,
+    table:[['Production LAN','58 hosts'],['QA LAN','26 hosts'],['IT LAN','12 hosts'],['CCTV VLAN','6 hosts'],['R1–R2 WAN link','2 hosts']],
+    model:`<strong>From 192.168.20.0, largest first:</strong><br>
+    • <b>Production (58)</b> → 64 block → /26 → <b>192.168.20.0/26</b>, usable .1–.62, bcast .63 — gateway <b>.1</b><br>
+    • <b>QA (26)</b> → 32 block → /27 → <b>192.168.20.64/27</b>, usable .65–.94, bcast .95 — gateway <b>.65</b><br>
+    • <b>IT (12)</b> → 16 block → /28 → <b>192.168.20.96/28</b>, usable .97–.110, bcast .111 — gateway <b>.97</b><br>
+    • <b>CCTV (6)</b> → 8 block → /29 → <b>192.168.20.112/29</b>, usable .113–.118, bcast .119 — gateway <b>.113</b><br>
+    • <b>WAN link (2)</b> → 4 block → /30 → <b>192.168.20.120/30</b>, usable .121–.122, bcast .123<br>
+    <em>Verify with base 192.168.20.0 /24 in the Address Table Builder.</em>`
+  },
+  sectionC:[
+    {marks:2, q:'A company reports that "the network is slow every morning when everyone logs in, and a single failed switch took down a whole floor." Using networking theory, name the TWO design characteristics being violated and briefly justify.', model:'(1) Scalability / QoS — the morning congestion suggests the network cannot handle peak load without degrading; QoS and/or added capacity would prioritise/serve the surge. (2) Fault Tolerance — a single switch failure taking down a floor shows no redundant path; redundancy (a second uplink/switch) would let traffic reroute automatically.'},
+    {marks:2, q:'A host is configured with IP 192.168.1.50/26 and default gateway 192.168.1.1. Explain why this host cannot reach the internet, and how to fix it.', model:'192.168.1.50/26 is in subnet 192.168.1.0/26 (usable .1–.62). The gateway .1 is in the same subnet, so that part is fine — BUT if the router interface is actually on a different subnet (e.g. the real gateway is .65 or the mask is wrong), the host and gateway wouldn\'t share a subnet and the host couldn\'t ARP the gateway. Fix: ensure the host and its default gateway are in the SAME subnet (matching network ID and mask). If the gateway truly is .1/26 this is correct; the issue would then be upstream (NAT/route).'},
+    {marks:2, q:'Two PCs on the same switch can ping each other, but neither can ping a server on another subnet. The switch and cabling are fine. What is the most likely misconfiguration and why?', model:'The most likely cause is a missing or incorrect default gateway on the PCs (or the router interface being down). Same-subnet pings work because they are delivered directly at Layer 2, but reaching another subnet requires forwarding through the default gateway. If the gateway IP is missing/wrong, or the router interface is shut down, off-subnet traffic has nowhere to go.'},
+  ]
+},
+{
+  id:'P5', name:'Paper 5 (Hard)',
+  sectionA:[
+    {q:'Given 10.0.0.0/8 subnetted to /14, how many subnets and how many hosts per subnet?', opts:['64 subnets, 262142 hosts','16 subnets, 65534 hosts','32 subnets, 131070 hosts','64 subnets, 65534 hosts'], c:0, e:'/14 borrows 6 bits from /8 → 2^6 = 64 subnets; 32−14 = 18 host bits → 2^18−2 = 262142 hosts.'},
+    {q:'Which address is the network ID for host 145.60.190.200/19?', opts:['145.60.190.0','145.60.160.0','145.60.176.0','145.60.192.0'], c:1, e:'/19 → 3rd-octet block size 32 (boundaries 0,32,64,...,160,192). 190 falls in the 160–191 block, so network = 145.60.160.0.'},
+    {q:'A /30 link uses which two usable addresses if the network is 192.168.5.4/30?', opts:['.4 and .7','.5 and .6','.4 and .5','.6 and .7'], c:1, e:'.4 network, .7 broadcast, so usable = .5 and .6.'},
+    {q:'Which OSI layer would a firewall filtering by port number operate at (in addition to L3)?', opts:['Layer 1','Layer 2','Layer 4 (Transport)','Layer 7 only'], c:2, e:'Port numbers are a Layer 4 (Transport) concept; a stateful firewall inspects L3/L4.'},
+    {q:'TRUE or FALSE: Switches make forwarding decisions using IP addresses.', opts:['True','False'], c:1, e:'False — switches forward using MAC (Layer 2) addresses; routers use IP.'},
+    {q:'The subnet mask /26 in binary in the last octet is:', opts:['11100000','11000000','11110000','10000000'], c:1, e:'/26 = 2 bits in the last octet → 11000000 = 192.'},
+    {q:'Which protocol resolves a domain name to an IP address?', opts:['DHCP','DNS','ARP','ICMP'], c:1, e:'DNS resolves names to IPs. (ARP resolves IP→MAC; DHCP assigns addresses.)'},
+    {q:'A device sends a DHCP DISCOVER. What destination does it use?', opts:['Its default gateway MAC','Broadcast (255.255.255.255 / FF-FF-FF-FF-FF-FF)','The DNS server','127.0.0.1'], c:1, e:'The client has no IP yet, so DHCP DISCOVER is broadcast.'},
+    {q:'Which is TRUE about half-duplex Ethernet?', opts:['No collisions occur','It uses CSMA/CD to manage collisions','It doubles bandwidth','It is used by modern switch ports'], c:1, e:'Half-duplex shares the medium and uses CSMA/CD to handle collisions.'},
+    {q:'How many usable hosts in a /23 network?', opts:['254','510','1022','126'], c:1, e:'/23 → 9 host bits → 2^9−2 = 510.'},
+    {q:'A packet with source 172.16.5.1 and destination 8.8.8.8 leaves a home router. What has NAT done?', opts:['Changed the destination to a private IP','Translated the private source to the router\'s public IP','Encrypted the payload','Dropped the packet'], c:1, e:'NAT rewrites the private source address to the router\'s public IP so replies can return.'},
+    {q:'Which statement about MAC addresses is FALSE?', opts:['48 bits long','First 3 bytes are the OUI','They are routable across the internet','Burned into the NIC'], c:2, e:'MAC addresses are NOT routable — they only work on the local segment; IP is used to cross networks.'},
+    {q:'The IPv6 loopback address is:', opts:['::1','::','fe80::1','ff02::1'], c:0, e:'::1 is the IPv6 loopback (equivalent to 127.0.0.1). :: is the unspecified address.'},
+    {q:'Which multicast address is "all IPv6 routers on the link"?', opts:['ff02::1','ff02::2','ff05::1','::1'], c:1, e:'ff02::2 = all-routers; ff02::1 = all-nodes.'},
+    {q:'A TCP segment with only the SYN flag set indicates:', opts:['Connection teardown','The first step of the 3-way handshake','Data acknowledgement','A reset'], c:1, e:'SYN alone starts the 3-way handshake (client→server).'},
+    {q:'Which of these correctly orders encapsulation top→bottom?', opts:['Bits, Frame, Packet, Segment, Data','Data, Segment, Packet, Frame, Bits','Data, Packet, Segment, Frame, Bits','Frame, Packet, Segment, Data, Bits'], c:1, e:'Going down the stack: Data → Segment → Packet → Frame → Bits.'},
+    {q:'TRUE or FALSE: A worm requires a user to run an infected file to spread.', opts:['True','False'], c:1, e:'False — a worm self-propagates without user action; that description fits a virus/trojan.'},
+    {q:'Which cable connects two switches together directly (no auto-MDI-X)?', opts:['Straight-through','Crossover','Rollover','Fiber patch only'], c:1, e:'Same device types (switch↔switch) traditionally need a crossover cable.'},
+    {q:'A subnet must support at least 500 hosts. What is the smallest sufficient prefix?', opts:['/24','/23','/22','/25'], c:1, e:'/23 gives 510 usable (≥500); /24 gives only 254.'},
+    {q:'Which port/protocol pair is correct?', opts:['DNS – TCP/UDP 53','HTTPS – TCP 80','SSH – TCP 23','FTP – UDP 21'], c:0, e:'DNS uses port 53 (UDP mainly, TCP for zone transfers). HTTPS=443, SSH=22, FTP=20/21 TCP.'},
+  ],
+  sectionB:{
+    scenario:`An ISP allocates <code>203.0.113.0/24</code> to a customer with three sites connected in a triangle (three WAN links). Using VLSM, allocate address space (largest first). Give <strong>network</strong>, <strong>prefix</strong>, <strong>usable range</strong>, and <strong>broadcast</strong> for each.`,
+    table:[['Site A LAN','100 hosts'],['Site B LAN','50 hosts'],['Site C LAN','25 hosts'],['WAN A–B','2 hosts'],['WAN B–C','2 hosts'],['WAN A–C','2 hosts']],
+    model:`<strong>From 203.0.113.0, largest first:</strong><br>
+    • <b>Site A (100)</b> → 128 → /25 → <b>203.0.113.0/25</b>, usable .1–.126, bcast .127<br>
+    • <b>Site B (50)</b> → 64 → /26 → <b>203.0.113.128/26</b>, usable .129–.190, bcast .191<br>
+    • <b>Site C (25)</b> → 32 → /27 → <b>203.0.113.192/27</b>, usable .193–.222, bcast .223<br>
+    • <b>WAN A–B (2)</b> → 4 → /30 → <b>203.0.113.224/30</b>, usable .225–.226, bcast .227<br>
+    • <b>WAN B–C (2)</b> → /30 → <b>203.0.113.228/30</b>, usable .229–.230, bcast .231<br>
+    • <b>WAN A–C (2)</b> → /30 → <b>203.0.113.232/30</b>, usable .233–.234, bcast .235<br>
+    <em>All fits within the /24 with room to spare. Verify in the Address Table Builder.</em>`
+  },
+  sectionC:[
+    {marks:2, q:'A network engineer captures traffic and sees a burst of ARP requests every time a PC boots, but one PC never gets replies and cannot reach anything. Explain the likely cause in ARP/subnet terms.', model:'The PC is likely configured with an IP in the wrong subnet (or wrong mask), so when it ARPs for its default gateway, the gateway is not on the same subnet and never replies — or the gateway address itself is wrong. Without a resolved gateway MAC, the PC cannot send any off-subnet traffic. Fix: correct the IP/mask/gateway so the host and gateway share the same network ID.'},
+    {marks:2, q:'You must choose between TCP and UDP for a live video conferencing app. State which you would choose and justify with TWO reasons grounded in protocol behaviour.', model:'Choose UDP. (1) Low latency/overhead — UDP has no handshake or retransmission, so it doesn\'t stall the stream waiting to re-send a lost packet; a slightly dropped frame is better than a frozen call. (2) Real-time tolerance — video/voice can tolerate minor loss but not delay; TCP\'s in-order guarantee and retransmission would introduce jitter/lag that hurts a live call more than occasional loss.'},
+    {marks:2, q:'Explain, using the concept of broadcast domains, why splitting a flat 500-host network into subnets improves performance.', model:'In a flat network all 500 hosts share one broadcast domain, so every ARP/DHCP/other broadcast is processed by all 500 devices, wasting bandwidth and CPU. Subnetting with routers between segments confines broadcasts to each smaller subnet (routers don\'t forward broadcasts), so each host sees far fewer broadcasts — reducing congestion and improving performance. It also limits the blast radius of broadcast storms.'},
+  ]
+},
+{
+  id:'P6', name:'Paper 6 (Hard)',
+  sectionA:[
+    {q:'A company summarises 192.168.8.0/24, 192.168.9.0/24, 192.168.10.0/24, 192.168.11.0/24 into ONE route. What is the summary?', opts:['192.168.8.0/22','192.168.8.0/23','192.168.0.0/16','192.168.8.0/21'], c:0, e:'Four consecutive /24s summarise to /22 (8,9,10,11 all share the first 22 bits): 192.168.8.0/22.'},
+    {q:'Host 88.132.44.19/28 — what is the FIRST usable host in its subnet?', opts:['88.132.44.16','88.132.44.17','88.132.44.1','88.132.44.15'], c:1, e:'/28 block 16: subnet .16–.31, network .16, first usable .17.'},
+    {q:'Which layer adds both a header AND a trailer during encapsulation?', opts:['Transport','Network','Data Link','Application'], c:2, e:'The Data Link layer adds a MAC header and an FCS/CRC trailer.'},
+    {q:'A switch port configured with port-security "sticky" will:', opts:['Block all MACs','Dynamically learn and save the connected MAC','Only allow broadcasts','Disable the port immediately'], c:1, e:'Sticky learning saves the learned MAC into the running config.'},
+    {q:'TRUE or FALSE: 127.0.0.1 packets are transmitted onto the physical wire.', opts:['True','False'], c:1, e:'False — loopback traffic stays inside the host TCP/IP stack; it never hits the wire.'},
+    {q:'Which subnet does 192.168.100.130 belong to, given mask /25?', opts:['192.168.100.0/25','192.168.100.128/25','192.168.100.64/25','192.168.100.130/25'], c:1, e:'/25 splits into .0–.127 and .128–.255; 130 is in the .128/25 subnet.'},
+    {q:'The purpose of the OSI Session layer is to:', opts:['Route packets','Establish, manage, and terminate sessions between apps','Encrypt data','Transmit bits'], c:1, e:'Session layer (L5) manages dialogue/sessions between applications.'},
+    {q:'Which is TRUE about anycast in IPv6?', opts:['One-to-all delivery','One-to-nearest of a group sharing the address','Same as broadcast','Only used for loopback'], c:1, e:'Anycast routes to the nearest device sharing the address (e.g. DNS root servers).'},
+    {q:'A NIC operating in promiscuous mode will:', opts:['Drop all frames','Process only frames addressed to its MAC','Process ALL frames it sees, regardless of destination MAC','Only send broadcasts'], c:2, e:'Promiscuous mode passes all frames up the stack (used by packet sniffers).'},
+    {q:'How many /29 subnets fit in a /24?', opts:['8','16','32','64'], c:2, e:'/24 → /29 borrows 5 bits: 2^5 = 32.'},
+    {q:'Which statement about TCP flow control is correct?', opts:['It uses TTL','It uses a sliding window to avoid overwhelming the receiver','It is handled by IP','It only works over UDP'], c:1, e:'TCP uses a sliding window (advertised receive window) for flow control.'},
+    {q:'A traceroute shows the 2nd hop timing out but later hops respond. This most likely means:', opts:['The destination is down','That one router is configured not to reply to the probe, but still forwards','The whole path is broken','DNS has failed'], c:1, e:'A hop can be configured to not send ICMP time-exceeded replies while still forwarding traffic — later hops still respond.'},
+    {q:'Which is the correct compressed form of fe80:0000:0000:0000:0204:61ff:fe9d:f156?', opts:['fe80::204:61ff:fe9d:f156','fe80::0204:61ff:fe9d:f156','fe80:0:0:0:204:61ff:fe9d:f156','fe80::204:61ff::f156'], c:0, e:'Compress the leading zero run to :: and drop leading zeros: fe80::204:61ff:fe9d:f156.'},
+    {q:'A stateful firewall differs from a stateless one because it:', opts:['Only blocks by IP','Tracks the state of connections (e.g. allows return traffic for established sessions)','Works only at Layer 1','Cannot be bypassed'], c:1, e:'Stateful firewalls track connection state, allowing return traffic for sessions they permitted outbound.'},
+    {q:'Which is TRUE about a broadcast frame FF-FF-FF-FF-FF-FF?', opts:['Routers forward it to all networks','Every device on the local LAN processes it','It is silently dropped by switches','It is a multicast'], c:1, e:'Broadcast is received/processed by every device on the local segment; routers do not forward it.'},
+    {q:'The block size (magic number) for mask 255.255.255.248 is:', opts:['4','8','16','32'], c:1, e:'256 − 248 = 8.'},
+    {q:'TRUE or FALSE: A single-mode fiber link is typically used for the short run from a switch to a desktop.', opts:['True','False'], c:1, e:'False — desktops use copper; single-mode fiber is for long-haul. Short runs use copper or multi-mode.'},
+    {q:'Which application-layer protocol pair is used to RECEIVE email?', opts:['SMTP and HTTP','IMAP and POP','DNS and DHCP','FTP and TFTP'], c:1, e:'IMAP and POP retrieve email; SMTP sends it.'},
+    {q:'An IPv4 packet is too large for the next link\'s MTU. What happens at Layer 3?', opts:['It is dropped silently always','It may be fragmented (or dropped if DF is set)','It is converted to IPv6','It is broadcast'], c:1, e:'IPv4 can fragment oversized packets (unless the Don\'t-Fragment bit is set, in which case it\'s dropped with an ICMP message).'},
+    {q:'You need 6 usable hosts per subnet with no waste. Which prefix?', opts:['/28','/29','/30','/27'], c:1, e:'/29 = 8 addresses − 2 = 6 usable, the exact fit.'},
+  ],
+  sectionB:{
+    scenario:`A school is given <code>172.16.16.0/22</code>. Design a VLSM plan (largest first) and give <strong>network</strong>, <strong>prefix</strong>, <strong>usable range</strong>, <strong>broadcast</strong> for each. Note the larger address space — watch your boundaries carefully.`,
+    table:[['Student Wi-Fi','500 hosts'],['Staff LAN','200 hosts'],['Lab Network','60 hosts'],['Servers','10 hosts'],['Core WAN link','2 hosts']],
+    model:`<strong>From 172.16.16.0 (/22 = 172.16.16.0–172.16.19.255), largest first:</strong><br>
+    • <b>Student Wi-Fi (500)</b> → 512 block → /23 → <b>172.16.16.0/23</b>, usable 172.16.16.1–172.16.17.254, bcast 172.16.17.255<br>
+    • <b>Staff (200)</b> → 256 block → /24 → <b>172.16.18.0/24</b>, usable .1–.254, bcast 172.16.18.255<br>
+    • <b>Lab (60)</b> → 64 block → /26 → <b>172.16.19.0/26</b>, usable 172.16.19.1–.62, bcast 172.16.19.63<br>
+    • <b>Servers (10)</b> → 16 block → /28 → <b>172.16.19.64/28</b>, usable .65–.78, bcast .79<br>
+    • <b>WAN link (2)</b> → 4 block → /30 → <b>172.16.19.80/30</b>, usable .81–.82, bcast .83<br>
+    <em>Tip: the /22 spans 172.16.16–19. Verify in the Address Table Builder using base 172.16.16.0 /22.</em>`
+  },
+  sectionC:[
+    {marks:2, q:'A company wants to reduce the size of its routing tables across many branch /24 networks. Explain the concept that helps, and give one benefit.', model:'Route summarisation (supernetting/CIDR): multiple contiguous networks are advertised as a single summary route (e.g. four /24s → one /22). Benefit: smaller routing tables, less router memory/CPU, faster lookups, and more stable routing (a single flapping subnet is hidden behind the summary).'},
+    {marks:2, q:'A user complains "HTTPS websites load but I can\'t send email." Given the concept of ports/protocols, list the likely cause and how you would confirm it.', model:'A firewall or ISP is likely blocking the email ports (e.g. SMTP 25/587, IMAP 143/993) while allowing HTTPS (443). Confirm by testing connectivity to the mail server on its port (telnet/Test-NetConnection to port 587/993) — if HTTPS/443 works but the mail port times out, the port is blocked. Fix: open the required port or use the provider\'s permitted submission port.'},
+    {marks:2, q:'Explain why a switch flooding an "unknown unicast" is normal behaviour and not a fault, and what stops it from happening again for that destination.', model:'When a switch has no MAC-table entry for a destination, it floods the frame out all ports (except the ingress) so the frame can still reach an unknown location — this is normal learning behaviour. Once the destination host replies, the switch reads that reply\'s source MAC and records it against the correct port, so future frames to that MAC are forwarded only out that one port (no more flooding) until the entry ages out.'},
+  ]
+},
+{
+  id:'P7', name:'Paper 7 (Hard)',
+  sectionA:[
+    {q:'A host 192.168.63.200 has mask 255.255.192.0. Its network ID is:', opts:['192.168.0.0','192.168.32.0','192.168.63.0','192.168.192.0'], c:0, e:'255.255.192.0 = /18, 3rd-octet block 64. 63 is in 0–63, so network = 192.168.0.0.'},
+    {q:'Which is TRUE about a /31 subnet (RFC 3021)?', opts:['It has 2 usable hosts and a broadcast','It provides 2 usable addresses with no network/broadcast, for point-to-point','It is invalid','It supports 6 hosts'], c:1, e:'/31 uses both addresses for a point-to-point link — no separate network/broadcast.'},
+    {q:'In the TCP/IP model, the OSI Application, Presentation, and Session layers map to:', opts:['Transport','Internet','The single Application layer','Network Access'], c:2, e:'TCP/IP collapses OSI L5–L7 into one Application layer.'},
+    {q:'A switch receives a frame from PC-A on port 1. What does it learn?', opts:['PC-A\'s IP is on port 1','PC-A\'s destination MAC','PC-A\'s source MAC is reachable via port 1','Nothing until it replies'], c:2, e:'A switch learns the SOURCE MAC of incoming frames and associates it with the ingress port.'},
+    {q:'How many host bits are needed to address 1000 hosts in one subnet?', opts:['9','10','11','8'], c:1, e:'2^10 = 1024 ≥ 1000+2; 2^9 = 512 is too few. So 10 host bits (/22).'},
+    {q:'TRUE or FALSE: The IPv6 :: can appear twice if the two zero-runs are equal length.', opts:['True','False'], c:1, e:'False — :: may appear at most once, ever, or the address is ambiguous.'},
+    {q:'Which describes CSMA/CD?', opts:['A routing protocol','A method half-duplex Ethernet uses to detect and recover from collisions','An encryption standard','A subnetting technique'], c:1, e:'CSMA/CD (Carrier Sense Multiple Access / Collision Detection) manages collisions on shared half-duplex media.'},
+    {q:'The default gateway address for a host must be:', opts:['Any public IP','On the same subnet as the host','The DNS server','A broadcast address'], c:1, e:'The gateway must be in the same subnet, or the host can\'t ARP/reach it.'},
+    {q:'Which is a Layer 2 broadcast?', opts:['255.255.255.255','FF-FF-FF-FF-FF-FF','224.0.0.1','::1'], c:1, e:'FF-FF-FF-FF-FF-FF is the L2 (MAC) broadcast; 255.255.255.255 is the L3 broadcast.'},
+    {q:'A packet is sent to 224.0.0.5. This is:', opts:['A unicast','A directed broadcast','A multicast (used by OSPF routers)','An anycast'], c:2, e:'224.0.0.0/24 is link-local multicast; 224.0.0.5 = OSPF all-routers.'},
+    {q:'What is the usable host range of 10.10.10.32/29?', opts:['.32–.39','.33–.38','.33–.39','.32–.38'], c:1, e:'/29 block 8: .32 network, .39 broadcast, usable .33–.38.'},
+    {q:'Which statement about UDP is TRUE?', opts:['It guarantees delivery','It performs a 3-way handshake','It is connectionless with minimal overhead','It reorders segments'], c:2, e:'UDP is connectionless, best-effort, and low overhead — no handshake, ordering, or retransmission.'},
+    {q:'The command "ipv6 unicast-routing" is required because:', opts:['It assigns an IPv6 address','Without it, the router will not forward IPv6 packets','It enables SSH','It sets the hostname'], c:1, e:'A Cisco router won\'t route IPv6 until this global command is enabled.'},
+    {q:'A frame\'s FCS (Frame Check Sequence) is used for:', opts:['Routing','Error DETECTION at Layer 2','Encryption','Flow control'], c:1, e:'The FCS/CRC in the trailer detects (not corrects) transmission errors.'},
+    {q:'Which will INCREASE the number of broadcast domains?', opts:['Adding a hub','Adding a switch','Adding a router / creating VLANs','Adding more cable'], c:2, e:'Routers (and VLANs on a switch) create additional broadcast domains; hubs/switches alone do not.'},
+    {q:'You are given 192.168.1.0/24 and need 4 equal subnets. What is the new prefix?', opts:['/25','/26','/27','/28'], c:1, e:'4 subnets = 2 borrowed bits → /26.'},
+    {q:'TRUE or FALSE: A trojan horse self-replicates across the network without user action.', opts:['True','False'], c:1, e:'False — a trojan disguises itself and needs the user to run it; worms self-replicate.'},
+    {q:'DNS primarily uses which transport protocol and port for standard queries?', opts:['TCP 80','UDP 53','TCP 25','UDP 67'], c:1, e:'DNS queries use UDP 53 (TCP 53 for large responses/zone transfers).'},
+    {q:'Which media offers the highest bandwidth and longest distance?', opts:['UTP Cat5e','Coaxial','Single-mode fiber','Wireless'], c:2, e:'Single-mode fiber has the highest bandwidth and longest reach.'},
+    {q:'An application needs to broadcast small status updates to many devices with minimal delay and can tolerate loss. Best transport?', opts:['TCP','UDP','ICMP','ARP'], c:1, e:'UDP suits low-latency, loss-tolerant, one-to-many style delivery.'},
+  ],
+  sectionB:{
+    scenario:`A startup is assigned <code>192.168.100.0/24</code>. They need the subnets below AND want you to state the <strong>network</strong>, <strong>prefix</strong>, <strong>usable range</strong>, and <strong>broadcast</strong> for each (largest first). Finally, identify how many addresses remain <strong>unused</strong> in the /24 after allocation.`,
+    table:[['Office LAN','120 hosts'],['Dev LAN','30 hosts'],['DMZ','6 hosts'],['Mgmt','6 hosts'],['WAN link','2 hosts']],
+    model:`<strong>From 192.168.100.0, largest first:</strong><br>
+    • <b>Office (120)</b> → 128 → /25 → <b>192.168.100.0/25</b>, usable .1–.126, bcast .127<br>
+    • <b>Dev (30)</b> → 32 → /27 → <b>192.168.100.128/27</b>, usable .129–.158, bcast .159<br>
+    • <b>DMZ (6)</b> → 8 → /29 → <b>192.168.100.160/29</b>, usable .161–.166, bcast .167<br>
+    • <b>Mgmt (6)</b> → 8 → /29 → <b>192.168.100.168/29</b>, usable .169–.174, bcast .175<br>
+    • <b>WAN (2)</b> → 4 → /30 → <b>192.168.100.176/30</b>, usable .177–.178, bcast .179<br>
+    <b>Used: .0 through .179 = 180 addresses. Unused: 256 − 180 = 76 addresses (.180–.255).</b><br>
+    <em>Verify in the Address Table Builder with base 192.168.100.0 /24.</em>`
+  },
+  sectionC:[
+    {marks:2, q:'A junior admin assigned a server the address 192.168.100.127/25 as a static host address. Explain why the server cannot communicate and what is wrong.', model:'In 192.168.100.0/25 the range is .0–.127, where .0 is the network address and .127 is the BROADCAST address. .127 cannot be used as a host address, so the server is misconfigured. Fix: assign any usable host from .1–.126.'},
+    {marks:2, q:'A company\'s VoIP calls break up whenever large backups run. Using a networking concept, explain the cause and the fix.', model:'Cause: lack of Quality of Service (QoS). The backup traffic saturates the link and competes equally with voice; because voice is delay-sensitive, the congestion causes jitter/packet loss and choppy calls. Fix: implement QoS to classify and prioritise VoIP traffic (give it higher priority/guaranteed bandwidth) so it isn\'t starved by bulk backup transfers.'},
+    {marks:2, q:'You capture a frame leaving PC1 (destined for a server two routers away). State what the SOURCE and DESTINATION MAC addresses are, and explain why they are NOT the server\'s MAC.', model:'Source MAC = PC1\'s own MAC; Destination MAC = PC1\'s default gateway (the first router interface) MAC. It is not the server\'s MAC because MAC addressing only works within the local segment — to leave the subnet the frame must be addressed to the gateway. The destination IP remains the server throughout, but each router rewrites the MACs for the next hop.'},
+  ]
+},
+{
+  id:'P8', name:'Paper 8 (Hard)',
+  sectionA:[
+    {q:'Which summary route covers 10.4.0.0/16, 10.5.0.0/16, 10.6.0.0/16, 10.7.0.0/16?', opts:['10.4.0.0/14','10.0.0.0/8','10.4.0.0/15','10.4.0.0/16'], c:0, e:'Four consecutive /16s (4–7) share the first 14 bits → 10.4.0.0/14.'},
+    {q:'What is the last usable host of 192.168.77.0/26?', opts:['192.168.77.62','192.168.77.63','192.168.77.64','192.168.77.126'], c:0, e:'/26 subnet .0–.63: broadcast .63, last usable .62.'},
+    {q:'Which is TRUE regarding switches and full-duplex?', opts:['Full-duplex causes collisions','A dedicated switch port in full-duplex has no collisions','Full-duplex halves throughput','Switches only support half-duplex'], c:1, e:'A dedicated full-duplex switch port has a collision-free link (send + receive simultaneously).'},
+    {q:'The Presentation layer is responsible for:', opts:['Routing','MAC addressing','Encryption, compression, and format translation','Session management'], c:2, e:'Presentation (L6): encryption/format/compression.'},
+    {q:'A device with IP 169.254.10.5 most likely:', opts:['Has a valid public IP','Failed to get a DHCP lease (APIPA self-assigned)','Is a router','Is using IPv6'], c:1, e:'169.254.0.0/16 (APIPA) is self-assigned when no DHCP server responds.'},
+    {q:'How many subnets result from borrowing 5 bits?', opts:['16','25','32','64'], c:2, e:'2^5 = 32.'},
+    {q:'Which statement about ARP cache is correct?', opts:['It is permanent','It maps IP→MAC and entries time out','It maps domain→IP','It is stored on the router only'], c:1, e:'The ARP cache maps IP to MAC and entries age out after a timeout.'},
+    {q:'A packet destined to 192.168.1.255 in a /24 network is:', opts:['A unicast to host 255','The directed broadcast for that subnet','Invalid','A multicast'], c:1, e:'.255 in a /24 is the subnet broadcast address.'},
+    {q:'Which is TRUE about TCP vs UDP headers?', opts:['UDP has a larger header','TCP header is larger due to sequence/ack/flags/window fields','Both are identical','UDP has sequence numbers'], c:1, e:'TCP\'s header carries sequence/ack numbers, flags, window, etc.; UDP\'s is minimal.'},
+    {q:'The IPv6 link-local prefix is:', opts:['2000::/3','fc00::/7','fe80::/10','ff00::/8'], c:2, e:'fe80::/10 is link-local.'},
+    {q:'A /27 subnet is written as which dotted-decimal mask?', opts:['255.255.255.192','255.255.255.224','255.255.255.240','255.255.255.128'], c:1, e:'/27 = 255.255.255.224 (block 32).'},
+    {q:'Which is the correct order of TCP connection teardown?', opts:['SYN, SYN-ACK, ACK','FIN, ACK, FIN, ACK','RST, FIN','ACK, SYN, FIN'], c:1, e:'Teardown: FIN → ACK → FIN → ACK (each side closes its direction).'},
+    {q:'A network engineer sees MAC A4-83-E7-... — the "A4-83-E7" portion identifies:', opts:['The device serial','The vendor (OUI)','The VLAN','The IP subnet'], c:1, e:'The first 3 bytes are the OUI, identifying the manufacturer.'},
+    {q:'Which scenario REQUIRES a router (not just a switch)?', opts:['Two PCs in 192.168.1.0/24 talking','A PC in 10.1.1.0/24 reaching a server in 10.2.2.0/24','Broadcasting an ARP','Two PCs on the same VLAN'], c:1, e:'Different networks require Layer 3 routing between them.'},
+    {q:'TRUE or FALSE: Multicast can be used as an IPv6 SOURCE address.', opts:['True','False'], c:1, e:'False — multicast may only be a destination, never a source.'},
+    {q:'The main risk of using Telnet instead of SSH for management is:', opts:['It is slower','Credentials/data are sent in plaintext','It uses too much bandwidth','It requires a domain name'], c:1, e:'Telnet is unencrypted — usernames/passwords are visible to any sniffer. SSH encrypts.'},
+    {q:'How many usable hosts does a /25 provide?', opts:['62','126','128','254'], c:1, e:'/25 → 7 host bits → 2^7−2 = 126.'},
+    {q:'Which pairing of protocol to layer is WRONG?', opts:['HTTP – Application','TCP – Transport','IP – Network','ARP – Transport'], c:3, e:'ARP operates at Layer 2 (Data Link) / L2–L3 boundary, not Transport.'},
+    {q:'A frame arrives with destination MAC 01-00-5E-0A-0B-0C. This is a:', opts:['Unicast','Broadcast','IPv4 multicast frame','Corrupted frame'], c:2, e:'01-00-5E prefix denotes an IPv4 multicast MAC.'},
+    {q:'Choosing UDP for DNS lookups is sensible because:', opts:['DNS needs guaranteed ordered delivery','A single small query/response is fast with low overhead, and can simply be retried','DNS is a streaming service','TCP cannot carry DNS'], c:1, e:'DNS queries are small and stateless; UDP\'s low overhead is ideal and the client just retries on loss.'},
+  ],
+  sectionB:{
+    scenario:`A data centre is assigned <code>10.20.0.0/16</code>. Using VLSM, allocate the requirements below (largest first) and provide <strong>network</strong>, <strong>prefix</strong>, <strong>usable range</strong>, and <strong>broadcast</strong>. Watch the multi-octet boundaries.`,
+    table:[['Compute cluster','1000 hosts'],['Storage network','500 hosts'],['Management','100 hosts'],['Backup VLAN','50 hosts'],['iLO/IPMI link','2 hosts']],
+    model:`<strong>From 10.20.0.0/16, largest first:</strong><br>
+    • <b>Compute (1000)</b> → 1024 block → /22 → <b>10.20.0.0/22</b>, usable 10.20.0.1–10.20.3.254, bcast 10.20.3.255<br>
+    • <b>Storage (500)</b> → 512 block → /23 → <b>10.20.4.0/23</b>, usable 10.20.4.1–10.20.5.254, bcast 10.20.5.255<br>
+    • <b>Management (100)</b> → 128 block → /25 → <b>10.20.6.0/25</b>, usable 10.20.6.1–.126, bcast 10.20.6.127<br>
+    • <b>Backup (50)</b> → 64 block → /26 → <b>10.20.6.128/26</b>, usable 10.20.6.129–.190, bcast 10.20.6.191<br>
+    • <b>iLO link (2)</b> → 4 block → /30 → <b>10.20.6.192/30</b>, usable 10.20.6.193–.194, bcast 10.20.6.195<br>
+    <em>Verify in the Address Table Builder using base 10.20.0.0 /16.</em>`
+  },
+  sectionC:[
+    {marks:2, q:'A company merged two departments that were each using 192.168.1.0/24 internally. After connecting them, hosts have duplicate IPs and cannot communicate. Explain the root cause and a proper fix.', model:'Root cause: overlapping/duplicate address space — both used the identical 192.168.1.0/24, so IPs collide and routing between them is ambiguous. Fix: re-address one (or both) departments into distinct subnets (e.g. 192.168.1.0/24 and 192.168.2.0/24), or use NAT between them as a temporary measure. Unique, non-overlapping subnets are required so each host has a globally-unique-within-the-org address.'},
+    {marks:2, q:'Explain why sending a large file over UDP with no application-layer reliability is risky, and what TCP provides that mitigates this.', model:'UDP is best-effort: lost, duplicated, or out-of-order packets are not detected or corrected, so a large file could arrive corrupted or incomplete with no notification. TCP mitigates this via sequence numbers (ordering + duplicate detection), acknowledgements + retransmission (reliability), and flow/congestion control (won\'t overwhelm the receiver or network) — guaranteeing the file arrives complete and in order.'},
+    {marks:2, q:'A firewall is configured to allow outbound HTTPS but block everything else inbound. Explain, using the idea of stateful inspection, how a user can still receive the web page they requested.', model:'A stateful firewall records outbound connections it permits (the user\'s HTTPS request to the server). When the server\'s reply comes back inbound, the firewall matches it to the existing tracked session (same IPs/ports, established state) and allows it through as return traffic — even though unsolicited inbound is blocked. It distinguishes solicited replies from unsolicited connection attempts by connection state.'},
+  ]
+},
+{
+  id:'P9', name:'Paper 9 (Hard)',
+  sectionA:[
+    {q:'Host 100.71.130.9/12 — network ID?', opts:['100.64.0.0','100.71.0.0','100.0.0.0','100.72.0.0'], c:0, e:'/12 → 2nd-octet block 16. 71 is in 64–79, so network = 100.64.0.0.'},
+    {q:'Which prefix provides exactly 30 usable hosts?', opts:['/26','/27','/28','/29'], c:1, e:'/27 → 2^5−2 = 30.'},
+    {q:'A router receives a packet whose destination matches no route and there is no default route. It:', opts:['Floods all interfaces','Drops the packet','Broadcasts on all LANs','Sends it to DNS'], c:1, e:'No matching route + no default route = the packet is dropped.'},
+    {q:'Which is TRUE about the relationship between IP and MAC during routing?', opts:['Both change every hop','Both stay constant','Source/Dest IP stay constant end-to-end; MACs change each hop','MAC stays constant, IP changes'], c:2, e:'IPs are end-to-end (constant); MACs are hop-by-hop (rewritten by each router).'},
+    {q:'Which statement about a /30 is FALSE?', opts:['It has 4 total addresses','It provides 2 usable hosts','It is ideal for router-to-router links','It provides 6 usable hosts'], c:3, e:'/30 gives only 2 usable hosts (4 − 2), not 6.'},
+    {q:'The subnet mask 255.255.255.252 corresponds to:', opts:['/29','/30','/31','/28'], c:1, e:'252 = 6 bits in the last octet → /30.'},
+    {q:'Which is a Layer 4 identifier?', opts:['MAC address','IP address','Port number','Frame FCS'], c:2, e:'Port numbers identify Transport-layer (L4) services/sessions.'},
+    {q:'DHCP uses which ports?', opts:['TCP 20/21','UDP 67/68','TCP 80/443','UDP 53'], c:1, e:'DHCP server uses UDP 67, client UDP 68.'},
+    {q:'A host cannot resolve www.example.com but CAN ping 8.8.8.8. The most likely problem is:', opts:['No physical link','DNS misconfiguration','Wrong subnet mask','Firewall blocks ICMP'], c:1, e:'Being able to reach an IP but not resolve names points to a DNS server problem, not connectivity.'},
+    {q:'How many /26 subnets can a /22 be divided into?', opts:['4','8','16','64'], c:2, e:'/22 → /26 borrows 4 bits: 2^4 = 16.'},
+    {q:'Which is TRUE about broadcast vs multicast?', opts:['Broadcast targets a subscribed group; multicast targets everyone','Multicast targets a subscribed group; broadcast targets everyone on the LAN','They are identical','Both are routed by default across the internet'], c:1, e:'Multicast = one-to-group (subscribers); broadcast = one-to-all on the local segment.'},
+    {q:'The purpose of the TCP three-way handshake is to:', opts:['Encrypt the session','Synchronise sequence numbers and establish a reliable connection','Assign an IP address','Resolve the MAC address'], c:1, e:'The handshake synchronises initial sequence numbers and confirms both sides are ready — establishing the connection.'},
+    {q:'What is the network address of 172.16.100.100/18?', opts:['172.16.64.0','172.16.96.0','172.16.100.0','172.16.0.0'], c:0, e:'/18 → 3rd-octet block 64. 100 is in 64–127, so network = 172.16.64.0.'},
+    {q:'A switch\'s MAC address table is also known as the:', opts:['ARP table','CAM table','Routing table','DNS cache'], c:1, e:'The MAC address table is stored in Content Addressable Memory (CAM table).'},
+    {q:'Which would MOST reduce broadcast traffic on a large flat LAN?', opts:['Replace switches with hubs','Segment into VLANs/subnets with routing','Use longer cables','Disable ARP'], c:1, e:'Segmenting into VLANs/subnets confines broadcasts to smaller domains.'},
+    {q:'TRUE or FALSE: Cut-through switching checks the full frame FCS before forwarding.', opts:['True','False'], c:1, e:'False — cut-through forwards after reading the destination MAC; store-and-forward checks the FCS.'},
+    {q:'Which application protocol sends email between mail servers?', opts:['POP','IMAP','SMTP','HTTP'], c:2, e:'SMTP sends/relays email; POP and IMAP retrieve it.'},
+    {q:'An IPv6 address with prefix 2000::/3 is a:', opts:['Link-local','Unique local','Global unicast','Multicast'], c:2, e:'2000::/3 is the global unicast range (routable, like a public IPv4).'},
+    {q:'Which is a valid reason to choose TCP over UDP?', opts:['Live streaming with minimal delay','A banking transaction requiring guaranteed, ordered delivery','DNS lookups','Broadcasting sensor data'], c:1, e:'A transaction needs reliability and ordering — TCP.'},
+    {q:'A design uses one subnet per department to contain broadcasts and apply security policy. This is primarily an example of:', opts:['Supernetting','The benefit of subnetting','NAT','DNS'], c:1, e:'Segmenting by department for smaller broadcast domains + policy control is exactly why organisations subnet.'},
+  ],
+  sectionB:{
+    scenario:`A clinic is assigned <code>192.168.128.0/23</code> (192.168.128.0–192.168.129.255). Using VLSM, allocate the requirements below (largest first). Provide <strong>network</strong>, <strong>prefix</strong>, <strong>usable range</strong>, and <strong>broadcast</strong> for each. The /23 spans two class-C blocks — mind the boundary.`,
+    table:[['Ward devices','120 hosts'],['Admin LAN','60 hosts'],['Imaging (PACS)','25 hosts'],['Pharmacy','12 hosts'],['Uplink link','2 hosts']],
+    model:`<strong>From 192.168.128.0/23, largest first:</strong><br>
+    • <b>Ward (120)</b> → 128 block → /25 → <b>192.168.128.0/25</b>, usable 192.168.128.1–.126, bcast 192.168.128.127<br>
+    • <b>Admin (60)</b> → 64 block → /26 → <b>192.168.128.128/26</b>, usable .129–.190, bcast 192.168.128.191<br>
+    • <b>Imaging (25)</b> → 32 block → /27 → <b>192.168.128.192/27</b>, usable .193–.222, bcast 192.168.128.223<br>
+    • <b>Pharmacy (12)</b> → 16 block → /28 → <b>192.168.128.224/28</b>, usable .225–.238, bcast 192.168.128.239<br>
+    • <b>Uplink (2)</b> → 4 block → /30 → <b>192.168.128.240/30</b>, usable .241–.242, bcast 192.168.128.243<br>
+    <em>All fits inside the first /24 half, leaving 192.168.129.0/24 spare. Verify in the Address Table Builder using base 192.168.128.0 /23.</em>`
+  },
+  sectionC:[
+    {marks:2, q:'A different site needs 300 hosts in one subnet but was only assigned a /24 (256 addresses). Explain why this is impossible and what prefix would actually be required.', model:'A /24 provides only 254 usable hosts (256 − 2), which is fewer than the 300 required, so it cannot fit them in one subnet. 300 hosts need at least 302 addresses → the next power of two is 512 → a /23 (510 usable). The correct response is to request a larger allocation (a /23 or bigger) rather than force an invalid design. Recognising infeasibility is part of good addressing design.'},
+    {marks:2, q:'A security team wants to ensure that even if malware infects a PC in the "Guest" subnet, it cannot broadcast-scan the "Servers" subnet. Explain how subnetting + a router/firewall achieves this.', model:'Because routers do not forward broadcasts, placing Guest and Servers in separate subnets confines each subnet\'s broadcast traffic to itself — malware in Guest cannot broadcast-discover hosts in Servers. Additionally, the router/firewall between them can enforce access-control rules (deny Guest→Servers traffic), so even unicast scanning is blocked. Segmentation limits both broadcast reach and the blast radius of a compromise.'},
+    {marks:2, q:'Explain, with reference to encapsulation, what happens to an HTTP request as it travels down the sending host\'s protocol stack.', model:'The HTTP request (Data) is passed to Transport, where TCP adds a header with source/destination ports and a sequence number → Segment. Network adds an IP header with source/destination IP and TTL → Packet. Data Link adds a MAC header (source/dest MAC) and an FCS trailer → Frame. Physical converts the frame into signals (Bits) on the medium. Each layer wraps the layer above — this is encapsulation; the receiver reverses it (de-encapsulation).'},
+  ]
+}
+];
+
+function renderExamPicker(){
+  const picker = document.getElementById('examPicker');
+  picker.innerHTML = EXAM_PAPERS.map((p,i)=>`<button data-paper="${i}" class="${i===0?'active':''}" onclick="loadExam(${i})">${p.name}</button>`).join('');
+  loadExam(0);
+}
+
+let currentExam = 0;
+function loadExam(idx){
+  currentExam = idx;
+  document.querySelectorAll('#examPicker button').forEach((b,i)=>b.classList.toggle('active', i===idx));
+  const p = EXAM_PAPERS[idx];
+  document.getElementById('examMeta').innerHTML =
+    `<span>Total: <b>25 marks</b></span><span>Duration: <b>1h 15m</b></span><span>Section A: <b>10</b></span><span>Section B: <b>9</b></span><span>Section C: <b>6</b></span>`;
+
+  let html = '';
+  // Section A
+  html += `<div class="section-head"><h3>Section A — Multiple Choice &amp; True/False</h3><span class="smarks">20 × 0.5 = 10 marks</span></div>`;
+  html += `<p class="section-desc">Choose the best answer for each. Graded automatically.</p>`;
+  p.sectionA.forEach((q,i)=>{
+    html += `<div class="exam-q" id="ea-${idx}-${i}">
+      <div class="eqhead"><span>A${i+1}</span><span>0.5 mark</span></div>
+      <div class="eqtext">${q.q}</div>
+      <div class="eq-opts">`;
+    q.opts.forEach((o,oi)=>{
+      html += `<label class="eq-opt" data-oi="${oi}"><input type="radio" name="ea-${idx}-${i}" value="${oi}"> ${o}</label>`;
+    });
+    html += `</div><div class="eq-explain" id="eae-${idx}-${i}"></div></div>`;
+  });
+
+  // Section B
+  const b = p.sectionB;
+  html += `<div class="section-head"><h3>Section B — Subnetting &amp; IP Addressing (VLSM)</h3><span class="smarks">9 marks</span></div>`;
+  html += `<div class="vlsm-scenario">${b.scenario}
+    <table><tr><th>Subnet / Link</th><th>Hosts Needed</th></tr>${b.table.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table>
+  </div>`;
+  html += `<div class="eq-short"><label>Your VLSM working &amp; table (type network / mask / range / broadcast for each subnet):</label>
+    <textarea id="eb-${idx}" placeholder="e.g.&#10;Subnet A: 172.16.0.0/26  mask 255.255.255.192  usable .1-.62  bcast .63&#10;..."></textarea></div>`;
+  html += `<div class="eq-model" id="ebm-${idx}"><div class="ml">Model Answer</div>${b.model}</div>`;
+  html += `<div class="eq-selfmark" id="ebs-${idx}"><span>Self-mark Section B (out of 9):</span>
+     <input type="number" min="0" max="9" step="0.5" id="ebscore-${idx}" style="width:70px;" oninput="updateExamScore()"> / 9</div>`;
+
+  // Section C
+  html += `<div class="section-head"><h3>Section C — Short Answer</h3><span class="smarks">6 marks</span></div>`;
+  html += `<p class="section-desc">Answer in a few sentences. After grading, compare with the model answer and self-mark.</p>`;
+  p.sectionC.forEach((q,i)=>{
+    html += `<div class="exam-q">
+      <div class="eqhead"><span>C${i+1}</span><span>${q.marks} marks</span></div>
+      <div class="eqtext">${q.q}</div>
+      <div class="eq-short"><textarea id="ec-${idx}-${i}" placeholder="Your answer…"></textarea></div>
+      <div class="eq-model" id="ecm-${idx}-${i}"><div class="ml">Model Answer</div>${q.model}</div>
+      <div class="eq-selfmark" id="ecs-${idx}-${i}"><span>Did you cover it?</span>
+        <button onclick="selfMark(${idx},${i},'yes',this)">Full (${q.marks})</button>
+        <button onclick="selfMark(${idx},${i},'part',this)">Partial (${q.marks/2})</button>
+        <button onclick="selfMark(${idx},${i},'no',this)">Missed (0)</button>
+      </div>
+    </div>`;
+  });
+
+  html += `<div class="exam-scorebar">
+    <div><div style="font-family:var(--mono); font-size:11px; color:var(--muted); text-transform:uppercase;">${p.name} — Written Test 2 mock</div>
+    <div class="esc" id="examScore">Not graded yet</div></div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="btn ghost" onclick="loadExam(${idx})">Reset</button>
+      <button class="btn" onclick="gradeExam(${idx})">Submit &amp; Grade</button>
+    </div>
+  </div>`;
+
+  document.getElementById('examBody').innerHTML = html;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+const examSelfMarks = {}; // key: idx-i -> marks earned
+
+function selfMark(idx, i, level, btn){
+  const q = EXAM_PAPERS[idx].sectionC[i];
+  const val = level==='yes' ? q.marks : level==='part' ? q.marks/2 : 0;
+  examSelfMarks[`c-${idx}-${i}`] = val;
+  const wrap = btn.parentElement;
+  wrap.querySelectorAll('button').forEach(b=>b.className='');
+  btn.className = level==='yes'?'on-yes':level==='part'?'on-part':'on-no';
+  updateExamScore();
+}
+
+function gradeExam(idx){
+  const p = EXAM_PAPERS[idx];
+  let aScore = 0;
+  p.sectionA.forEach((q,i)=>{
+    const sel = document.querySelector(`input[name="ea-${idx}-${i}"]:checked`);
+    const opts = document.querySelectorAll(`#ea-${idx}-${i} .eq-opt`);
+    opts.forEach(o=>o.classList.remove('correct','incorrect'));
+    if(sel){
+      const ci = parseInt(sel.value,10);
+      if(ci===q.c){ aScore += 0.5; opts[ci].classList.add('correct'); }
+      else { opts[ci].classList.add('incorrect'); opts[q.c].classList.add('correct'); }
+    } else {
+      opts[q.c].classList.add('correct');
+    }
+    const exp = document.getElementById(`eae-${idx}-${i}`);
+    exp.textContent = q.e; exp.style.display='block';
+  });
+  examSelfMarks[`a-${idx}`] = aScore;
+  // reveal models + self-mark controls
+  document.getElementById(`ebm-${idx}`).style.display='block';
+  document.getElementById(`ebs-${idx}`).classList.add('show');
+  p.sectionC.forEach((q,i)=>{
+    document.getElementById(`ecm-${idx}-${i}`).style.display='block';
+    document.getElementById(`ecs-${idx}-${i}`).classList.add('show');
+  });
+  updateExamScore();
+  document.querySelector('#panel-exam .exam-scorebar').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function updateExamScore(){
+  const idx = currentExam;
+  const p = EXAM_PAPERS[idx];
+  const a = examSelfMarks[`a-${idx}`] || 0;
+  const bInput = document.getElementById(`ebscore-${idx}`);
+  const b = bInput && bInput.value!=='' ? parseFloat(bInput.value) : 0;
+  let c = 0;
+  p.sectionC.forEach((q,i)=>{ c += examSelfMarks[`c-${idx}-${i}`] || 0; });
+  const total = a + b + c;
+  const el = document.getElementById('examScore');
+  if(el) el.textContent = `A: ${a}/10 · B: ${b}/9 · C: ${c}/6  =  ${total}/25 (${Math.round(total/25*100)}%)`;
+}
+
+renderExamPicker();
 
 
 /* =========================================================
